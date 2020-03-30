@@ -1,3 +1,5 @@
+Below are important scripts that are used:
+
 ### `npm start`
 
 Runs the app in the development mode.<br />
