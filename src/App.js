@@ -10,8 +10,7 @@ function App() {
   const [alertType, setAlertType] = useState('');
   const [first, setFirst] = useState('');
   const [test, setTest] = useState(0);
-  const [results, setResults] = useState({ score: 0, correct: 0, total: 0 });
-
+  const [results, setResults] = useState({});
   const createAlert = (msg, type, time) => {
     // Creates an alert with a msg, type (see Alert.js for types), and time (in milliseconds) setting a time of 0 makes a permanant alert
     setAlert(msg);
@@ -30,7 +29,14 @@ function App() {
         return correct++;
       } else return null;
     });
-    console.log(`Score: ` + (correct / total).toString());
+    setResults({
+      score: ((correct / total) * 100).toFixed(2),
+      correct,
+      total,
+      data: answers
+    });
+    console.log(results);
+    // Redirect Here
   };
   return (
     <Router>
@@ -65,7 +71,11 @@ function App() {
                 />
               )}
             />
-            <Route exact path='/done' render={props => <Done />} />
+            <Route
+              exact
+              path='/done'
+              render={props => <Done results={results} />}
+            />
           </Switch>
         </div>
       </div>

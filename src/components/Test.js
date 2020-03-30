@@ -40,6 +40,7 @@ const Test = ({ first, test, createAlert, gradeTest }) => {
     });
     if (allAnswered) {
       gradeTest(answers);
+      history.push('/done');
     }
   };
   return (
