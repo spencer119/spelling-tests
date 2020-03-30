@@ -1,34 +1,28 @@
 import React, { Fragment } from 'react';
-import speaker from '../speaker.png';
 import { useHistory } from 'react-router-dom';
-const Test = ({ first, last }) => {
+import Question from './Question';
+import test1words from '../test1words.json';
+import test2words from '../test2words.json';
+import test3words from '../test3words.json';
+const Test = ({ first, test }) => {
   const history = useHistory();
-  if (first === '' || last === '') {
+  if (first === '' || test === 0) {
     history.push('/');
     return <Fragment />;
   }
-  const onClick = () => {
-    let audio = new Audio('/audio.mp3');
-    audio.play();
-  };
+  console.log(test);
   return (
     <div>
-      <h2>
-        Current Test Session: {first} {last}
-      </h2>
+      <h2>{first.charAt(0).toUpperCase() + first.slice(1)}</h2>
       <br />
       <form>
-        <div className='input-group'>
-          <input
-            className='form-control'
-            placeholder='Type in the word here...'
-          />
-          <img src={speaker} className='speaker' onClick={onClick} alt='play' />
-        </div>
-        <div className='input-group'>
-          <input className='form-control' />
-          <img src={speaker} className='speaker' onClick={onClick} alt='play' />
-        </div>
+        {test === 1
+          ? test1words.map(word => <Question key={word} word={word} />)
+          : test === 2
+          ? test2words.map(word => <Question key={word} word={word} />)
+          : test === 3
+          ? test3words.map(word => <Question key={word} word={word} />)
+          : null}
         <button className='btn btn-primary' style={{ width: '100%' }}>
           Submit Test
         </button>

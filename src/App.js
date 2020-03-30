@@ -8,7 +8,7 @@ function App() {
   const [alert, setAlert] = useState('');
   const [alertType, setAlertType] = useState('');
   const [first, setFirst] = useState('');
-  const [last, setLast] = useState('');
+  const [test, setTest] = useState(0);
 
   const createAlert = (msg, type, time) => {
     // Creates an alert with a msg, type (see Alert.js for types), and time (in milliseconds) setting a time of 0 makes a permanant alert
@@ -36,16 +36,15 @@ function App() {
                 <Home
                   createAlert={createAlert}
                   first={first}
-                  last={last}
                   setFirst={setFirst}
-                  setLast={setLast}
+                  setTest={setTest}
                 />
               )}
             />
             <Route
               exact
               path='/test'
-              render={props => <Test first={first} last={last} />}
+              render={props => <Test first={first} test={test} />}
             />
           </Switch>
         </div>
