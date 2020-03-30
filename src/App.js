@@ -1,25 +1,41 @@
-import React from 'react';
-import logo from './logo.svg';
+import React, { Fragment, useState } from 'react';
 import './App.css';
-
+import Home from './components/Home';
+import Alert from './components/Alert';
+import { BrowserRouter as Router, Switch, Route } from 'react-router-dom';
+import Test from './components/Test';
 function App() {
+  const [alert, setAlert] = useState('');
+  const [alertType, setAlertType] = useState('');
+
+  const createAlert = (msg, type, time) => {
+    // Creates an alert with a msg, type (see Alert.js for types), and time (in milliseconds)
+    setAlert(msg);
+    setAlertType(type);
+    setTimeout(() => {
+      setAlert('');
+      setAlertType('');
+    }, time);
+  };
   return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
-    </div>
+    <Router>
+      <div className='App'>
+        <div className='container'>
+          <strong>
+            <h1 className='title'>Mrs. Hamilton's Spelling Test</h1>
+          </strong>
+          <Alert alert={alert} alertType={alertType} />
+          <Switch>
+            <Route
+              exact
+              path='/'
+              render={props => <Home createAlert={createAlert} />}
+            />
+            <Route exact path='/test' render={props => <Test />} />
+          </Switch>
+        </div>
+      </div>
+    </Router>
   );
 }
 
