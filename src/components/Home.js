@@ -34,6 +34,7 @@ const Home = ({ createAlert, first, last, setFirst, setLast }) => {
           <div className='col'>
             <input
               type='text'
+              autoComplete='off'
               className='form-control'
               placeholder='Please enter your first name...'
               id='first'
@@ -44,6 +45,7 @@ const Home = ({ createAlert, first, last, setFirst, setLast }) => {
           <div className='col'>
             <input
               type='text'
+              autoComplete='off'
               className='form-control'
               placeholder='Please enter your last name...'
               id='last'

@@ -52,7 +52,8 @@ function App() {
       </div>
       <footer>
         <p style={{ marginTop: '10px', textAlign: 'center' }}>
-          If you have any issues taking the test, please contact Mrs. Hamilton
+          If you have any issues taking the test, please contact{' '}
+          <a href='mailto:khamilton@mdsd.org'>Mrs. Hamilton</a>
         </p>
       </footer>
     </Router>

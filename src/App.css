@@ -5,3 +5,8 @@ h1.title {
   text-align: center;
   margin: 35px;
 }
+.speaker {
+  height: 50px;
+  width: 50px;
+  cursor: pointer;
+}
