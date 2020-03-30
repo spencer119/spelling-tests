@@ -1,10 +1,8 @@
 import React, { useState } from 'react';
-import { Redirect } from 'react-router-dom';
+import { useHistory } from 'react-router-dom';
 
-const Home = ({ createAlert }) => {
-  const [first, setFirst] = useState('');
-  const [last, setLast] = useState('');
-
+const Home = ({ createAlert, first, last, setFirst, setLast }) => {
+  const history = useHistory();
   const onChange = e => {
     if (e.target.id === 'first') {
       setFirst(e.target.value);
@@ -16,7 +14,12 @@ const Home = ({ createAlert }) => {
   const onClick = e => {
     e.preventDefault();
     if (first === '' || last === '')
-      createAlert('You must enter a first and last name.', 'danger', 5000);
+      return createAlert(
+        'You must enter a first and last name.',
+        'danger',
+        5000
+      );
+    history.push('/test');
   };
 
   return (

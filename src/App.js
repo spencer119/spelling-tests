@@ -7,15 +7,18 @@ import Test from './components/Test';
 function App() {
   const [alert, setAlert] = useState('');
   const [alertType, setAlertType] = useState('');
+  const [first, setFirst] = useState('');
+  const [last, setLast] = useState('');
 
   const createAlert = (msg, type, time) => {
-    // Creates an alert with a msg, type (see Alert.js for types), and time (in milliseconds)
+    // Creates an alert with a msg, type (see Alert.js for types), and time (in milliseconds) setting a time of 0 makes a permanant alert
     setAlert(msg);
     setAlertType(type);
-    setTimeout(() => {
-      setAlert('');
-      setAlertType('');
-    }, time);
+    if (time !== 0)
+      setTimeout(() => {
+        setAlert('');
+        setAlertType('');
+      }, time);
   };
   return (
     <Router>
@@ -29,12 +32,29 @@ function App() {
             <Route
               exact
               path='/'
-              render={props => <Home createAlert={createAlert} />}
+              render={props => (
+                <Home
+                  createAlert={createAlert}
+                  first={first}
+                  last={last}
+                  setFirst={setFirst}
+                  setLast={setLast}
+                />
+              )}
             />
-            <Route exact path='/test' render={props => <Test />} />
+            <Route
+              exact
+              path='/test'
+              render={props => <Test first={first} last={last} />}
+            />
           </Switch>
         </div>
       </div>
+      <footer>
+        <p style={{ marginTop: '10px', textAlign: 'center' }}>
+          If you have any issues taking the test, please contact Mrs. Hamilton
+        </p>
+      </footer>
     </Router>
   );
 }
