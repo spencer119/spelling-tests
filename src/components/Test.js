@@ -23,11 +23,11 @@ const Test = ({ first, last }) => {
             className='form-control'
             placeholder='Type in the word here...'
           />
-          <img src={speaker} className='speaker' onClick={onClick} />
+          <img src={speaker} className='speaker' onClick={onClick} alt='play' />
         </div>
         <div className='input-group'>
           <input className='form-control' />
-          <img src={speaker} className='speaker' onClick={onClick} />
+          <img src={speaker} className='speaker' onClick={onClick} alt='play' />
         </div>
         <button className='btn btn-primary' style={{ width: '100%' }}>
           Submit Test
