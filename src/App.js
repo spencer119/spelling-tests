@@ -5,6 +5,8 @@ import Alert from './components/Alert';
 import { BrowserRouter as Router, Switch, Route } from 'react-router-dom';
 import Test from './components/Test';
 import Done from './components/Done';
+import Admin from './components/Admin';
+import AdminLogin from './components/AdminLogin';
 function App() {
   const [alert, setAlert] = useState('');
   const [alertType, setAlertType] = useState('');
@@ -25,18 +27,17 @@ function App() {
     let total = answers.length;
     let correct = 0;
     answers.map(q => {
-      if (q.word === q.ans) {
+      if (q.word.toLowerCase() === q.ans.toLowerCase()) {
         return correct++;
       } else return null;
     });
     setResults({
+      name: first,
       score: ((correct / total) * 100).toFixed(2),
       correct,
       total,
       data: answers
     });
-    console.log(results);
-    // Redirect Here
   };
   return (
     <Router>
@@ -76,6 +77,8 @@ function App() {
               path='/done'
               render={props => <Done results={results} />}
             />
+            <Route exact path='/admin/results' render={props => <Admin />} />
+            <Route exact path='/admin/login' render={props => <AdminLogin />} />
           </Switch>
         </div>
       </div>

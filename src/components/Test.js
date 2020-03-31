@@ -28,17 +28,19 @@ const Test = ({ first, test, createAlert, gradeTest }) => {
   }
   const onClick = e => {
     e.preventDefault();
-    let allAnswered = false;
+    let allAnswered = true;
     answers.map(ans => {
-      if (ans.ans === '')
+      if (ans.ans === '') {
+        allAnswered = false;
         return createAlert(
           'You must try to answer each question.',
           'danger',
           8000
         );
-      else return (allAnswered = true);
+      } else return null;
     });
     if (allAnswered) {
+      console.log('test');
       gradeTest(answers);
       history.push('/done');
     }
@@ -47,6 +49,10 @@ const Test = ({ first, test, createAlert, gradeTest }) => {
     <div>
       <h2>{first.charAt(0).toUpperCase() + first.slice(1)}</h2>
       <br />
+      <h4>
+        Click the speaker button to hear the word and type your answer in the
+        box next to it.
+      </h4>
       <form>
         {test === 1
           ? test1words.map(word => (

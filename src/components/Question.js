@@ -19,8 +19,8 @@ const Question = ({ word, answers, setAnswers }) => {
   };
   return (
     <div className='input-group'>
+      <img src={speaker} style={{position: 'relative', bottom: '5px'}} className='speaker' onClick={onClick} alt='play' />
       <input className='form-control' value={value} onChange={onChange} />
-      <img src={speaker} className='speaker' onClick={onClick} alt='play' />
     </div>
   );
 };
