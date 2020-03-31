@@ -77,7 +77,7 @@ function App() {
               path='/done'
               render={props => <Done results={results} />}
             />
-            <Route exact path='/admin/results' render={props => <Admin />} />
+            <Route exact path='/admin' render={props => <Admin />} />
             <Route exact path='/admin/login' render={props => <AdminLogin />} />
           </Switch>
         </div>
