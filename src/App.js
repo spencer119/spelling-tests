@@ -7,8 +7,10 @@ import Test from './components/Test';
 import Done from './components/Done';
 import Admin from './components/Admin';
 import AdminLogin from './components/AdminLogin';
+import axios from 'axios';
 function App() {
   const [alert, setAlert] = useState('');
+  const [token, setToken] = useState('');
   const [alertType, setAlertType] = useState('');
   const [first, setFirst] = useState('');
   const [test, setTest] = useState(0);
@@ -38,14 +40,22 @@ function App() {
       total,
       data: answers
     });
+    axios
+      .post('/api/results', {
+        name: first,
+        score: ((correct / total) * 100).toFixed(2),
+        correct,
+        total,
+        data: answers
+      })
+      .then(res => {
+        console.log(res);
+      });
   };
   return (
     <Router>
       <div className='App'>
-        <div className='container'>
-          <strong>
-            <h1 className='title'>Mrs. Hamilton's Spelling Test</h1>
-          </strong>
+        <div>
           <Alert alert={alert} alertType={alertType} />
           <Switch>
             <Route
@@ -77,17 +87,21 @@ function App() {
               path='/done'
               render={props => <Done results={results} />}
             />
-            <Route exact path='/admin' render={props => <Admin />} />
-            <Route exact path='/admin/login' render={props => <AdminLogin />} />
+            <Route
+              exact
+              path='/admin'
+              render={props => <Admin token={token} />}
+            />
+            <Route
+              exact
+              path='/admin/login'
+              render={props => (
+                <AdminLogin setToken={setToken} createAlert={createAlert} />
+              )}
+            />
           </Switch>
         </div>
       </div>
-      <footer>
-        <p style={{ marginTop: '10px', textAlign: 'center' }}>
-          If you have any issues taking the test, please contact{' '}
-          <a href='mailto:khamilton@mdsd.org'>Mrs. Hamilton</a>
-        </p>
-      </footer>
     </Router>
   );
 }

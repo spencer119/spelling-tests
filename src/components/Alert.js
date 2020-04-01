@@ -17,7 +17,14 @@ const Alert = ({ alert, alertType }) => {
     console.error(`Invalid error type of ${alertType}`);
     return <Fragment />;
   }
-  return <div className={`alert alert-${alertType}`}>{alert}</div>;
+  return (
+    <div
+      style={{ marginTop: '30px' }}
+      className={`container alert alert-${alertType}`}
+    >
+      {alert}
+    </div>
+  );
 };
 
 export default Alert;

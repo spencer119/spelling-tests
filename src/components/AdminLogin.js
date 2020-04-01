@@ -1,31 +1,26 @@
 import React, { useState } from 'react';
 import '.././Admin.css';
 import axios from 'axios';
-const AdminLogin = () => {
-  const [username, setUsername] = useState('');
+import { useHistory } from 'react-router-dom';
+const AdminLogin = ({ createAlert, setToken }) => {
   const [password, setPassword] = useState('');
-
+  const history = useHistory();
   const onClick = e => {
     e.preventDefault();
-    axios.post('/api/auth', { username, password }).then(res => {
-      console.log(res);
-    });
+    axios
+      .post('/api/auth', { password })
+      .then(res => {
+        setToken(res.data.token);
+        history.push('/admin');
+      })
+      .catch(err => {
+        createAlert(err.response.data.msg, 'danger', 5000);
+      });
   };
   return (
     <div className='login-form'>
       <form>
-        <h2 className='text-center'>Admin Log in</h2>
-        <div className='form-group'>
-          <input
-            type='text'
-            className='form-control'
-            placeholder='Username'
-            value={username}
-            onChange={e => {
-              setUsername(e.target.value);
-            }}
-          />
-        </div>
+        <h2 className='text-center'>Admin Password</h2>
         <div className='form-group'>
           <input
             type='password'

@@ -46,7 +46,10 @@ const Test = ({ first, test, createAlert, gradeTest }) => {
     }
   };
   return (
-    <div>
+    <div className='container'>
+      <strong>
+        <h1 className='title'>Mrs. Hamilton's Spelling Test</h1>
+      </strong>
       <h2>{first.charAt(0).toUpperCase() + first.slice(1)}</h2>
       <br />
       <h4>
@@ -91,6 +94,12 @@ const Test = ({ first, test, createAlert, gradeTest }) => {
           Submit Test
         </button>
       </form>
+      <footer>
+        <p style={{ marginTop: '10px', textAlign: 'center' }}>
+          If you have any issues taking the test, please contact{' '}
+          <a href='mailto:khamilton@mdsd.org'>Mrs. Hamilton</a>
+        </p>
+      </footer>
     </div>
   );
 };

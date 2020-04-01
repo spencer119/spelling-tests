@@ -14,7 +14,10 @@ const Done = ({ results }) => {
     return <Fragment />;
   }
   return (
-    <div>
+    <div className='container'>
+      <strong>
+        <h1 className='title'>Mrs. Hamilton's Spelling Test</h1>
+      </strong>
       <div className='alert alert-success'>
         Test submitted. You may close this window.
       </div>

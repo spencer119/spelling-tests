@@ -33,34 +33,39 @@ const Home = ({ createAlert, first, setFirst, setTest }) => {
   };
 
   return (
-    <div className='jumbotron'>
-      <h1 className='display-4'>Hello students!</h1>
-      <p className='lead'>
-        Please enter your name in the box below to begin your spelling test
-      </p>
-      <form>
-        <div className='row'>
-          <div className='col'>
-            <input
-              type='text'
-              autoComplete='off'
-              className='form-control'
-              placeholder='Please enter your first name...'
-              id='first'
-              value={first}
-              onChange={onChange}
-            />
+    <div className='container'>
+      <strong>
+        <h1 className='title'>Mrs. Hamilton's Spelling Test</h1>
+      </strong>
+      <div className='jumbotron'>
+        <h1 className='display-4'>Hello students!</h1>
+        <p className='lead'>
+          Please enter your name in the box below to begin your spelling test
+        </p>
+        <form>
+          <div className='row'>
+            <div className='col'>
+              <input
+                type='text'
+                autoComplete='off'
+                className='form-control'
+                placeholder='Please enter your first name...'
+                id='first'
+                value={first}
+                onChange={onChange}
+              />
+            </div>
           </div>
-        </div>
-        <button
-          style={{ marginTop: '20px', width: '100%' }}
-          className='btn btn-primary'
-          onClick={onClick}
-          type='submit'
-        >
-          Begin Test
-        </button>
-      </form>
+          <button
+            style={{ marginTop: '20px', width: '100%' }}
+            className='btn btn-primary'
+            onClick={onClick}
+            type='submit'
+          >
+            Begin Test
+          </button>
+        </form>
+      </div>
     </div>
   );
 };
