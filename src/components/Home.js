@@ -16,12 +16,14 @@ const Home = ({ createAlert, first, setFirst, setToken }) => {
         setToken(res.data.token);
         history.push('/test');
       })
-      .catch(() => {
+      .catch(err => {
         createAlert(
           'Please double check you have typed in your name correctly.',
           'danger',
           5000
         );
+        console.log(err);
+        console.log(err.response);
       });
   };
 
