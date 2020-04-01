@@ -11,7 +11,9 @@ const Home = ({ createAlert, first, setFirst, setToken }) => {
   const onClick = e => {
     e.preventDefault();
     axios
-      .post('http://138.68.228.50:5000/api/user', { name: first })
+      .post('https://spelling-tests-backend.herokuapp.com/api/admin/api/user', {
+        name: first
+      })
       .then(res => {
         setToken(res.data.token);
         history.push('/test');

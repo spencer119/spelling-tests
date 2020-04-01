@@ -17,9 +17,12 @@ const Admin = ({ token }) => {
       history.push('/admin/login');
     } else {
       axios
-        .get('http://138.68.228.50:5000/api/admin', {
-          headers: { token }
-        })
+        .get(
+          'https://spelling-tests-backend.herokuapp.com/api/admin/api/admin',
+          {
+            headers: { token }
+          }
+        )
         .then(res => {
           console.log(res.data);
           setGroups(res.data.groups);

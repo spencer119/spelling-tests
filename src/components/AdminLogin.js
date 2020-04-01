@@ -8,7 +8,7 @@ const AdminLogin = ({ createAlert, setToken }) => {
   const onClick = e => {
     e.preventDefault();
     axios
-      .post('/api/auth', {
+      .post('https://spelling-tests-backend.herokuapp.com/api/admin/api/auth', {
         password
       })
       .then(res => {
