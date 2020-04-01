@@ -13,7 +13,6 @@ function App() {
   const [token, setToken] = useState('');
   const [alertType, setAlertType] = useState('');
   const [first, setFirst] = useState('');
-  const [test, setTest] = useState(0);
   const [results, setResults] = useState({});
   const createAlert = (msg, type, time) => {
     // Creates an alert with a msg, type (see Alert.js for types), and time (in milliseconds) setting a time of 0 makes a permanant alert
@@ -41,7 +40,7 @@ function App() {
       data: answers
     });
     axios
-      .post('/api/results', {
+      .post('https://spelling-tests-backend.herokuapp.com/api/results', {
         name: first,
         score: ((correct / total) * 100).toFixed(2),
         correct,
@@ -66,7 +65,7 @@ function App() {
                   createAlert={createAlert}
                   first={first}
                   setFirst={setFirst}
-                  setTest={setTest}
+                  setToken={setToken}
                 />
               )}
             />
@@ -76,9 +75,9 @@ function App() {
               render={props => (
                 <Test
                   first={first}
-                  test={test}
                   createAlert={createAlert}
                   gradeTest={gradeTest}
+                  token={token}
                 />
               )}
             />

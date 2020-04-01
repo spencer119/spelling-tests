@@ -1,10 +1,8 @@
 import React from 'react';
 import { useHistory } from 'react-router-dom';
-import test1 from '../test1.json';
-import test2 from '../test2.json';
-import test3 from '../test3.json';
+import axios from 'axios';
 
-const Home = ({ createAlert, first, setFirst, setTest }) => {
+const Home = ({ createAlert, first, setFirst, setToken }) => {
   const history = useHistory();
   const onChange = e => {
     setFirst(e.target.value);
@@ -12,24 +10,19 @@ const Home = ({ createAlert, first, setFirst, setTest }) => {
 
   const onClick = e => {
     e.preventDefault();
-    if (first === '')
-      return createAlert('You must enter your name', 'danger', 5000);
-    if (test1.includes(first.toLowerCase())) {
-      setTest(1);
-      history.push('/test');
-    } else if (test2.includes(first.toLowerCase())) {
-      setTest(2);
-      history.push('/test');
-    } else if (test3.includes(first.toLowerCase())) {
-      setTest(3);
-      history.push('/test');
-    } else {
-      return createAlert(
-        'Please double check you have entered your name correctly and try again.',
-        'danger',
-        5000
-      );
-    }
+    axios
+      .post('https://spelling-tests-backend.herokuapp.com/api/user', { name: first })
+      .then(res => {
+        setToken(res.data.token);
+        history.push('/test');
+      })
+      .catch(() => {
+        createAlert(
+          'Please double check you have typed in your name correctly.',
+          'danger',
+          5000
+        );
+      });
   };
 
   return (

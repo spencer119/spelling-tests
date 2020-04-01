@@ -9,6 +9,7 @@ const Admin = ({ token }) => {
   const [results, setResults] = useState([]);
   const [groups, setGroups] = useState([]);
   const [tests, setTests] = useState([]);
+  const [students, setStudents] = useState([]);
   const history = useHistory();
   const [active, setActive] = useState('results');
   useEffect(() => {
@@ -16,12 +17,15 @@ const Admin = ({ token }) => {
       history.push('/admin/login');
     } else {
       axios
-        .get('/api/admin', { headers: { token } })
+        .get('https://spelling-tests-backend.herokuapp.com/api/admin', {
+          headers: { token }
+        })
         .then(res => {
           console.log(res.data);
           setGroups(res.data.groups);
           setTests(res.data.tests);
           setResults(res.data.results);
+          setStudents(res.data.students);
         })
         .catch(err => console.error(err.message));
     }

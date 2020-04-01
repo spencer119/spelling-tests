@@ -1,7 +1,6 @@
 import React from 'react';
 
 const Tests = ({ tests }) => {
-  console.log(tests);
   return (
     <div className='container'>
       <table className='table'>

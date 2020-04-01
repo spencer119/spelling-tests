@@ -23,12 +23,14 @@ const Results = ({ results }) => {
               <td>{result.correct}</td>
               <td>{result.total}</td>
               <td>{result.score}%</td>
-              <button
-                className='btn btn-primary'
-                style={{ position: 'relative', top: '6px' }}
-              >
-                Data
-              </button>
+              <td>
+                <button
+                  className='btn btn-primary'
+                  style={{ position: 'relative', bottom: '6px' }}
+                >
+                  Data
+                </button>
+              </td>
             </tr>
           ))}
         </tbody>

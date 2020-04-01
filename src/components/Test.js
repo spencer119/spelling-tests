@@ -1,31 +1,26 @@
 import React, { Fragment, useState, useEffect } from 'react';
 import { useHistory } from 'react-router-dom';
 import Question from './Question';
-import test1words from '../test1words.json';
-import test2words from '../test2words.json';
-import test3words from '../test3words.json';
-const Test = ({ first, test, createAlert, gradeTest }) => {
+import axios from 'axios';
+const Test = ({ first, createAlert, gradeTest, token }) => {
   const [answers, setAnswers] = useState([]);
-  useEffect(() => {
-    if (test === 1) {
-      test1words.map(word =>
-        setAnswers(answers => [...answers, { word, ans: '' }])
-      );
-    } else if (test === 2) {
-      test2words.map(word =>
-        setAnswers(answers => [...answers, { word, ans: '' }])
-      );
-    } else if (test === 3) {
-      test3words.map(word =>
-        setAnswers(answers => [...answers, { word, ans: '' }])
-      );
-    }
-  }, [test]);
+  const [words, setWords] = useState([]);
   const history = useHistory();
-  if (first === '' || test === 0) {
-    history.push('/');
-    return <Fragment />;
-  }
+  useEffect(() => {
+    axios
+      .get('https://spelling-tests-backend.herokuapp.com/api/user/test', {
+        headers: { token }
+      })
+      .then(res => {
+        console.log(res.data);
+        setWords(res.data.words);
+      })
+      .catch(err => {
+        console.log(err.response);
+        history.push('/');
+      });
+  }, []);
+
   const onClick = e => {
     e.preventDefault();
     let allAnswered = true;
@@ -57,34 +52,14 @@ const Test = ({ first, test, createAlert, gradeTest }) => {
         box next to it.
       </h4>
       <form>
-        {test === 1
-          ? test1words.map(word => (
-              <Question
-                key={word}
-                word={word}
-                answers={answers}
-                setAnswers={setAnswers}
-              />
-            ))
-          : test === 2
-          ? test2words.map(word => (
-              <Question
-                key={word}
-                word={word}
-                answers={answers}
-                setAnswers={setAnswers}
-              />
-            ))
-          : test === 3
-          ? test3words.map(word => (
-              <Question
-                key={word}
-                word={word}
-                answers={answers}
-                setAnswers={setAnswers}
-              />
-            ))
-          : null}
+        {words.map(word => (
+          <Question
+            key={word}
+            word={word}
+            answers={answers}
+            setAnswers={setAnswers}
+          />
+        ))}
         <button
           className='btn btn-primary'
           style={{ width: '100%' }}
