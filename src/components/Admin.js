@@ -17,7 +17,7 @@ const Admin = ({ token }) => {
       history.push('/admin/login');
     } else {
       axios
-        .get('https://spelling-tests-backend.herokuapp.com/api/admin', {
+        .get('/api/admin', {
           headers: { token }
         })
         .then(res => {
