@@ -17,7 +17,7 @@ const Admin = ({ token }) => {
       history.push('/admin/login');
     } else {
       axios
-        .get('/api/admin', {
+        .get('http://138.68.228.50:5000/api/admin', {
           headers: { token }
         })
         .then(res => {

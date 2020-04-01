@@ -8,7 +8,7 @@ const Test = ({ first, createAlert, gradeTest, token }) => {
   const history = useHistory();
   useEffect(() => {
     axios
-      .get('/api/user/test', {
+      .get('http://138.68.228.50:5000/api/user/test', {
         headers: { token }
       })
       .then(res => {

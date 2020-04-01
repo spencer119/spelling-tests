@@ -40,7 +40,7 @@ function App() {
       data: answers
     });
     axios
-      .post('https://spelling-tests-backend.herokuapp.com/api/results', {
+      .post('http://138.68.228.50:5000/api/results', {
         name: first,
         score: ((correct / total) * 100).toFixed(2),
         correct,
