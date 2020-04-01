@@ -25,6 +25,7 @@ function App() {
       }, time);
   };
   const gradeTest = answers => {
+    console.log(answers);
     let total = answers.length;
     let correct = 0;
     answers.map(q => {

@@ -14,6 +14,9 @@ const Test = ({ first, createAlert, gradeTest, token }) => {
       .then(res => {
         console.log(res.data);
         setWords(res.data.words);
+        res.data.words.map(word => {
+          setAnswers(answers => [...answers, { word, ans: '' }]);
+        });
       })
       .catch(err => {
         console.log(err.response);
