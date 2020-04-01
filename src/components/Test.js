@@ -8,12 +8,9 @@ const Test = ({ first, createAlert, gradeTest, token }) => {
   const history = useHistory();
   useEffect(() => {
     axios
-      .get(
-        'https://spelling-tests-backend.herokuapp.com/api/admin/api/user/test',
-        {
-          headers: { token }
-        }
-      )
+      .get('https://spelling-tests-backend.herokuapp.com/api/user/test', {
+        headers: { token }
+      })
       .then(res => {
         console.log(res.data);
         setWords(res.data.words);
