@@ -18,16 +18,16 @@ const Admin = ({ token }) => {
     } else {
       axios
         .get('https://spelling-tests-backend.herokuapp.com/api/admin', {
-          headers: { token }
+          headers: { token },
         })
-        .then(res => {
+        .then((res) => {
           console.log(res.data);
           setGroups(res.data.groups);
           setTests(res.data.tests);
           setResults(res.data.results);
           setStudents(res.data.students);
         })
-        .catch(err => console.error(err.message));
+        .catch((err) => console.error(err.message));
     }
   }, [history, token]);
   return (

@@ -2,32 +2,32 @@ import React, { Fragment, useState, useEffect } from 'react';
 import { useHistory } from 'react-router-dom';
 import Question from './Question';
 import axios from 'axios';
-const Test = ({ first, createAlert, gradeTest, token }) => {
+const Test = ({ first, createAlert, gradeTest, token, setTestName }) => {
   const [answers, setAnswers] = useState([]);
   const [words, setWords] = useState([]);
   const history = useHistory();
   useEffect(() => {
     axios
       .get('https://spelling-tests-backend.herokuapp.com/api/user/test', {
-        headers: { token }
+        headers: { token },
       })
-      .then(res => {
-        console.log(res.data);
-        setWords(res.data.words);
-        res.data.words.map(word => {
-          setAnswers(answers => [...answers, { word, ans: '' }]);
+      .then((res) => {
+        setTestName(res.data.testName);
+        setWords(res.data.test.words);
+        res.data.test.words.map((word) => {
+          setAnswers((answers) => [...answers, { word, ans: '' }]);
         });
       })
-      .catch(err => {
+      .catch((err) => {
         console.log(err.response);
         history.push('/');
       });
   }, []);
 
-  const onClick = e => {
+  const onClick = (e) => {
     e.preventDefault();
     let allAnswered = true;
-    answers.map(ans => {
+    answers.map((ans) => {
       if (ans.ans === '') {
         allAnswered = false;
         return createAlert(
@@ -38,7 +38,6 @@ const Test = ({ first, createAlert, gradeTest, token }) => {
       } else return null;
     });
     if (allAnswered) {
-      console.log('test');
       gradeTest(answers);
       history.push('/done');
     }
@@ -55,7 +54,7 @@ const Test = ({ first, createAlert, gradeTest, token }) => {
         box next to it.
       </h4>
       <form>
-        {words.map(word => (
+        {words.map((word) => (
           <Question
             key={word}
             word={word}

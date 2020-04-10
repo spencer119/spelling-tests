@@ -5,17 +5,17 @@ import { useHistory } from 'react-router-dom';
 const AdminLogin = ({ createAlert, setToken }) => {
   const [password, setPassword] = useState('');
   const history = useHistory();
-  const onClick = e => {
+  const onClick = (e) => {
     e.preventDefault();
     axios
       .post('https://spelling-tests-backend.herokuapp.com/api/auth', {
-        password
+        password,
       })
-      .then(res => {
+      .then((res) => {
         setToken(res.data.token);
         history.push('/admin');
       })
-      .catch(err => {
+      .catch((err) => {
         createAlert(err.response.data.msg, 'danger', 5000);
       });
   };
@@ -29,7 +29,7 @@ const AdminLogin = ({ createAlert, setToken }) => {
             className='form-control'
             placeholder='Password'
             value={password}
-            onChange={e => {
+            onChange={(e) => {
               setPassword(e.target.value);
             }}
           />
