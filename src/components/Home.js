@@ -4,21 +4,21 @@ import axios from 'axios';
 
 const Home = ({ createAlert, first, setFirst, setToken }) => {
   const history = useHistory();
-  const onChange = e => {
+  const onChange = (e) => {
     setFirst(e.target.value);
   };
 
-  const onClick = e => {
+  const onClick = (e) => {
     e.preventDefault();
     axios
-      .post('/api/user', {
-        name: first
+      .post('https://spelling-tests-backend.herokuapp.com/api/user', {
+        name: first,
       })
-      .then(res => {
+      .then((res) => {
         setToken(res.data.token);
         history.push('/test');
       })
-      .catch(err => {
+      .catch((err) => {
         createAlert(
           'Please double check you have typed in your name correctly.',
           'danger',
