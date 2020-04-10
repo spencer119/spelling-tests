@@ -28,7 +28,7 @@ const Question = ({ word, answers, setAnswers }) => {
         onClick={onClick}
         alt='play'
       />
-      <input className='form-control' value={value} onChange={onChange} />
+      <input className='form-control' autocomplete="off" autocorrect="off" autocapitalize="off" spellcheck="false" value={value} onChange={onChange} />
     </div>
   );
 };
