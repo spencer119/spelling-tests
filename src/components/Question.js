@@ -10,11 +10,11 @@ const Question = ({ word, answers, setAnswers }) => {
     audio.play();
   };
   const onChange = (e) => {
-    setValue(e.target.value);
+    setValue(e.target.value.replace(' ', ''));
     let newAnswers = answers;
     newAnswers.map((ans) => {
       if (ans.word === word) {
-        return (ans.ans = e.target.value);
+        return (ans.ans = e.target.value.replace(' ', ''));
       } else return null;
     });
     setAnswers(newAnswers);
