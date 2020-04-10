@@ -53,10 +53,17 @@ const Test = ({ first, createAlert, gradeTest, token, setTestName }) => {
       <h4>
         Click the speaker button to hear the word and type your answer in the
         box next to it. You MUST answer every question. When you are finished
-        click Submit Test. After that you should see your score an a message
-        saying the test was completed.
+        click the button.
       </h4>
       <form>
+        <button
+          className='btn btn-primary'
+          style={{ width: '100%', marginTop: '10px', marginBottom: '10px' }}
+          onClick={onClick}
+          type='submit'
+        >
+          Click here when you answer every question
+        </button>
         {words.map((word) => (
           <Question
             key={word}
@@ -71,7 +78,7 @@ const Test = ({ first, createAlert, gradeTest, token, setTestName }) => {
           onClick={onClick}
           type='submit'
         >
-          Submit Test
+          Click here when you answer every question
         </button>
       </form>
       <footer>
