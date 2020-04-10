@@ -5,14 +5,14 @@ import axios from 'axios';
 const Home = ({ createAlert, first, setFirst, setToken }) => {
   const history = useHistory();
   const onChange = (e) => {
-    setFirst(e.target.value);
+    setFirst(e.target.value.replace(' ', ''));
   };
 
   const onClick = (e) => {
     e.preventDefault();
     axios
       .post('https://spelling-tests-backend.herokuapp.com/api/user', {
-        name: first,
+        name: first.toLowerCase(),
       })
       .then((res) => {
         setToken(res.data.token);
