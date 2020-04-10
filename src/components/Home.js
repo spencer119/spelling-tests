@@ -1,24 +1,29 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { useHistory } from 'react-router-dom';
 import axios from 'axios';
+import spinner from '../spinner.gif';
 
 const Home = ({ createAlert, first, setFirst, setToken }) => {
   const history = useHistory();
+  const [loading, setLoading] = useState(false);
   const onChange = (e) => {
     setFirst(e.target.value.replace(' ', ''));
   };
 
   const onClick = (e) => {
     e.preventDefault();
+    setLoading(true);
     axios
       .post('https://spelling-tests-backend.herokuapp.com/api/user', {
         name: first.toLowerCase(),
       })
       .then((res) => {
+        setLoading(false);
         setToken(res.data.token);
         history.push('/test');
       })
       .catch((err) => {
+        setLoading(false);
         createAlert(
           'Please double check you have typed in your name correctly.',
           'danger',
@@ -63,6 +68,25 @@ const Home = ({ createAlert, first, setFirst, setToken }) => {
           </button>
         </form>
       </div>
+      {loading ? (
+        <div
+          style={{
+            textAlign: 'center',
+            fontSize: '50px',
+          }}
+        >
+          Loading
+          <img
+            src={spinner}
+            alt='Loading...'
+            style={{
+              width: '200px',
+              margin: 'auto',
+              display: 'block',
+            }}
+          />
+        </div>
+      ) : null}
     </div>
   );
 };
