@@ -49,9 +49,12 @@ const Test = ({ first, createAlert, gradeTest, token, setTestName }) => {
       </strong>
       <h2>{first.charAt(0).toUpperCase() + first.slice(1)}</h2>
       <br />
+      <h1>Instructions</h1>
       <h4>
         Click the speaker button to hear the word and type your answer in the
-        box next to it.
+        box next to it. You MUST answer every question. When you are finished
+        click Submit Test. After that you should see your score an a message
+        saying the test was completed.
       </h4>
       <form>
         {words.map((word) => (
