@@ -7,7 +7,7 @@ const Home = ({ createAlert, first, setFirst, setToken }) => {
   const history = useHistory();
   const [loading, setLoading] = useState(false);
   const onChange = (e) => {
-    setFirst(e.target.value.replace(' ', ''));
+    setFirst(e.target.value.replace(' ', '').toLowerCase());
   };
 
   const onClick = (e) => {
