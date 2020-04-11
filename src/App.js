@@ -50,6 +50,7 @@ function App() {
           correct,
           total,
           data: answers,
+          token,
         })
         .then((res) => {
           resolve(res);
