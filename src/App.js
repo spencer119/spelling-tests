@@ -26,34 +26,38 @@ function App() {
       }, time);
   };
   const gradeTest = (answers) => {
-    console.log(answers);
-    let total = answers.length;
-    let correct = 0;
-    answers.map((q) => {
-      if (q.word.toLowerCase() === q.ans.toLowerCase()) {
-        return correct++;
-      } else return null;
-    });
-    setResults({
-      name: first.toLowerCase(),
-      test: testName,
-      score: ((correct / total) * 100).toFixed(3),
-      correct,
-      total,
-      data: answers,
-    });
-    axios
-      .post('https://spelling-tests-backend.herokuapp.com/api/results', {
+    return new Promise((resolve, reject) => {
+      let total = answers.length;
+      let correct = 0;
+      answers.map((q) => {
+        if (q.word.toLowerCase() === q.ans.toLowerCase()) {
+          return correct++;
+        } else return null;
+      });
+      setResults({
         name: first.toLowerCase(),
-        testName,
+        test: testName,
         score: ((correct / total) * 100).toFixed(3),
         correct,
         total,
         data: answers,
-      })
-      .then((res) => {
-        console.log(res);
       });
+      axios
+        .post('https://spelling-tests-backend.herokuapp.com/api/results', {
+          name: first.toLowerCase(),
+          testName,
+          score: ((correct / total) * 100).toFixed(3),
+          correct,
+          total,
+          data: answers,
+        })
+        .then((res) => {
+          resolve(res);
+        })
+        .catch((err) => {
+          reject(err);
+        });
+    });
   };
   return (
     <Router>

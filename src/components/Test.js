@@ -38,8 +38,17 @@ const Test = ({ first, createAlert, gradeTest, token, setTestName }) => {
       } else return null;
     });
     if (allAnswered) {
-      gradeTest(answers);
-      history.push('/done');
+      gradeTest(answers)
+        .then(() => {
+          history.push('/done');
+        })
+        .catch((err) =>
+          createAlert(
+            'There was an error saving your test. Please try again.',
+            'danger',
+            5000
+          )
+        );
     }
   };
   return (
