@@ -1,19 +1,19 @@
 import React, { useState } from 'react';
-import '.././Admin.css';
+import './Teacher.css';
 import axios from 'axios';
 import { useHistory } from 'react-router-dom';
-const AdminLogin = ({ createAlert, setToken }) => {
+const TeacherLogin = ({ createAlert, setToken }) => {
   const [password, setPassword] = useState('');
   const history = useHistory();
   const onClick = (e) => {
     e.preventDefault();
     axios
-      .post('https://spelling-tests-backend.herokuapp.com/api/auth', {
+      .post('/api/auth', {
         password,
       })
       .then((res) => {
         setToken(res.data.token);
-        history.push('/admin');
+        history.push('/teacher');
       })
       .catch((err) => {
         createAlert(err.response.data.msg, 'danger', 5000);
@@ -22,7 +22,7 @@ const AdminLogin = ({ createAlert, setToken }) => {
   return (
     <div className='login-form'>
       <form>
-        <h2 className='text-center'>Admin Password</h2>
+        <h2 className='text-center'>Teacher Password</h2>
         <div className='form-group'>
           <input
             type='password'
@@ -48,4 +48,4 @@ const AdminLogin = ({ createAlert, setToken }) => {
   );
 };
 
-export default AdminLogin;
+export default TeacherLogin;

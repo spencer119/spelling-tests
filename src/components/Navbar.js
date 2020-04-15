@@ -2,7 +2,7 @@ import React, { useState } from 'react';
 import { Link } from 'react-router-dom';
 
 const Navbar = ({ active, setActive }) => {
-  const onClick = e => {
+  const onClick = (e) => {
     setActive(e.target.id);
   };
   return (
@@ -33,14 +33,14 @@ const Navbar = ({ active, setActive }) => {
               Manage Tests
             </span>
           </li>
-          <li className={`nav-link ${active === 'students' ? 'active' : ''}`}>
+          <li className={`nav-link ${active === 'groups' ? 'active' : ''}`}>
             <span
               className='nav-link'
               style={{ cursor: 'pointer' }}
-              id='students'
+              id='groups'
               onClick={onClick}
             >
-              Manage Students
+              Manage Groups
             </span>
           </li>
         </ul>

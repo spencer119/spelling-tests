@@ -30,10 +30,10 @@ const Question = ({ word, answers, setAnswers }) => {
       />
       <input
         className='form-control'
-        autocomplete='off'
-        autocorrect='off'
-        autocapitalize='off'
-        spellcheck='false'
+        autoComplete='off'
+        autoCorrect='off'
+        autoCapitalize='off'
+        spellCheck='false'
         value={value}
         onChange={onChange}
       />

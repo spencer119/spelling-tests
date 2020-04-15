@@ -5,8 +5,9 @@ import Alert from './components/Alert';
 import { BrowserRouter as Router, Switch, Route } from 'react-router-dom';
 import Test from './components/Test';
 import Done from './components/Done';
-import Admin from './components/Admin';
-import AdminLogin from './components/AdminLogin';
+import Navbar from './components/Navbar';
+import Teacher from './components/teacher/Teacher';
+import TeacherLogin from './components/teacher/TeacherLogin';
 import axios from 'axios';
 function App() {
   const [alert, setAlert] = useState('');
@@ -43,7 +44,7 @@ function App() {
         data: answers,
       });
       axios
-        .post('https://spelling-tests-backend.herokuapp.com/api/results', {
+        .post('/api/results', {
           name: first.toLowerCase(),
           testName,
           score: ((correct / total) * 100).toFixed(3),
@@ -98,14 +99,14 @@ function App() {
             />
             <Route
               exact
-              path='/admin'
-              render={(props) => <Admin token={token} />}
+              path='/teacher'
+              render={(props) => <Teacher token={token} />}
             />
             <Route
               exact
-              path='/admin/login'
+              path='/teacher/login'
               render={(props) => (
-                <AdminLogin setToken={setToken} createAlert={createAlert} />
+                <TeacherLogin setToken={setToken} createAlert={createAlert} />
               )}
             />
           </Switch>
