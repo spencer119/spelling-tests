@@ -60,19 +60,11 @@ const Test = ({ first, createAlert, gradeTest, token, setTestName }) => {
       <br />
       <h1>Instructions</h1>
       <h4>
-        Click the speaker button to hear the word and type your answer in the
-        box next to it. You MUST answer every question. When you are finished
-        click the button.
+        Click the speaker button to hear your spelling word. Then, type your
+        spelling word in the box. You MUST put a word in every box. When you are
+        finished click the All Done button.
       </h4>
       <form>
-        <button
-          className='btn btn-primary'
-          style={{ width: '100%', marginTop: '10px', marginBottom: '10px' }}
-          onClick={onClick}
-          type='submit'
-        >
-          Click here when you answer every question
-        </button>
         {words.map((word) => (
           <Question
             key={word}
@@ -87,7 +79,7 @@ const Test = ({ first, createAlert, gradeTest, token, setTestName }) => {
           onClick={onClick}
           type='submit'
         >
-          Click here when you answer every question
+          All Done
         </button>
       </form>
       <footer>

@@ -1,5 +1,4 @@
-import React, { useState } from 'react';
-import { Link } from 'react-router-dom';
+import React from 'react';
 
 const Navbar = ({ active, setActive }) => {
   const onClick = (e) => {
@@ -10,7 +9,7 @@ const Navbar = ({ active, setActive }) => {
       className='navbar navbar-dark navbar-expand-lg bg-dark'
       style={{ marginBottom: '35px' }}
     >
-      <span className='navbar-brand'>Admin Dashboard</span>
+      <span className='navbar-brand'>Teacher Dashboard</span>
       <div className='collapse navbar-collapse'>
         <ul className='navbar-nav mr-auto'>
           <li className={`nav-link ${active === 'results' ? 'active' : ''}`}>

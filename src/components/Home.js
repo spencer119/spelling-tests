@@ -42,7 +42,7 @@ const Home = ({ createAlert, first, setFirst, setToken }) => {
       <div className='jumbotron'>
         <h1 className='display-4'>Hello students!</h1>
         <p className='lead'>
-          Please enter your name in the box below to begin your spelling test
+          Please enter your name in the box below and then click Start Test.
         </p>
         <form>
           <div className='row'>
@@ -51,7 +51,7 @@ const Home = ({ createAlert, first, setFirst, setToken }) => {
                 type='text'
                 autoComplete='off'
                 className='form-control'
-                placeholder='Please enter your first name...'
+                placeholder='Write your first name'
                 id='first'
                 value={first}
                 onChange={onChange}
@@ -64,7 +64,7 @@ const Home = ({ createAlert, first, setFirst, setToken }) => {
             onClick={onClick}
             type='submit'
           >
-            Begin Test
+            Start Test
           </button>
         </form>
       </div>
