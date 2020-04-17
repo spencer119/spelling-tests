@@ -1,4 +1,4 @@
-import React, { Fragment, useState, useEffect } from 'react';
+import React, { useState, useEffect } from 'react';
 import { useHistory } from 'react-router-dom';
 import Question from './Question';
 import axios from 'axios';
@@ -8,7 +8,7 @@ const Test = ({ first, createAlert, gradeTest, token, setTestName }) => {
   const history = useHistory();
   useEffect(() => {
     axios
-      .get('/api/user/test', {
+      .get('https://spelling-tests-backend.herokuapp.com/api/user/test', {
         headers: { token },
       })
       .then((res) => {

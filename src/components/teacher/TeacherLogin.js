@@ -8,7 +8,7 @@ const TeacherLogin = ({ createAlert, setToken }) => {
   const onClick = (e) => {
     e.preventDefault();
     axios
-      .post('/api/auth', {
+      .post('https://spelling-tests-backend.herokuapp.com/api/auth', {
         password,
       })
       .then((res) => {

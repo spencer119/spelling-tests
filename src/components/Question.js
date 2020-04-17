@@ -3,7 +3,9 @@ import speaker from '../speaker.png';
 const Question = ({ word, answers, setAnswers }) => {
   const [value, setValue] = useState('');
   const onClick = () => {
-    let audio = new Audio(`/audio/${word}.m4a`);
+    let audio = new Audio(
+      `https://spelling-tests-backend.herokuapp.com/audio/${word}.m4a`
+    );
     audio.volume = 0.25;
     audio.play();
   };

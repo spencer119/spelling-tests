@@ -17,7 +17,7 @@ const Tests = ({ token }) => {
   };
   const getTests = () => {
     axios
-      .get('/api/teacher/tests', {
+      .get('https://spelling-tests-backend.herokuapp.com/api/teacher/tests', {
         headers: { token },
       })
       .then((res) => {
@@ -29,7 +29,7 @@ const Tests = ({ token }) => {
   const onClick = () => {
     let words = newTestWords.split('\n');
     axios
-      .post('/api/teacher/tests', {
+      .post('https://spelling-tests-backend.herokuapp.com/api/teacher/tests', {
         token,
         name: newTestName,
         words,
@@ -42,14 +42,17 @@ const Tests = ({ token }) => {
   };
   const deleteTest = (e) => {
     axios
-      .delete('/api/teacher/tests', {
-        headers: {
-          token,
-        },
-        data: {
-          test: e.target.parentElement.parentElement.id,
-        },
-      })
+      .delete(
+        'https://spelling-tests-backend.herokuapp.com/api/teacher/tests',
+        {
+          headers: {
+            token,
+          },
+          data: {
+            test: e.target.parentElement.parentElement.id,
+          },
+        }
+      )
       .then(() => {
         getTests();
       });

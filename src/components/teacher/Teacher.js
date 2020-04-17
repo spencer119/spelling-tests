@@ -1,5 +1,4 @@
 import React, { useState, useEffect, Fragment } from 'react';
-import axios from 'axios';
 import { useHistory } from 'react-router-dom';
 import Navbar from '../Navbar';
 import Results from './Results';

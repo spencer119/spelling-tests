@@ -5,10 +5,14 @@ const Upload = ({ token }) => {
   const [missing, setMissing] = useState('');
   const [count, setCount] = useState(0);
   const getMissing = () => {
-    axios.get('/api/teacher/tests', { headers: { token } }).then((res) => {
-      setMissing(res.data.missing.join('\n'));
-      setCount(res.data.missing.length);
-    });
+    axios
+      .get('https://spelling-tests-backend.herokuapp.com/api/teacher/tests', {
+        headers: { token },
+      })
+      .then((res) => {
+        setMissing(res.data.missing.join('\n'));
+        setCount(res.data.missing.length);
+      });
   };
   useEffect(() => {
     getMissing();
@@ -16,13 +20,17 @@ const Upload = ({ token }) => {
   const [files, setFiles] = useState([]);
   const onClick = (e) => {
     e.preventDefault();
-    
+
     const data = new FormData();
     for (var x = 0; x < files.length; x++) {
       data.append('file', files[x]);
     }
     axios
-      .post('/api/teacher/upload', data, { headers: { token } })
+      .post(
+        'https://spelling-tests-backend.herokuapp.com/api/teacher/upload',
+        data,
+        { headers: { token } }
+      )
       .then((res) => {
         alert('Files uploaded.');
         getMissing();
