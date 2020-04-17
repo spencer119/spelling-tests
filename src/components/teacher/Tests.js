@@ -13,7 +13,7 @@ const Tests = ({ token }) => {
     setNewTestName(e.target.value);
   };
   const onWordChange = (e) => {
-    setNewTestWords(e.target.value);
+    setNewTestWords(e.target.value.replace(' ', '').toLowerCase());
   };
   const getTests = () => {
     axios
@@ -28,6 +28,10 @@ const Tests = ({ token }) => {
   };
   const onClick = () => {
     let words = newTestWords.split('\n');
+    if (words.includes('')) {
+      let index = words.indexOf('');
+      words.splice(index, 1);
+    }
     axios
       .post('https://spelling-tests-backend.herokuapp.com/api/teacher/tests', {
         token,
