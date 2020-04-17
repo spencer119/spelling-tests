@@ -8,6 +8,7 @@ const Tests = ({ token }) => {
   const [showModal, setShowModal] = useState(false);
   const [newTestName, setNewTestName] = useState('');
   const [newTestWords, setNewTestWords] = useState('');
+  const [missing, setMissing] = useState([]);
   const onNameChange = (e) => {
     setNewTestName(e.target.value);
   };
@@ -16,18 +17,19 @@ const Tests = ({ token }) => {
   };
   const getTests = () => {
     axios
-      .get('https://spelling-tests-backend.herokuapp.com/api/teacher/tests', {
+      .get('/api/teacher/tests', {
         headers: { token },
       })
       .then((res) => {
-        setTests(res.data);
+        setTests(res.data.tests);
+        setMissing(res.data.missing);
       })
-      .catch(() => history.push('/'));
+      .catch(() => history.push('/teacher/login'));
   };
   const onClick = () => {
     let words = newTestWords.split('\n');
     axios
-      .post('https://spelling-tests-backend.herokuapp.com/api/teacher/tests', {
+      .post('/api/teacher/tests', {
         token,
         name: newTestName,
         words,
@@ -40,20 +42,20 @@ const Tests = ({ token }) => {
   };
   const deleteTest = (e) => {
     axios
-      .delete(
-        'https://spelling-tests-backend.herokuapp.com/api/teacher/tests',
-        {
-          headers: {
-            token,
-          },
-          data: {
-            test: e.target.parentElement.parentElement.id,
-          },
-        }
-      )
+      .delete('/api/teacher/tests', {
+        headers: {
+          token,
+        },
+        data: {
+          test: e.target.parentElement.parentElement.id,
+        },
+      })
       .then(() => {
         getTests();
       });
+  };
+  const mouseOver = (e) => {
+    alert('This test is missing audio files.');
   };
   useEffect(() => getTests(), []);
   return (
@@ -94,14 +96,15 @@ const Tests = ({ token }) => {
           </button>
         </Modal.Footer>
       </Modal>
-
       <button
         className='btn btn-primary'
-        style={{ width: '100%', marginTop: '25px' }}
+        style={{ width: '100%', marginBottom: '25px' }}
         onClick={() => setShowModal(true)}
       >
         Create new test
       </button>
+      <i className='fas fa-info-circle' style={{ color: 'red' }}></i>
+      <span> = Missing Files</span>
       <table className='table'>
         <thead>
           <tr>
@@ -111,19 +114,34 @@ const Tests = ({ token }) => {
           </tr>
         </thead>
         <tbody>
-          {tests.map((test) => (
-            <tr key={test.name} id={test.name}>
-              <td>{test.name}</td>
-              <td>
-                <button className='btn btn-info'>Modify</button>
-              </td>
-              <td>
-                <button className='btn btn-danger' onClick={deleteTest}>
-                  Delete
-                </button>
-              </td>
-            </tr>
-          ))}
+          {tests.map((test) => {
+            let isMissing = false;
+            test.words.map((word) => {
+              if (missing.includes(word)) {
+                isMissing = true;
+              }
+            });
+            return (
+              <tr key={test.name} id={test.name}>
+                <td>{test.name}</td>
+                <td>
+                  <button className='btn btn-info'>Modify</button>
+                </td>
+                <td>
+                  <button className='btn btn-danger' onClick={deleteTest}>
+                    Delete
+                  </button>
+                  {isMissing ? (
+                    <i
+                      className='fas fa-info-circle'
+                      style={{ marginLeft: '25px', color: 'red' }}
+                      onMouseOver={mouseOver}
+                    ></i>
+                  ) : null}
+                </td>
+              </tr>
+            );
+          })}
         </tbody>
       </table>
     </div>

@@ -5,10 +5,11 @@ import Navbar from '../Navbar';
 import Results from './Results';
 import Tests from './Tests';
 import Groups from './Groups';
+import Upload from './Upload';
 const Teacher = ({ token }) => {
   const [results, setResults] = useState([]);
   const history = useHistory();
-  const [active, setActive] = useState('results');
+  const [active, setActive] = useState('tests');
   useEffect(() => {
     if (token === '') {
       history.push('/teacher/login');
@@ -24,6 +25,8 @@ const Teacher = ({ token }) => {
           <Tests token={token} />
         ) : active === 'groups' ? (
           <Groups token={token} />
+        ) : active === 'upload' ? (
+          <Upload token={token} />
         ) : null}
       </div>
     </Fragment>

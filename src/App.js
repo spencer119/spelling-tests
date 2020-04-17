@@ -44,7 +44,7 @@ function App() {
         data: answers,
       });
       axios
-        .post('https://spelling-tests-backend.herokuapp.com/api/results', {
+        .post('/api/results', {
           name: first.toLowerCase(),
           testName,
           score: ((correct / total) * 100).toFixed(3),

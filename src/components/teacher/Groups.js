@@ -9,18 +9,15 @@ const Groups = ({ token }) => {
   const history = useHistory();
   const getGroups = () => {
     axios
-      .get('https://spelling-tests-backend.herokuapp.com/api/teacher/groups', {
+      .get('/api/teacher/groups', {
         headers: { token },
       })
       .then((res) => {
         setGroups(res.data);
         axios
-          .get(
-            'https://spelling-tests-backend.herokuapp.com/api/teacher/tests',
-            { headers: { token } }
-          )
+          .get('/api/teacher/tests', { headers: { token } })
           .then((res) => {
-            setTests(res.data);
+            setTests(res.data.tests);
           })
           .catch(() => {
             history.push('/');
@@ -33,7 +30,7 @@ const Groups = ({ token }) => {
   }, []);
   const onClick = (e) => {
     axios
-      .put('https://spelling-tests-backend.herokuapp.com/api/teacher/groups', {
+      .put('/api/teacher/groups', {
         token,
         group: e.target.parentElement.id,
         newTest: e.target.id,
@@ -44,7 +41,7 @@ const Groups = ({ token }) => {
   };
   const noTest = (e) => {
     axios
-      .put('https://spelling-tests-backend.herokuapp.com/api/teacher/groups', {
+      .put('/api/teacher/groups', {
         token,
         group: e.target.parentElement.id,
         newTest: '',

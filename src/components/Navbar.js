@@ -12,7 +12,7 @@ const Navbar = ({ active, setActive }) => {
       <span className='navbar-brand'>Teacher Dashboard</span>
       <div className='collapse navbar-collapse'>
         <ul className='navbar-nav mr-auto'>
-          <li className={`nav-link ${active === 'results' ? 'active' : ''}`}>
+          {/* <li className={`nav-link ${active === 'results' ? 'active' : ''}`}>
             <span
               className='nav-link'
               style={{ cursor: 'pointer' }}
@@ -21,7 +21,7 @@ const Navbar = ({ active, setActive }) => {
             >
               Results
             </span>
-          </li>
+          </li> */}
           <li className={`nav-link ${active === 'tests' ? 'active' : ''}`}>
             <span
               className='nav-link'
@@ -40,6 +40,16 @@ const Navbar = ({ active, setActive }) => {
               onClick={onClick}
             >
               Manage Groups
+            </span>
+          </li>
+          <li className={`nav-link ${active === 'upload' ? 'active' : ''}`}>
+            <span
+              className='nav-link'
+              style={{ cursor: 'pointer' }}
+              id='upload'
+              onClick={onClick}
+            >
+              Upload Audio Files
             </span>
           </li>
         </ul>
