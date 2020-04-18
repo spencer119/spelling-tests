@@ -1,4 +1,5 @@
 import React from 'react';
+import { Link } from 'react-router-dom';
 
 const Navbar = ({ active, setActive }) => {
   const onClick = (e) => {
@@ -52,6 +53,11 @@ const Navbar = ({ active, setActive }) => {
               Upload Audio Files
             </span>
           </li>
+        </ul>
+        <ul className='nav justify-content-end'>
+          <Link to='/' className='btn btn-danger'>
+            Sign Out
+          </Link>
         </ul>
       </div>
     </nav>
