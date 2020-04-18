@@ -9,14 +9,21 @@ const Groups = ({ token }) => {
   const history = useHistory();
   const getGroups = () => {
     axios
-      .get('https://spelling-tests-backend.herokuapp.com/api/teacher/groups', {
-        headers: { token },
-      })
+      .get(
+        process.env.NODE_ENV === 'development'
+          ? '/api/teacher/groups'
+          : 'https://spelling-tests-backend.herokuapp.com/api/teacher/groups',
+        {
+          headers: { token },
+        }
+      )
       .then((res) => {
         setGroups(res.data);
         axios
           .get(
-            'https://spelling-tests-backend.herokuapp.com/api/teacher/tests',
+            process.env.NODE_ENV === 'development'
+              ? '/api/teacher/tests'
+              : 'https://spelling-tests-backend.herokuapp.com/api/teacher/tests',
             { headers: { token } }
           )
           .then((res) => {
@@ -33,22 +40,32 @@ const Groups = ({ token }) => {
   }, []);
   const onClick = (e) => {
     axios
-      .put('https://spelling-tests-backend.herokuapp.com/api/teacher/groups', {
-        token,
-        group: e.target.parentElement.id,
-        newTest: e.target.id,
-      })
+      .put(
+        process.env.NODE_ENV === 'development'
+          ? '/api/teacher/groups'
+          : 'https://spelling-tests-backend.herokuapp.com/api/teacher/groups',
+        {
+          token,
+          group: e.target.parentElement.id,
+          newTest: e.target.id,
+        }
+      )
       .then(() => {
         getGroups();
       });
   };
   const noTest = (e) => {
     axios
-      .put('https://spelling-tests-backend.herokuapp.com/api/teacher/groups', {
-        token,
-        group: e.target.parentElement.id,
-        newTest: '',
-      })
+      .put(
+        process.env.NODE_ENV === 'development'
+          ? '/api/teacher/groups'
+          : 'https://spelling-tests-backend.herokuapp.com/api/teacher/groups',
+        {
+          token,
+          group: e.target.parentElement.id,
+          newTest: '',
+        }
+      )
       .then(() => {
         getGroups();
       });

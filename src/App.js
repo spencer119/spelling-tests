@@ -5,7 +5,6 @@ import Alert from './components/Alert';
 import { BrowserRouter as Router, Switch, Route } from 'react-router-dom';
 import Test from './components/Test';
 import Done from './components/Done';
-import Navbar from './components/Navbar';
 import Teacher from './components/teacher/Teacher';
 import TeacherLogin from './components/teacher/TeacherLogin';
 import axios from 'axios';
@@ -44,15 +43,20 @@ function App() {
         data: answers,
       });
       axios
-        .post('https://spelling-tests-backend.herokuapp.com/api/results', {
-          name: first.toLowerCase(),
-          testName,
-          score: ((correct / total) * 100).toFixed(3),
-          correct,
-          total,
-          data: answers,
-          token,
-        })
+        .post(
+          process.env.NODE_ENV === 'development'
+            ? '/api/results'
+            : 'https://spelling-tests-backend.herokuapp.com/api/results',
+          {
+            name: first.toLowerCase(),
+            testName,
+            score: ((correct / total) * 100).toFixed(3),
+            correct,
+            total,
+            data: answers,
+            token,
+          }
+        )
         .then((res) => {
           resolve(res);
         })

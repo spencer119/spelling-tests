@@ -6,9 +6,14 @@ const Upload = ({ token }) => {
   const [count, setCount] = useState(0);
   const getMissing = () => {
     axios
-      .get('https://spelling-tests-backend.herokuapp.com/api/teacher/tests', {
-        headers: { token },
-      })
+      .get(
+        process.env.NODE_ENV === 'development'
+          ? '/api/teacher/tests'
+          : 'https://spelling-tests-backend.herokuapp.com/api/teacher/tests',
+        {
+          headers: { token },
+        }
+      )
       .then((res) => {
         setMissing(res.data.missing.join('\n'));
         setCount(res.data.missing.length);
@@ -27,7 +32,9 @@ const Upload = ({ token }) => {
     }
     axios
       .post(
-        'https://spelling-tests-backend.herokuapp.com/api/teacher/upload',
+        process.env.NODE_ENV === 'development'
+          ? '/api/teacher/upload'
+          : 'https://spelling-tests-backend.herokuapp.com/api/teacher/upload',
         data,
         { headers: { token } }
       )

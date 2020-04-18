@@ -17,9 +17,14 @@ const Tests = ({ token }) => {
   };
   const getTests = () => {
     axios
-      .get('https://spelling-tests-backend.herokuapp.com/api/teacher/tests', {
-        headers: { token },
-      })
+      .get(
+        process.env.NODE_ENV === 'development'
+          ? '/api/teacher/tests'
+          : 'https://spelling-tests-backend.herokuapp.com/api/teacher/tests',
+        {
+          headers: { token },
+        }
+      )
       .then((res) => {
         setTests(res.data.tests);
         setMissing(res.data.missing);
@@ -33,11 +38,16 @@ const Tests = ({ token }) => {
       words.splice(index, 1);
     }
     axios
-      .post('https://spelling-tests-backend.herokuapp.com/api/teacher/tests', {
-        token,
-        name: newTestName,
-        words,
-      })
+      .post(
+        process.env.NODE_ENV === 'development'
+          ? '/api/teacher/tests'
+          : 'https://spelling-tests-backend.herokuapp.com/api/teacher/tests',
+        {
+          token,
+          name: newTestName,
+          words,
+        }
+      )
       .then((res) => {
         console.log(res);
         setShowModal(false);
@@ -47,7 +57,9 @@ const Tests = ({ token }) => {
   const deleteTest = (e) => {
     axios
       .delete(
-        'https://spelling-tests-backend.herokuapp.com/api/teacher/tests',
+        process.env.NODE_ENV === 'development'
+          ? '/api/teacher/tests'
+          : 'https://spelling-tests-backend.herokuapp.com/api/teacher/tests',
         {
           headers: {
             token,

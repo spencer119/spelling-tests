@@ -14,9 +14,14 @@ const Home = ({ createAlert, first, setFirst, setToken }) => {
     e.preventDefault();
     setLoading(true);
     axios
-      .post('https://spelling-tests-backend.herokuapp.com/api/user', {
-        name: first.toLowerCase(),
-      })
+      .post(
+        process.env.NODE_ENV === 'development'
+          ? '/api/user'
+          : 'https://spelling-tests-backend.herokuapp.com/api/user',
+        {
+          name: first.toLowerCase(),
+        }
+      )
       .then((res) => {
         setLoading(false);
         setToken(res.data.token);

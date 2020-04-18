@@ -4,7 +4,9 @@ const Question = ({ word, answers, setAnswers }) => {
   const [value, setValue] = useState('');
   const onClick = () => {
     let audio = new Audio(
-      `https://spelling-tests-backend.herokuapp.com/audio/${word}.m4a`
+      process.env.NODE_ENV === 'development'
+        ? `/audio/${word}.m4a`
+        : `https://spelling-tests-backend.herokuapp.com/audio/${word}.m4a`
     );
     audio.volume = 0.25;
     audio.play();
