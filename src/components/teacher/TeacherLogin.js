@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import './Teacher.css';
 import axios from 'axios';
-import { useHistory } from 'react-router-dom';
+import { useHistory, Link } from 'react-router-dom';
 const TeacherLogin = ({ createAlert, setToken }) => {
   const [password, setPassword] = useState('');
   const history = useHistory();
@@ -47,6 +47,9 @@ const TeacherLogin = ({ createAlert, setToken }) => {
           >
             Log in
           </button>
+          <Link className='btn btn-secondary btn-block' to='/'>
+            Back to home
+          </Link>
         </div>
       </form>
     </div>
