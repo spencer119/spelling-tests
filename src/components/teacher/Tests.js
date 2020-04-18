@@ -76,7 +76,7 @@ const Tests = ({ token }) => {
   const mouseOver = (e) => {
     alert('This test is missing audio files.');
   };
-  useEffect(() => getTests(), []);
+  useEffect(() => getTests());
   return (
     <div className='container'>
       <Modal show={showModal} onHide={() => setShowModal(false)}>
@@ -137,8 +137,8 @@ const Tests = ({ token }) => {
             let isMissing = false;
             test.words.map((word) => {
               if (missing.includes(word)) {
-                isMissing = true;
-              }
+                return (isMissing = true);
+              } else return null;
             });
             return (
               <tr key={test.name} id={test.name}>

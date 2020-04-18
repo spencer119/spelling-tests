@@ -21,7 +21,7 @@ const Upload = ({ token }) => {
   };
   useEffect(() => {
     getMissing();
-  }, []);
+  });
   const [files, setFiles] = useState([]);
   const onClick = (e) => {
     e.preventDefault();

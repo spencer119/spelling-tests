@@ -6,9 +6,8 @@ import Tests from './Tests';
 import Groups from './Groups';
 import Upload from './Upload';
 const Teacher = ({ token }) => {
-  const [results, setResults] = useState([]);
   const history = useHistory();
-  const [active, setActive] = useState('tests');
+  const [active, setActive] = useState('results');
   useEffect(() => {
     if (token === '') {
       history.push('/teacher/login');

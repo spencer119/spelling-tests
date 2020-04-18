@@ -20,14 +20,14 @@ const Test = ({ first, createAlert, gradeTest, token, setTestName }) => {
         setTestName(res.data.testName);
         setWords(res.data.test.words);
         res.data.test.words.map((word) => {
-          setAnswers((answers) => [...answers, { word, ans: '' }]);
+          return setAnswers((answers) => [...answers, { word, ans: '' }]);
         });
       })
       .catch((err) => {
         console.log(err.response);
         history.push('/');
       });
-  }, []);
+  });
 
   const onClick = (e) => {
     e.preventDefault();

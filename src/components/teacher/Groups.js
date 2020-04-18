@@ -37,7 +37,7 @@ const Groups = ({ token }) => {
   };
   useEffect(() => {
     getGroups();
-  }, []);
+  });
   const onClick = (e) => {
     axios
       .put(
