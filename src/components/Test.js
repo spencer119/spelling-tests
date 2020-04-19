@@ -27,7 +27,7 @@ const Test = ({ first, createAlert, gradeTest, token, setTestName }) => {
         console.log(err.response);
         history.push('/');
       });
-  });
+  }, []);
 
   const onClick = (e) => {
     e.preventDefault();
