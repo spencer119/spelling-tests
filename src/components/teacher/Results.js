@@ -47,7 +47,7 @@ const Results = ({ token }) => {
       case 'student':
         let newArr = [];
         results.map((result) => {
-          if (result.name.includes(newSearch.toLowerCase())) {
+          if (result.name.toLowerCase().includes(newSearch.toLowerCase())) {
             return newArr.push(result);
           } else return null;
         });

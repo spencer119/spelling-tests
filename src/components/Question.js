@@ -2,17 +2,14 @@ import React, { useState } from 'react';
 import speaker from '../speaker.png';
 const Question = ({ word, answers, setAnswers }) => {
   const [value, setValue] = useState('');
-  const [playable, setPlayable] = useState(true);
   const onClick = () => {
-    if (playable === false) return;
     let audio = new Audio(
       process.env.NODE_ENV === 'development'
         ? `/audio/${word}.m4a`
         : `https://spelling-tests-backend.herokuapp.com/audio/${word}.m4a`
     );
     audio.volume = 0.25;
-    setPlayable(false);
-    audio.play().then(() => setPlayable(true));
+    audio.play();
   };
   const onChange = (e) => {
     setValue(e.target.value.replace(' ', ''));

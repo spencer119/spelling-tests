@@ -9,6 +9,8 @@ const Tests = ({ token }) => {
   const [newTestName, setNewTestName] = useState('');
   const [newTestWords, setNewTestWords] = useState('');
   const [missing, setMissing] = useState([]);
+  const [viewModal, setViewModal] = useState(false);
+  const [viewInfo, setViewInfo] = useState([]);
   const onNameChange = (e) => {
     setNewTestName(e.target.value);
   };
@@ -73,6 +75,14 @@ const Tests = ({ token }) => {
         getTests();
       });
   };
+  const viewTest = (e) => {
+    tests.map((test) => {
+      if (test.name === e.target.parentElement.parentElement.id) {
+        return setViewInfo(test.words);
+      } else return null;
+    });
+    setViewModal(true);
+  };
   const mouseOver = (e) => {
     alert('This test is missing audio files.');
   };
@@ -115,6 +125,31 @@ const Tests = ({ token }) => {
           </button>
         </Modal.Footer>
       </Modal>
+
+      <Modal show={viewModal} onHide={() => setViewModal(false)}>
+        <Modal.Header closeButton>
+          <Modal.Title>View test</Modal.Title>
+        </Modal.Header>
+        <Modal.Body>
+          {viewInfo.map((word) => (
+            <p>{word}</p>
+          ))}
+        </Modal.Body>
+        <Modal.Footer>
+          <button
+            className='btn btn-danger'
+            onClick={() => {
+              setViewModal(false);
+            }}
+          >
+            Close
+          </button>
+        </Modal.Footer>
+      </Modal>
+      <p>
+        To create a new test click the button below and follow the instructions.
+        Do not forget to upload the audio files via the Upload tab.
+      </p>
       <button
         className='btn btn-primary'
         style={{ width: '100%', marginBottom: '25px' }}
@@ -123,12 +158,12 @@ const Tests = ({ token }) => {
         Create new test
       </button>
       <i className='fas fa-info-circle' style={{ color: 'red' }}></i>
-      <span> = Missing Files</span>
+      <span> = The test is missing audio files</span>
       <table className='table'>
         <thead>
           <tr>
             <th scope='col'>Test</th>
-            <th scope='col'>Modify</th>
+            <th scope='col'>View</th>
             <th scope='col'>Delete</th>
           </tr>
         </thead>
@@ -144,7 +179,9 @@ const Tests = ({ token }) => {
               <tr key={test.name} id={test.name}>
                 <td>{test.name}</td>
                 <td>
-                  <button className='btn btn-info'>Modify</button>
+                  <button className='btn btn-info' onClick={viewTest}>
+                    View
+                  </button>
                 </td>
                 <td>
                   <button className='btn btn-danger' onClick={deleteTest}>
