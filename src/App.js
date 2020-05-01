@@ -16,7 +16,7 @@ function App() {
   const [first, setFirst] = useState('');
   const [results, setResults] = useState({});
   const [testName, setTestName] = useState('');
-  const [maintenance, setMaintenance] = useState(true);
+  const [maintenance, setMaintenance] = useState(false);
   const createAlert = (msg, type, time) => {
     // Creates an alert with a msg, type (see Alert.js for types), and time (in milliseconds) setting a time of 0 makes a permanant alert
     setAlert(msg);
