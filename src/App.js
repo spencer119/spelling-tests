@@ -8,6 +8,7 @@ import Done from './components/Done';
 import Teacher from './components/teacher/Teacher';
 import TeacherLogin from './components/teacher/TeacherLogin';
 import axios from 'axios';
+import Maintenance from './components/Maintenance';
 function App() {
   const [alert, setAlert] = useState('');
   const [token, setToken] = useState('');
@@ -15,6 +16,7 @@ function App() {
   const [first, setFirst] = useState('');
   const [results, setResults] = useState({});
   const [testName, setTestName] = useState('');
+  const [maintenance, setMaintenance] = useState(true);
   const createAlert = (msg, type, time) => {
     // Creates an alert with a msg, type (see Alert.js for types), and time (in milliseconds) setting a time of 0 makes a permanant alert
     setAlert(msg);
@@ -93,6 +95,7 @@ function App() {
                   gradeTest={gradeTest}
                   token={token}
                   setTestName={setTestName}
+                  maintenance={maintenance}
                 />
               )}
             />
@@ -105,6 +108,11 @@ function App() {
               exact
               path='/teacher'
               render={(props) => <Teacher token={token} />}
+            />
+            <Route
+              exact
+              path='/maintenance'
+              render={(props) => <Maintenance />}
             />
             <Route
               exact
