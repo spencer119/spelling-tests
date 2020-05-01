@@ -3,8 +3,7 @@ import React from 'react';
 const Maintenance = () => {
   return (
     <h1>
-      Sorry, this site is currently undergoing maintenance. Please check back
-      later
+      Sorry, the spelling test is being fixed! Please check back Saturday.
     </h1>
   );
 };
