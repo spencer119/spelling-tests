@@ -5,8 +5,11 @@ const Question = ({ word, answers, setAnswers }) => {
   const onClick = () => {
     let audio = new Audio(
       process.env.NODE_ENV === 'development'
-        ? `/audio/${word}.m4a`
-        : `https://spelling-tests-backend.herokuapp.com/audio/${word}.m4a`
+        ? `/audio/${word.replace("'", '')}.m4a`
+        : `https://spelling-tests-backend.herokuapp.com/audio/${word.replace(
+            "'",
+            ''
+          )}.m4a`
     );
     audio.volume = 0.25;
     audio.play();
