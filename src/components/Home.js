@@ -28,6 +28,9 @@ const Home = ({ createAlert, first, setFirst, setToken }) => {
         history.push('/test');
       })
       .catch((err) => {
+        if (err.response.data.maintenance) {
+          return history.push('/maintenance');
+        }
         setLoading(false);
         createAlert(
           'Please double check you have typed in your name correctly.',

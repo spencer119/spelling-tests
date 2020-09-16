@@ -2,42 +2,33 @@ import React, { useState, useEffect } from 'react';
 import { useHistory } from 'react-router-dom';
 import Question from './Question';
 import axios from 'axios';
-const Test = ({
-  first,
-  createAlert,
-  gradeTest,
-  token,
-  setTestName,
-  maintenance,
-}) => {
+const Test = ({ first, createAlert, gradeTest, token, setTestName }) => {
   const [answers, setAnswers] = useState([]);
   const [words, setWords] = useState([]);
   const history = useHistory();
   useEffect(() => {
-    if (maintenance) {
-      history.push('/maintenance');
-    } else {
-      axios
-        .get(
-          process.env.NODE_ENV === 'development'
-            ? '/api/user/test'
-            : 'https://spelling-tests-backend.herokuapp.com/api/user/test',
-          {
-            headers: { token },
-          }
-        )
-        .then((res) => {
-          setTestName(res.data.testName);
-          setWords(res.data.test.words);
-          res.data.test.words.map((word) => {
-            return setAnswers((answers) => [...answers, { word, ans: '' }]);
-          });
-        })
-        .catch((err) => {
-          console.log(err.response);
-          history.push('/');
+    axios
+      .get(
+        process.env.NODE_ENV === 'development'
+          ? '/api/user/test'
+          : 'https://spelling-tests-backend.herokuapp.com/api/user/test',
+        {
+          headers: { token },
+        }
+      )
+      .then((res) => {
+        setTestName(res.data.testName);
+        setWords(res.data.test.words);
+        res.data.test.words.map((word) => {
+          return setAnswers((answers) => [...answers, { word, ans: '' }]);
         });
-    }
+      })
+      .catch((err) => {
+        if (err.response.data.maintenance) {
+          return history.push('/maintenance');
+        }
+        history.push('/');
+      });
   }, []);
 
   const onClick = (e) => {
