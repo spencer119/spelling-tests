@@ -19,7 +19,7 @@ const Home = ({ createAlert, first, setFirst, setToken }) => {
           ? '/api/user'
           : 'https://spelling-tests-backend.herokuapp.com/api/user',
         {
-          name: first.toLowerCase(),
+          username: first.toLowerCase(),
         }
       )
       .then((res) => {
@@ -53,12 +53,13 @@ const Home = ({ createAlert, first, setFirst, setToken }) => {
       </Link>
       <div className='container'>
         <strong>
-          <h1 className='title'>Mrs. Hamilton's Spelling Test</h1>
+          <h1 className='title'>BRMES Online Spelling Test</h1>
         </strong>
         <div className='jumbotron'>
           <h1 className='display-4'>Hello students!</h1>
           <p className='lead'>
-            Please enter your name in the box below and then click Start Test.
+            Please enter your username in the box below and then click Start
+            Test.
           </p>
           <form>
             <div className='row'>
@@ -67,7 +68,7 @@ const Home = ({ createAlert, first, setFirst, setToken }) => {
                   type='text'
                   autoComplete='off'
                   className='form-control'
-                  placeholder='Write your first name'
+                  placeholder='Enter your username'
                   id='first'
                   value={first}
                   onChange={onChange}

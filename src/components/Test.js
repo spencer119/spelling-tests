@@ -61,7 +61,7 @@ const Test = ({ first, createAlert, gradeTest, token, setTestName }) => {
   return (
     <div className='container'>
       <strong>
-        <h1 className='title'>Mrs. Hamilton's Spelling Test</h1>
+        <h1 className='title'>BRMES Online Spelling Test</h1>
       </strong>
       <h2>{first.charAt(0).toUpperCase() + first.slice(1)}</h2>
       <br />

@@ -105,7 +105,9 @@ function App() {
             <Route
               exact
               path='/teacher'
-              render={(props) => <Teacher token={token} />}
+              render={(props) => (
+                <Teacher token={token} createAlert={createAlert} />
+              )}
             />
             <Route
               exact

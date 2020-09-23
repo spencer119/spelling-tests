@@ -53,6 +53,26 @@ const Navbar = ({ active, setActive }) => {
               Upload Audio Files
             </span>
           </li>
+          <li className={`nav-link ${active === 'classes' ? 'active' : ''}`}>
+            <span
+              className='nav-link'
+              style={{ cursor: 'pointer' }}
+              id='classes'
+              onClick={onClick}
+            >
+              Classes
+            </span>
+          </li>
+          <li className={`nav-link ${active === 'students' ? 'active' : ''}`}>
+            <span
+              className='nav-link'
+              style={{ cursor: 'pointer' }}
+              id='students'
+              onClick={onClick}
+            >
+              Students
+            </span>
+          </li>
         </ul>
         <ul className='nav justify-content-end'>
           <Link to='/' className='btn btn-danger'>

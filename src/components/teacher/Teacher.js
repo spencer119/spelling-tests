@@ -5,7 +5,9 @@ import Results from './Results';
 import Tests from './Tests';
 import Groups from './Groups';
 import Upload from './Upload';
-const Teacher = ({ token }) => {
+import Classes from './Classes';
+import Students from './Students.js';
+const Teacher = ({ token, createAlert }) => {
   const history = useHistory();
   const [active, setActive] = useState('results');
   useEffect(() => {
@@ -25,6 +27,10 @@ const Teacher = ({ token }) => {
           <Groups token={token} />
         ) : active === 'upload' ? (
           <Upload token={token} />
+        ) : active === 'classes' ? (
+          <Classes token={token} />
+        ) : active === 'students' ? (
+          <Students token={token} createAlert={createAlert} />
         ) : null}
       </div>
     </Fragment>
