@@ -3,10 +3,11 @@ import axios from 'axios';
 import { Dropdown } from 'react-bootstrap';
 import { useHistory } from 'react-router-dom';
 
-const Groups = ({ token }) => {
+const Groups = () => {
   const [groups, setGroups] = useState([]);
   const [tests, setTests] = useState([]);
   const history = useHistory();
+  let token = localStorage.getItem('token')
   const getGroups = () => {
     axios
       .get(

@@ -2,14 +2,17 @@ import React, { useState, useEffect } from 'react';
 import { Dropdown, Modal } from 'react-bootstrap';
 import axios from 'axios';
 
-const Results = ({ token }) => {
+const Results = () => {
   const [searchType, setSearchType] = useState('student');
   const [search, setSearch] = useState('');
   const [results, setResults] = useState([]);
   const [sorted, setSorted] = useState([]);
   const [showModal, setShowModal] = useState(false);
   const [modalInfo, setModalInfo] = useState([]);
+  let token;
   useEffect(() => {
+    token = localStorage.getItem('token')
+    console.log(localStorage.getItem('token'))
     axios
       .get(
         process.env.NODE_ENV === 'development'

@@ -1,9 +1,10 @@
 import React, { useState, useEffect } from 'react';
 import axios from 'axios';
 
-const Upload = ({ token }) => {
+const Upload = () => {
   const [missing, setMissing] = useState('');
   const [count, setCount] = useState(0);
+  let token = localStorage.getItem('token')
   const getMissing = () => {
     axios
       .get(

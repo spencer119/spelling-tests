@@ -1,8 +1,9 @@
 import React, { useState, useEffect } from 'react';
 import { Modal, Dropdown } from 'react-bootstrap';
 import axios from 'axios';
+import {Link} from 'react-router-dom'
 
-const Students = ({ token, createAlert }) => {
+const Students = ({ createAlert }) => {
   const [search, setSearch] = useState('');
   const [selectedClass, setSelectedClass] = useState('Select Class');
   const [selectedGroup, setSelectedGroup] = useState('Select Group');
@@ -17,6 +18,7 @@ const Students = ({ token, createAlert }) => {
   const [creationAlert, setCreationAlert] = useState(false);
   const [sorted, setSorted] = useState([]);
   const [showModal, setShowModal] = useState(false);
+  let token = localStorage.getItem('token')
   const getData = () => {
     axios // get student data
       .get(
@@ -248,7 +250,7 @@ const Students = ({ token, createAlert }) => {
                   <td>{getClassName(student.class_id)}</td>
                   <td>{getGroupName(student.group_id)}</td>
                   <td>
-                    <button className='btn btn-primary'>Edit</button>
+                    <Link to={`/teacher/student/edit?student_id=${student.student_id}`} className='btn btn-primary'>Edit</Link>
                   </td>
                 </tr>
               ))

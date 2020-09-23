@@ -2,7 +2,7 @@ import React, { useEffect, useState } from 'react';
 import axios from 'axios';
 import { Modal } from 'react-bootstrap';
 import { useHistory } from 'react-router-dom';
-const Tests = ({ token }) => {
+const Tests = () => {
   const history = useHistory();
   const [tests, setTests] = useState([]);
   const [showModal, setShowModal] = useState(false);
@@ -11,6 +11,7 @@ const Tests = ({ token }) => {
   const [missing, setMissing] = useState([]);
   const [viewModal, setViewModal] = useState(false);
   const [viewInfo, setViewInfo] = useState([]);
+  let token = localStorage.getItem('token')
   const onNameChange = (e) => {
     setNewTestName(e.target.value);
   };

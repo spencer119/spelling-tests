@@ -7,11 +7,11 @@ import Groups from './Groups';
 import Upload from './Upload';
 import Classes from './Classes';
 import Students from './Students.js';
-const Teacher = ({ token, createAlert }) => {
+const Teacher = ({createAlert }) => {
   const history = useHistory();
   const [active, setActive] = useState('results');
   useEffect(() => {
-    if (token === '') {
+    if (localStorage.getItem('token') === '') {
       history.push('/teacher/login');
     }
   });
@@ -20,17 +20,17 @@ const Teacher = ({ token, createAlert }) => {
       <Navbar active={active} setActive={setActive} />
       <div className='container-fluid'>
         {active === 'results' ? (
-          <Results token={token} />
+          <Results />
         ) : active === 'tests' ? (
-          <Tests token={token} />
+          <Tests />
         ) : active === 'groups' ? (
-          <Groups token={token} />
+          <Groups />
         ) : active === 'upload' ? (
-          <Upload token={token} />
+          <Upload />
         ) : active === 'classes' ? (
-          <Classes token={token} />
+          <Classes/>
         ) : active === 'students' ? (
-          <Students token={token} createAlert={createAlert} />
+          <Students createAlert={createAlert} />
         ) : null}
       </div>
     </Fragment>
