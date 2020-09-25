@@ -11,7 +11,7 @@ const Tests = () => {
   const [missing, setMissing] = useState([]);
   const [viewModal, setViewModal] = useState(false);
   const [viewInfo, setViewInfo] = useState([]);
-  let token = localStorage.getItem('token')
+  let token;
   const onNameChange = (e) => {
     setNewTestName(e.target.value);
   };
@@ -58,6 +58,7 @@ const Tests = () => {
       });
   };
   const deleteTest = (e) => {
+    
     axios
       .delete(
         process.env.NODE_ENV === 'development'
@@ -87,7 +88,10 @@ const Tests = () => {
   const mouseOver = (e) => {
     alert('This test is missing audio files.');
   };
-  useEffect(() => getTests(), []);
+  useEffect(() => {
+    token = localStorage.getItem('token')
+    getTests()
+  } , []);
   return (
     <div className='container'>
       <Modal show={showModal} onHide={() => setShowModal(false)}>

@@ -1,10 +1,7 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
 
-const Navbar = ({ active, setActive }) => {
-  const onClick = (e) => {
-    setActive(e.target.id);
-  };
+const Navbar = () => {
   return (
     <nav
       className='navbar navbar-dark navbar-expand-lg bg-dark'
@@ -13,65 +10,50 @@ const Navbar = ({ active, setActive }) => {
       <span className='navbar-brand'>Teacher Dashboard</span>
       <div className='collapse navbar-collapse'>
         <ul className='navbar-nav mr-auto'>
-          <li className={`nav-link ${active === 'results' ? 'active' : ''}`}>
-            <span
+          <li className='nav-link'>
+            <Link
               className='nav-link'
               style={{ cursor: 'pointer' }}
-              id='results'
-              onClick={onClick}
+              to='/teacher/results'
             >
               Results
-            </span>
+            </Link>
           </li>
-          <li className={`nav-link ${active === 'tests' ? 'active' : ''}`}>
-            <span
+          <li className='nav-link'>
+            <Link
               className='nav-link'
               style={{ cursor: 'pointer' }}
-              id='tests'
-              onClick={onClick}
+              to='/teacher/tests'
             >
               Manage Tests
-            </span>
+            </Link>
           </li>
-          <li className={`nav-link ${active === 'groups' ? 'active' : ''}`}>
-            <span
+          <li className='nav-link'>
+            <Link
               className='nav-link'
               style={{ cursor: 'pointer' }}
-              id='groups'
-              onClick={onClick}
+              to='/teacher/groups'
             >
               Manage Groups
-            </span>
+            </Link>
           </li>
-          <li className={`nav-link ${active === 'upload' ? 'active' : ''}`}>
-            <span
+          <li className='nav-link'>
+            <Link
               className='nav-link'
               style={{ cursor: 'pointer' }}
-              id='upload'
-              onClick={onClick}
-            >
-              Upload Audio Files
-            </span>
-          </li>
-          <li className={`nav-link ${active === 'classes' ? 'active' : ''}`}>
-            <span
-              className='nav-link'
-              style={{ cursor: 'pointer' }}
-              id='classes'
-              onClick={onClick}
+              to='/teacher/classes'
             >
               Classes
-            </span>
+            </Link>
           </li>
-          <li className={`nav-link ${active === 'students' ? 'active' : ''}`}>
-            <span
+          <li className='nav-link'>
+            <Link
               className='nav-link'
               style={{ cursor: 'pointer' }}
-              id='students'
-              onClick={onClick}
+              to='/teacher/students'
             >
               Students
-            </span>
+            </Link>
           </li>
         </ul>
         <ul className='nav justify-content-end'>

@@ -250,7 +250,7 @@ const Students = ({ createAlert }) => {
                   <td>{getClassName(student.class_id)}</td>
                   <td>{getGroupName(student.group_id)}</td>
                   <td>
-                    <Link to={`/teacher/student/edit?student_id=${student.student_id}`} className='btn btn-primary'>Edit</Link>
+                    <Link to={`/teacher/students/edit?student_id=${student.student_id}`} className='btn btn-primary'>Edit</Link>
                   </td>
                 </tr>
               ))

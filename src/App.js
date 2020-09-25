@@ -9,6 +9,15 @@ import Teacher from './components/teacher/Teacher';
 import TeacherLogin from './components/teacher/TeacherLogin';
 import axios from 'axios';
 import Maintenance from './components/Maintenance';
+import Navbar from './components/Navbar'
+import Students from './components/teacher/Students'
+import Results from './components/teacher/Results';
+import EditStudent from './components/teacher/EditStudent'
+import Tests from './components/teacher/Tests';
+import Groups from './components/teacher/Groups';
+import Upload from './components/teacher/Upload';
+import Classes from './components/teacher/Classes'
+import { Nav } from 'react-bootstrap';
 function App() {
   const [alert, setAlert] = useState('');
   const [token, setToken] = useState('');
@@ -104,13 +113,6 @@ function App() {
             />
             <Route
               exact
-              path='/teacher'
-              render={(props) => (
-                <Teacher token={token} createAlert={createAlert} />
-              )}
-            />
-            <Route
-              exact
               path='/maintenance'
               render={(props) => <Maintenance />}
             />
@@ -121,6 +123,26 @@ function App() {
                 <TeacherLogin setToken={setToken} createAlert={createAlert} />
               )}
             />
+            <Route exact path='/teacher/students'>
+              <Navbar />
+              <Students />
+            </Route>
+            <Route path='/teacher/results'>
+              <Navbar />
+              <Results />
+            </Route>
+            <Route path='/teacher/tests'>
+              <Navbar />
+              <Tests />
+            </Route>
+            <Route path='/teacher/groups'>
+              <Navbar />
+              <Groups />
+            </Route>
+            <Route path='/teacher/students/edit'>
+              <Navbar />
+              <EditStudent />
+            </Route>
           </Switch>
         </div>
       </div>

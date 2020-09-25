@@ -9,7 +9,6 @@ import Classes from './Classes';
 import Students from './Students.js';
 const Teacher = ({createAlert }) => {
   const history = useHistory();
-  const [active, setActive] = useState('results');
   useEffect(() => {
     if (localStorage.getItem('token') === '') {
       history.push('/teacher/login');
@@ -17,22 +16,6 @@ const Teacher = ({createAlert }) => {
   });
   return (
     <Fragment>
-      <Navbar active={active} setActive={setActive} />
-      <div className='container-fluid'>
-        {active === 'results' ? (
-          <Results />
-        ) : active === 'tests' ? (
-          <Tests />
-        ) : active === 'groups' ? (
-          <Groups />
-        ) : active === 'upload' ? (
-          <Upload />
-        ) : active === 'classes' ? (
-          <Classes/>
-        ) : active === 'students' ? (
-          <Students createAlert={createAlert} />
-        ) : null}
-      </div>
     </Fragment>
   );
 };

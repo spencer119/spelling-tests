@@ -21,7 +21,7 @@ const TeacherLogin = ({ createAlert, setToken }) => {
       .then((res) => {
         localStorage.setItem('token', res.data.token)
         setToken(res.data.token);
-        history.push('/teacher');
+        history.push('/teacher/results');
       })
       .catch((err) => {
         console.log(err.response);
