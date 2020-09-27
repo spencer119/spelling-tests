@@ -1,13 +1,13 @@
 import React, { useEffect, useState } from 'react';
 import axios from 'axios';
 import { Dropdown } from 'react-bootstrap';
-import { useHistory } from 'react-router-dom';
+import { useHistory, Link } from 'react-router-dom';
 
 const Groups = () => {
   const [groups, setGroups] = useState([]);
   const [tests, setTests] = useState([]);
   const history = useHistory();
-  let token = localStorage.getItem('token')
+  let token = localStorage.getItem('token');
   const getGroups = () => {
     axios
       .get(
@@ -34,7 +34,7 @@ const Groups = () => {
             history.push('/');
           });
       })
-      .catch(() => history.push('/'));
+      .catch(() => {});
   };
   useEffect(() => {
     getGroups();
@@ -76,7 +76,15 @@ const Groups = () => {
       <p>
         To change the current active test. Select a new test from the dropdown
         menu that corresponds to the correct group.
+        <Link
+          to='/teacher/groups/create'
+          className='btn btn-primary'
+          style={{ marginLeft: '75px' }}
+        >
+          Create New Group
+        </Link>
       </p>
+
       <table className='table'>
         <thead>
           <tr>

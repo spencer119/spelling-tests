@@ -9,14 +9,16 @@ import Teacher from './components/teacher/Teacher';
 import TeacherLogin from './components/teacher/TeacherLogin';
 import axios from 'axios';
 import Maintenance from './components/Maintenance';
-import Navbar from './components/Navbar'
-import Students from './components/teacher/Students'
+import Navbar from './components/Navbar';
+import Students from './components/teacher/Students';
 import Results from './components/teacher/Results';
-import EditStudent from './components/teacher/EditStudent'
+import EditStudent from './components/teacher/EditStudent';
 import Tests from './components/teacher/Tests';
 import Groups from './components/teacher/Groups';
+import CreateClass from './components/teacher/create/CreateClass';
+import CreateGroup from './components/teacher/create/CreateGroup';
 import Upload from './components/teacher/Upload';
-import Classes from './components/teacher/Classes'
+import Classes from './components/teacher/Classes';
 import { Nav } from 'react-bootstrap';
 function App() {
   const [alert, setAlert] = useState('');
@@ -79,9 +81,8 @@ function App() {
     <Router>
       <div className='App'>
         <div>
-          <Alert alert={alert} alertType={alertType} />
           <Switch>
-            <Route
+            {/* <Route
               exact
               path='/'
               render={(props) => (
@@ -92,8 +93,17 @@ function App() {
                   setToken={setToken}
                 />
               )}
-            />
-            <Route
+            /> */}
+            <Route exact path='/'>
+              <Alert alert={alert} alertType={alertType} />
+              <Home
+                createAlert={createAlert}
+                first={first}
+                setFirst={setFirst}
+                setToken={setToken}
+              />
+            </Route>
+            {/* <Route
               exact
               path='/test'
               render={(props) => (
@@ -105,24 +115,46 @@ function App() {
                   setTestName={setTestName}
                 />
               )}
-            />
-            <Route
+            /> */}
+            <Route exact path='/test'>
+              <Alert alert={alert} alertType={alertType} />
+              <Test
+                first={first}
+                createAlert={createAlert}
+                gradeTest={gradeTest}
+                token={token}
+                setTestName={setTestName}
+              />
+            </Route>
+            {/* <Route
               exact
               path='/done'
               render={(props) => <Done results={results} />}
-            />
-            <Route
+            /> */}
+            <Route exact path='/done'>
+              <Alert alert={alert} alertType={alertType} />
+              <Done results={results} />
+            </Route>
+            {/* <Route
               exact
               path='/maintenance'
               render={(props) => <Maintenance />}
-            />
-            <Route
+            /> */}
+            <Route exact path='/maintenance'>
+              <Alert alert={alert} alertType={alertType} />
+              <Maintenance />
+            </Route>
+            {/* <Route
               exact
               path='/teacher/login'
               render={(props) => (
                 <TeacherLogin setToken={setToken} createAlert={createAlert} />
               )}
-            />
+            /> */}
+            <Route exact path='/teacher/login'>
+              <Alert alert={alert} alertType={alertType} />
+              <TeacherLogin setToken={setToken} createAlert={createAlert} />
+            </Route>
             <Route exact path='/teacher/students'>
               <Navbar />
               <Students />
@@ -135,9 +167,17 @@ function App() {
               <Navbar />
               <Tests />
             </Route>
-            <Route path='/teacher/groups'>
+            <Route exact path='/teacher/groups'>
               <Navbar />
               <Groups />
+            </Route>
+            <Route exact path='/teacher/classes'>
+              <Navbar />
+              <Classes />
+            </Route>
+            <Route path='/teacher/groups/create'>
+              <Navbar />
+              <CreateGroup />
             </Route>
             <Route path='/teacher/students/edit'>
               <Navbar />
