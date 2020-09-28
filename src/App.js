@@ -5,7 +5,6 @@ import Alert from './components/Alert';
 import { BrowserRouter as Router, Switch, Route } from 'react-router-dom';
 import Test from './components/Test';
 import Done from './components/Done';
-import Teacher from './components/teacher/Teacher';
 import TeacherLogin from './components/teacher/TeacherLogin';
 import axios from 'axios';
 import Maintenance from './components/Maintenance';
@@ -17,9 +16,7 @@ import Tests from './components/teacher/Tests';
 import Groups from './components/teacher/Groups';
 import CreateClass from './components/teacher/create/CreateClass';
 import CreateGroup from './components/teacher/create/CreateGroup';
-import Upload from './components/teacher/Upload';
 import Classes from './components/teacher/Classes';
-import { Nav } from 'react-bootstrap';
 function App() {
   const [alert, setAlert] = useState('');
   const [token, setToken] = useState('');
@@ -82,18 +79,6 @@ function App() {
       <div className='App'>
         <div>
           <Switch>
-            {/* <Route
-              exact
-              path='/'
-              render={(props) => (
-                <Home
-                  createAlert={createAlert}
-                  first={first}
-                  setFirst={setFirst}
-                  setToken={setToken}
-                />
-              )}
-            /> */}
             <Route exact path='/'>
               <Alert alert={alert} alertType={alertType} />
               <Home
@@ -103,19 +88,6 @@ function App() {
                 setToken={setToken}
               />
             </Route>
-            {/* <Route
-              exact
-              path='/test'
-              render={(props) => (
-                <Test
-                  first={first}
-                  createAlert={createAlert}
-                  gradeTest={gradeTest}
-                  token={token}
-                  setTestName={setTestName}
-                />
-              )}
-            /> */}
             <Route exact path='/test'>
               <Alert alert={alert} alertType={alertType} />
               <Test
@@ -126,61 +98,51 @@ function App() {
                 setTestName={setTestName}
               />
             </Route>
-            {/* <Route
-              exact
-              path='/done'
-              render={(props) => <Done results={results} />}
-            /> */}
             <Route exact path='/done'>
               <Alert alert={alert} alertType={alertType} />
               <Done results={results} />
             </Route>
-            {/* <Route
-              exact
-              path='/maintenance'
-              render={(props) => <Maintenance />}
-            /> */}
             <Route exact path='/maintenance'>
               <Alert alert={alert} alertType={alertType} />
               <Maintenance />
             </Route>
-            {/* <Route
-              exact
-              path='/teacher/login'
-              render={(props) => (
-                <TeacherLogin setToken={setToken} createAlert={createAlert} />
-              )}
-            /> */}
             <Route exact path='/teacher/login'>
               <Alert alert={alert} alertType={alertType} />
               <TeacherLogin setToken={setToken} createAlert={createAlert} />
             </Route>
             <Route exact path='/teacher/students'>
               <Navbar />
+              <Alert alert={alert} alertType={alertType} />
               <Students />
             </Route>
             <Route path='/teacher/results'>
               <Navbar />
+              <Alert alert={alert} alertType={alertType} />
               <Results />
             </Route>
             <Route path='/teacher/tests'>
               <Navbar />
+              <Alert alert={alert} alertType={alertType} />
               <Tests />
             </Route>
             <Route exact path='/teacher/groups'>
               <Navbar />
-              <Groups />
+              <Alert alert={alert} alertType={alertType} />
+              <Groups createAlert={createAlert} />
             </Route>
             <Route exact path='/teacher/classes'>
               <Navbar />
-              <Classes />
+              <Alert alert={alert} alertType={alertType} />
+              <Classes createAlert={createAlert} />
             </Route>
             <Route path='/teacher/groups/create'>
               <Navbar />
-              <CreateGroup />
+              <Alert alert={alert} alertType={alertType} />
+              <CreateGroup createAlert={createAlert} />
             </Route>
             <Route path='/teacher/students/edit'>
               <Navbar />
+              <Alert alert={alert} alertType={alertType} />
               <EditStudent />
             </Route>
           </Switch>
