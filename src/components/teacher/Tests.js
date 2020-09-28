@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useState, useRef } from 'react';
 import axios from 'axios';
 import { Modal } from 'react-bootstrap';
 import { useHistory } from 'react-router-dom';
@@ -11,7 +11,7 @@ const Tests = () => {
   const [missing, setMissing] = useState([]);
   const [viewModal, setViewModal] = useState(false);
   const [viewInfo, setViewInfo] = useState([]);
-  let token;
+  const token = useRef(localStorage.getItem('token'))
   const onNameChange = (e) => {
     setNewTestName(e.target.value);
   };
@@ -19,22 +19,24 @@ const Tests = () => {
     setNewTestWords(e.target.value.replace(' ', '').toLowerCase());
   };
   const getTests = () => {
+    let userToken = token.current;
     axios
       .get(
         process.env.NODE_ENV === 'development'
           ? '/api/teacher/tests'
           : 'https://spelling-tests-backend.herokuapp.com/api/teacher/tests',
         {
-          headers: { token },
+          headers: { token: userToken },
         }
       )
       .then((res) => {
         setTests(res.data.tests);
         setMissing(res.data.missing);
       })
-      .catch(() => history.push('/teacher/login'));
+      .catch(() => {});
   };
   const onClick = () => {
+    let userToken = token.current;
     let words = newTestWords.split('\n');
     if (words.includes('')) {
       let index = words.indexOf('');
@@ -46,10 +48,9 @@ const Tests = () => {
           ? '/api/teacher/tests'
           : 'https://spelling-tests-backend.herokuapp.com/api/teacher/tests',
         {
-          token,
           name: newTestName,
           words,
-        }
+        }, {headers: {token: userToken}}
       )
       .then((res) => {
         console.log(res);
@@ -89,7 +90,7 @@ const Tests = () => {
     alert('This test is missing audio files.');
   };
   useEffect(() => {
-    token = localStorage.getItem('token')
+
     getTests()
   } , []);
   return (
