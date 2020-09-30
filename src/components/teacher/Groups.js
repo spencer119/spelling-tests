@@ -12,29 +12,6 @@ const Groups = ({ createAlert }) => {
   const [loading, setLoading] = useState(true);
   let token = localStorage.getItem('token');
   const getGroups = () => {
-    axios
-      .get(
-        process.env.NODE_ENV === 'development'
-          ? '/api/teacher'
-          : 'https://spelling-tests-backend.herokuapp.com/api/teacher',
-        {
-          headers: { token },
-        }
-      )
-      .then((res) => {
-        setGroups(res.data.groups);
-        setClasses(res.data.classes);
-        setStudents(res.data.students);
-      })
-      .catch(() => {
-        createAlert(
-          'There was an error fetching your student groups.',
-          'danger',
-          5000
-        );
-      });
-  };
-  useEffect(() => {
     setLoading(true);
     axios
       .get(
@@ -49,7 +26,8 @@ const Groups = ({ createAlert }) => {
         setGroups(res.data.groups);
         setClasses(res.data.classes);
         setStudents(res.data.students);
-        setLoading(false);
+        setTests(res.data.tests)
+        setLoading(false)
       })
       .catch(() => {
         createAlert(
@@ -58,18 +36,24 @@ const Groups = ({ createAlert }) => {
           5000
         );
       });
+  };
+  useEffect(() => {
+    setLoading(true);
+    getGroups()
   }, []);
   const onClick = (e) => {
+    console.log(e.target);
+    console.log(e.target.parentElement);
     axios
       .put(
         process.env.NODE_ENV === 'development'
           ? '/api/teacher/groups'
           : 'https://spelling-tests-backend.herokuapp.com/api/teacher/groups',
         {
-          token,
           group: e.target.parentElement.id,
           newTest: e.target.id,
-        }
+        }, 
+        {headers: {token: token.current}}
       )
       .then(() => {
         getGroups();
@@ -82,10 +66,9 @@ const Groups = ({ createAlert }) => {
           ? '/api/teacher/groups'
           : 'https://spelling-tests-backend.herokuapp.com/api/teacher/groups',
         {
-          token,
           group: e.target.parentElement.id,
           newTest: '',
-        }
+        }, {headers: {token: token.current}}
       )
       .then(() => {
         getGroups();
@@ -137,11 +120,11 @@ const Groups = ({ createAlert }) => {
                     <Dropdown.Menu id={group.group_id}>
                       {tests.map((test) => (
                         <Dropdown.Item
-                          key={test.name}
-                          id={test.name}
+                          key={test.test_name}
+                          id={test.test_id}
                           onClick={onClick}
                         >
-                          {test.name}
+                          {test.test_name}
                         </Dropdown.Item>
                       ))}
                       <Dropdown.Divider />

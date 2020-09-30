@@ -123,7 +123,7 @@ function App() {
             <Route path='/teacher/tests'>
               <Navbar />
               <Alert alert={alert} alertType={alertType} />
-              <Tests />
+              <Tests createAlert={createAlert} />
             </Route>
             <Route exact path='/teacher/groups'>
               <Navbar />
