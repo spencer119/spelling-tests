@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useState, useRef } from 'react';
 import axios from 'axios';
 import { Dropdown } from 'react-bootstrap';
 import { Link } from 'react-router-dom';
@@ -10,7 +10,12 @@ const Groups = ({ createAlert }) => {
   const [students, setStudents] = useState([]);
   const [tests, setTests] = useState([]);
   const [loading, setLoading] = useState(true);
-  let token = localStorage.getItem('token');
+  let token = useRef(localStorage.getItem('token'));
+  const getTestName = (test_id) => {
+    let testObj = tests.find((test) => test.test_id === test_id);
+    console.log(testObj);
+    return testObj.test_name;
+  };
   const getGroups = () => {
     setLoading(true);
     axios
@@ -19,15 +24,15 @@ const Groups = ({ createAlert }) => {
           ? '/api/teacher'
           : 'https://spelling-tests-backend.herokuapp.com/api/teacher',
         {
-          headers: { token },
+          headers: { token: token.current },
         }
       )
       .then((res) => {
         setGroups(res.data.groups);
         setClasses(res.data.classes);
         setStudents(res.data.students);
-        setTests(res.data.tests)
-        setLoading(false)
+        setTests(res.data.tests);
+        setLoading(false);
       })
       .catch(() => {
         createAlert(
@@ -39,21 +44,19 @@ const Groups = ({ createAlert }) => {
   };
   useEffect(() => {
     setLoading(true);
-    getGroups()
+    getGroups();
   }, []);
   const onClick = (e) => {
-    console.log(e.target);
-    console.log(e.target.parentElement);
     axios
       .put(
         process.env.NODE_ENV === 'development'
           ? '/api/teacher/groups'
           : 'https://spelling-tests-backend.herokuapp.com/api/teacher/groups',
         {
-          group: e.target.parentElement.id,
-          newTest: e.target.id,
-        }, 
-        {headers: {token: token.current}}
+          group_id: e.target.parentElement.id,
+          new_test: e.target.id,
+        },
+        { headers: { token: token.current } }
       )
       .then(() => {
         getGroups();
@@ -66,9 +69,10 @@ const Groups = ({ createAlert }) => {
           ? '/api/teacher/groups'
           : 'https://spelling-tests-backend.herokuapp.com/api/teacher/groups',
         {
-          group: e.target.parentElement.id,
-          newTest: '',
-        }, {headers: {token: token.current}}
+          group_id: e.target.parentElement.id,
+          new_test: '',
+        },
+        { headers: { token: token.current } }
       )
       .then(() => {
         getGroups();
@@ -115,7 +119,7 @@ const Groups = ({ createAlert }) => {
                     <Dropdown.Toggle variant='primary' id='dropdown-basic'>
                       {group.active_test === null
                         ? 'No test selected'
-                        : group.active_test}
+                        : getTestName(group.active_test)}
                     </Dropdown.Toggle>
                     <Dropdown.Menu id={group.group_id}>
                       {tests.map((test) => (
