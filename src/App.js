@@ -135,6 +135,11 @@ function App() {
               <Alert alert={alert} alertType={alertType} />
               <Classes createAlert={createAlert} />
             </Route>
+            <Route exact path='/teacher/classes/create'>
+              <Navbar />
+              <Alert alert={alert} alertType={alertType} />
+              <CreateClass createAlert={createAlert} />
+            </Route>
             <Route path='/teacher/groups/create'>
               <Navbar />
               <Alert alert={alert} alertType={alertType} />
