@@ -1,69 +1,64 @@
-import React, { useState, useEffect } from 'react';
-import { useHistory } from 'react-router-dom';
+import React, { useState, useEffect, useRef } from 'react';
+import { useHistory, useLocation } from 'react-router-dom';
 import Question from './Question';
 import axios from 'axios';
-const Test = ({ first, createAlert, gradeTest, token, setTestName }) => {
+const Test = () => {
   const [answers, setAnswers] = useState([]);
   const [words, setWords] = useState([]);
   const history = useHistory();
+  const token = useRef(localStorage.getItem('token'));
+  function useQuery() {
+    return new URLSearchParams(useLocation().search);
+  }
+  const query = useQuery();
+  const test_id = query.get('test_id');
   useEffect(() => {
     axios
       .get(
         process.env.NODE_ENV === 'development'
-          ? '/api/user/test'
-          : 'https://spelling-tests-backend.herokuapp.com/api/user/test',
+          ? `/api/user/test?test_id=${test_id}`
+          : `https://spelling-tests-backend.herokuapp.com/api/user/test?test_id=${test_id}`,
         {
-          headers: { token },
+          headers: { token: token.current },
         }
       )
-      .then((res) => {
-        setTestName(res.data.testName);
-        setWords(res.data.test.words);
-        res.data.test.words.map((word) => {
-          return setAnswers((answers) => [...answers, { word, ans: '' }]);
-        });
-      })
-      .catch((err) => {
-        if (err.response.data.maintenance) {
-          return history.push('/maintenance');
-        }
-        history.push('/');
-      });
+      .then((res) => {})
+      .catch((err) => {});
   }, []);
 
   const onClick = (e) => {
     e.preventDefault();
-    let allAnswered = true;
-    answers.map((ans) => {
-      if (ans.ans === '') {
-        allAnswered = false;
-        return createAlert(
-          'You must try to answer each question.',
-          'danger',
-          8000
-        );
-      } else return null;
-    });
-    if (allAnswered) {
-      gradeTest(answers)
-        .then(() => {
-          history.push('/done');
-        })
-        .catch((err) =>
-          createAlert(
-            'There was an error saving your test. Please try again.',
-            'danger',
-            5000
-          )
-        );
-    }
+    // let allAnswered = true;
+    // answers.map((ans) => {
+    //   if (ans.ans === '') {
+    //     allAnswered = false;
+    //     return createAlert(
+    //       'You must try to answer each question.',
+    //       'danger',
+    //       8000
+    //     );
+    //   } else return null;
+    // });
+    // if (allAnswered) {
+    //   gradeTest(answers)
+    //     .then(() => {
+    //       history.push('/done');
+    //     })
+    //     .catch((err) =>
+    //       createAlert(
+    //         'There was an error saving your test. Please try again.',
+    //         'danger',
+    //         5000
+    //       )
+    //     );
+    // }
   };
   return (
     <div className='container'>
       <strong>
         <h1 className='title'>BRMES Online Spelling Test</h1>
       </strong>
-      <h2>{first.charAt(0).toUpperCase() + first.slice(1)}</h2>
+      <h2></h2>
       <br />
       <h1>Instructions</h1>
       <h4>

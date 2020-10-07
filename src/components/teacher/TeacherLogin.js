@@ -2,7 +2,7 @@ import React, { useState } from 'react';
 import './Teacher.css';
 import axios from 'axios';
 import { useHistory, Link } from 'react-router-dom';
-const TeacherLogin = ({ createAlert, setToken }) => {
+const TeacherLogin = ({ createAlert }) => {
   const [password, setPassword] = useState('');
   const [username, setUsername] = useState('');
   const history = useHistory();
@@ -11,16 +11,16 @@ const TeacherLogin = ({ createAlert, setToken }) => {
     axios
       .post(
         process.env.NODE_ENV === 'development'
-          ? '/api/auth'
-          : 'https://spelling-tests-backend.herokuapp.com/api/auth',
+          ? '/api/auth/teacher'
+          : 'https://spelling-tests-backend.herokuapp.com/api/auth/teacher',
         {
           username,
           password,
         }
       )
       .then((res) => {
-        localStorage.setItem('token', res.data.token)
-        setToken(res.data.token);
+        localStorage.setItem('token', res.data.token);
+        localStorage.setItem('loggedIn', 'teacher');
         history.push('/teacher/results');
       })
       .catch((err) => {

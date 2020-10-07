@@ -17,11 +17,11 @@ import Groups from './components/teacher/Groups';
 import CreateClass from './components/teacher/create/CreateClass';
 import CreateGroup from './components/teacher/create/CreateGroup';
 import Classes from './components/teacher/Classes';
+import StudentHome from './components/StudentHome';
 function App() {
   const [alert, setAlert] = useState('');
   const [token, setToken] = useState('');
   const [alertType, setAlertType] = useState('');
-  const [first, setFirst] = useState('');
   const [results, setResults] = useState({});
   const [testName, setTestName] = useState('');
   const createAlert = (msg, type, time) => {
@@ -35,44 +35,44 @@ function App() {
       }, time);
   };
   const gradeTest = (answers) => {
-    return new Promise((resolve, reject) => {
-      let total = answers.length;
-      let correct = 0;
-      answers.map((q) => {
-        if (q.word.toLowerCase() === q.ans.toLowerCase()) {
-          return correct++;
-        } else return null;
-      });
-      setResults({
-        name: first.toLowerCase(),
-        test: testName,
-        score: ((correct / total) * 100).toFixed(3),
-        correct,
-        total,
-        data: answers,
-      });
-      axios
-        .post(
-          process.env.NODE_ENV === 'development'
-            ? '/api/results'
-            : 'https://spelling-tests-backend.herokuapp.com/api/results',
-          {
-            name: first.toLowerCase(),
-            testName,
-            score: ((correct / total) * 100).toFixed(3),
-            correct,
-            total,
-            data: answers,
-            token,
-          }
-        )
-        .then((res) => {
-          resolve(res);
-        })
-        .catch((err) => {
-          reject(err);
-        });
-    });
+    // return new Promise((resolve, reject) => {
+    //   let total = answers.length;
+    //   let correct = 0;
+    //   answers.map((q) => {
+    //     if (q.word.toLowerCase() === q.ans.toLowerCase()) {
+    //       return correct++;
+    //     } else return null;
+    //   });
+    //   setResults({
+    //     name: first.toLowerCase(),
+    //     test: testName,
+    //     score: ((correct / total) * 100).toFixed(3),
+    //     correct,
+    //     total,
+    //     data: answers,
+    //   });
+    //   axios
+    //     .post(
+    //       process.env.NODE_ENV === 'development'
+    //         ? '/api/results'
+    //         : 'https://spelling-tests-backend.herokuapp.com/api/results',
+    //       {
+    //         name: first.toLowerCase(),
+    //         testName,
+    //         score: ((correct / total) * 100).toFixed(3),
+    //         correct,
+    //         total,
+    //         data: answers,
+    //         token,
+    //       }
+    //     )
+    //     .then((res) => {
+    //       resolve(res);
+    //     })
+    //     .catch((err) => {
+    //       reject(err);
+    //     });
+    // });
   };
   return (
     <Router>
@@ -81,22 +81,15 @@ function App() {
           <Switch>
             <Route exact path='/'>
               <Alert alert={alert} alertType={alertType} />
-              <Home
-                createAlert={createAlert}
-                first={first}
-                setFirst={setFirst}
-                setToken={setToken}
-              />
+              <Home createAlert={createAlert} />
             </Route>
             <Route exact path='/test'>
               <Alert alert={alert} alertType={alertType} />
-              <Test
-                first={first}
-                createAlert={createAlert}
-                gradeTest={gradeTest}
-                token={token}
-                setTestName={setTestName}
-              />
+              <Test createAlert={createAlert} gradeTest={gradeTest} />
+            </Route>
+            <Route exact path='/student/home'>
+              <Alert alert={alert} alertType={alertType} />
+              <StudentHome createAlert={createAlert} />
             </Route>
             <Route exact path='/done'>
               <Alert alert={alert} alertType={alertType} />

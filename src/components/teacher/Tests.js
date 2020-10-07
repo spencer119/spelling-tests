@@ -2,19 +2,19 @@ import React, { useEffect, useState, useRef } from 'react';
 import axios from 'axios';
 import { Modal } from 'react-bootstrap';
 import { useHistory } from 'react-router-dom';
-import Spinner from '../Spinner'
-const Tests = ({createAlert}) => {
+import Spinner from '../Spinner';
+const Tests = ({ createAlert }) => {
   const history = useHistory();
   const [tests, setTests] = useState([]);
   const [showModal, setShowModal] = useState(false);
   const [newTestName, setNewTestName] = useState('');
   const [newTestWords, setNewTestWords] = useState('');
   const [missing, setMissing] = useState([]);
-  const [testLines, setTestLines] = useState([])
+  const [testLines, setTestLines] = useState([]);
   const [viewModal, setViewModal] = useState(false);
   const [viewInfo, setViewInfo] = useState([]);
-  const [loading, setLoading] = useState(true)
-  const token = useRef(localStorage.getItem('token'))
+  const [loading, setLoading] = useState(true);
+  const token = useRef(localStorage.getItem('token'));
   const onNameChange = (e) => {
     setNewTestName(e.target.value);
   };
@@ -22,7 +22,7 @@ const Tests = ({createAlert}) => {
     setNewTestWords(e.target.value.replace(' ', '').toLowerCase());
   };
   const getTests = () => {
-    setLoading(true)
+    setLoading(true);
     let userToken = token.current;
     axios
       .get(
@@ -34,9 +34,9 @@ const Tests = ({createAlert}) => {
         }
       )
       .then((res) => {
-        setTests(res.data.tests)
-        setTestLines(res.data.testlines)
-        setLoading(false)
+        setTests(res.data.tests);
+        setTestLines(res.data.testlines);
+        setLoading(false);
       })
       .catch(() => {});
   };
@@ -55,15 +55,15 @@ const Tests = ({createAlert}) => {
         {
           name: newTestName,
           words,
-        }, {headers: {token: userToken}}
+        },
+        { headers: { token: userToken } }
       )
       .then((res) => {
         setShowModal(false);
-        createAlert('Test created successfully.', 'success', 5000)
+        createAlert('Test created successfully.', 'success', 5000);
       });
   };
   const deleteTest = (e) => {
-    
     axios
       .delete(
         process.env.NODE_ENV === 'development'
@@ -94,11 +94,10 @@ const Tests = ({createAlert}) => {
     alert('This test is missing audio files.');
   };
   useEffect(() => {
-
-    getTests()
-  } , []);
+    getTests();
+  }, []);
   if (loading) {
-    return <Spinner />
+    return <Spinner />;
   } else {
     return (
       <div className='container'>
@@ -115,8 +114,8 @@ const Tests = ({createAlert}) => {
                 onChange={onNameChange}
               />
               <label>
-                Enter the words for the test in the box below. Seperate each word
-                by pressing enter and creating a new line.
+                Enter the words for the test in the box below. Seperate each
+                word by pressing enter and creating a new line.
               </label>
               <textarea
                 className='form-control'
@@ -138,7 +137,7 @@ const Tests = ({createAlert}) => {
             </button>
           </Modal.Footer>
         </Modal>
-  
+
         <Modal show={viewModal} onHide={() => setViewModal(false)}>
           <Modal.Header closeButton>
             <Modal.Title>View test</Modal.Title>
@@ -160,8 +159,9 @@ const Tests = ({createAlert}) => {
           </Modal.Footer>
         </Modal>
         <p>
-          To create a new test click the button below and follow the instructions.
-          Do not forget to upload the audio files via the Upload tab.
+          To create a new test click the button below and follow the
+          instructions. Do not forget to upload the audio files via the Upload
+          tab.
         </p>
         <button
           className='btn btn-primary'
@@ -203,7 +203,6 @@ const Tests = ({createAlert}) => {
       </div>
     );
   }
-  
 };
 
 export default Tests;

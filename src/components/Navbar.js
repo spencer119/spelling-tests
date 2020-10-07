@@ -57,7 +57,14 @@ const Navbar = () => {
           </li>
         </ul>
         <ul className='nav justify-content-end'>
-          <Link to='/' className='btn btn-danger'>
+          <Link
+            to='/'
+            className='btn btn-danger'
+            onClick={() => {
+              localStorage.removeItem('token');
+              localStorage.removeItem('loggedIn');
+            }}
+          >
             Sign Out
           </Link>
         </ul>

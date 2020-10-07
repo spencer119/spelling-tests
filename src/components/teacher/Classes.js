@@ -53,6 +53,9 @@ const Classes = ({ createAlert }) => {
         );
       });
   }, []);
+  const confirm = () => {
+    return new Promise((resolve, reject) => {});
+  };
   const onButton = (e) => {
     switch (e.target.id) {
       case 'delete':
@@ -83,10 +86,29 @@ const Classes = ({ createAlert }) => {
             <td scope='row'>{s.first_name}</td>
             <td scope='row'>{s.last_name}</td>
             <td scope='row'>{s.username}</td>
-            <td scope='row' style={{ color: 'red' }}>
-              <a style={{ cursor: 'pointer', color: 'red' }} onClick={onRemove}>
-                Remove
-              </a>
+            <td scope='row'>
+              <button className='btn btn-danger'>Delete</button>
+            </td>
+          </tr>
+        ))}
+      </Fragment>
+    );
+  };
+  const getClassGroups = () => {
+    let classStudents = [];
+    students.map((student) => {
+      if (student.class_id === selectedClass) {
+        classStudents.push(student);
+      }
+    });
+    return (
+      <Fragment>
+        {classStudents.map((s) => (
+          <tr key={s.student_id}>
+            <td scope='row'>{s.first_name}</td>
+            <td scope='row'>{s.last_name}</td>
+            <td scope='row'>
+              <button className='btn btn-danger'>Delete</button>
             </td>
           </tr>
         ))}
@@ -172,17 +194,39 @@ const Classes = ({ createAlert }) => {
         <div className='row'>
           <div className='col' style={{ marginTop: '20px' }}>
             {selectedClass === '' ? null : (
-              <table className='table'>
-                <thead className='thead-dark'>
-                  <tr>
-                    <th scope='col'>First</th>
-                    <th scope='col'>Last</th>
-                    <th scope='col'>Username</th>
-                    <th scope='col'>Actions</th>
-                  </tr>
-                </thead>
-                <tbody>{getClassDetails()}</tbody>
-              </table>
+              <Fragment>
+                <h4 className='text-center'>Class Info</h4>
+                <table className='table'>
+                  <thead className='thead-dark'>
+                    <tr>
+                      <th scope='col'>First</th>
+                      <th scope='col'>Last</th>
+                      <th scope='col'>Username</th>
+                      <th scope='col'>Actions</th>
+                    </tr>
+                  </thead>
+                  <tbody>{getClassDetails()}</tbody>
+                </table>
+              </Fragment>
+            )}
+          </div>
+        </div>
+        <div className='row'>
+          <div className='col' style={{ marginTop: '20px' }}>
+            {selectedClass === '' ? null : (
+              <Fragment>
+                <h4 className='text-center'>Class Groups</h4>
+                <table className='table'>
+                  <thead className='thead-dark'>
+                    <tr>
+                      <th scope='col'>Group Name</th>
+                      <th scope='col'>Active Test</th>
+                      <th scope='col'>Actions</th>
+                    </tr>
+                  </thead>
+                  <tbody>{getClassGroups()}</tbody>
+                </table>
+              </Fragment>
             )}
           </div>
         </div>
