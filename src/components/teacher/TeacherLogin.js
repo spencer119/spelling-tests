@@ -19,12 +19,18 @@ const TeacherLogin = ({ createAlert }) => {
         }
       )
       .then((res) => {
-        localStorage.setItem('token', res.data.token);
-        localStorage.setItem('loggedIn', 'teacher');
-        history.push('/teacher/results');
+        if (res.data.firstLogin === true) {
+          localStorage.setItem('token', res.data.token)
+          history.push('/teacher/login/firstlogin')
+        }
+        else {
+          localStorage.setItem('token', res.data.token);
+          localStorage.setItem('loggedIn', 'teacher');
+          history.push('/teacher/results');
+        }
+
       })
       .catch((err) => {
-        console.log(err.response);
         createAlert(err.response.data.msg, 'danger', 5000);
       });
   };

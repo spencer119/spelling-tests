@@ -18,6 +18,7 @@ import CreateClass from './components/teacher/create/CreateClass';
 import CreateGroup from './components/teacher/create/CreateGroup';
 import Classes from './components/teacher/Classes';
 import StudentHome from './components/StudentHome';
+import FirstLogin from './components/teacher/FirstLogin'
 function App() {
   const [alert, setAlert] = useState('');
   const [token, setToken] = useState('');
@@ -102,6 +103,10 @@ function App() {
             <Route exact path='/teacher/login'>
               <Alert alert={alert} alertType={alertType} />
               <TeacherLogin setToken={setToken} createAlert={createAlert} />
+            </Route>
+            <Route exact path='/teacher/login/firstlogin'>
+              <Alert alert={alert} alertType={alertType} />
+              <FirstLogin createAlert={createAlert} />
             </Route>
             <Route exact path='/teacher/students'>
               <Navbar />
