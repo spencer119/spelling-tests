@@ -7,11 +7,11 @@ import Test from './components/Test';
 import Done from './components/Done';
 import TeacherLogin from './components/teacher/TeacherLogin';
 import axios from 'axios';
+import EditStudent from './components/teacher/EditStudent'
 import Maintenance from './components/Maintenance';
 import Navbar from './components/Navbar';
 import Students from './components/teacher/Students';
 import Results from './components/teacher/Results';
-import EditStudent from './components/teacher/EditStudent';
 import Tests from './components/teacher/Tests';
 import Groups from './components/teacher/Groups';
 import CreateClass from './components/teacher/create/CreateClass';

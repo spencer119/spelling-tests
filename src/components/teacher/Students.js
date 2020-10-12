@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { Modal, Dropdown } from 'react-bootstrap';
 import axios from 'axios';
-import { Link } from 'react-router-dom';
+import { useHistory } from 'react-router-dom';
 import Spinner from '../Spinner';
 
 const Students = ({ createAlert }) => {
@@ -20,6 +20,7 @@ const Students = ({ createAlert }) => {
   const [sorted, setSorted] = useState([]);
   const [showModal, setShowModal] = useState(false);
   const [loading, setLoading] = useState(true);
+  const history = useHistory()
   let token = localStorage.getItem('token');
   const getData = () => {
     axios // get student data
@@ -279,7 +280,7 @@ const Students = ({ createAlert }) => {
                           Modify
                         </Dropdown.Toggle>
                         <Dropdown.Menu id={student.student_id}>
-                          <Dropdown.Item>Change Class</Dropdown.Item>
+                          <Dropdown.Item onClick={() => history.push(`/teacher/students/edit?student_id=${student.student_id}&class_id=${student.class_id}&group_id=${student.group_id}&student_name=${student.first_name}`)}>Change Class</Dropdown.Item>
                           <Dropdown.Item>Change Group</Dropdown.Item>
                           <Dropdown.Divider />
                           <Dropdown.Item style={{ color: 'red' }}>
