@@ -60,6 +60,7 @@ const Students = ({ createAlert }) => {
           setLastName('');
           setUsername('');
           setShowModal(false);
+          createAlert('Student created!', 'success', 5000);
         })
         .catch((err) => {
           console.log(err);
@@ -254,7 +255,7 @@ const Students = ({ createAlert }) => {
               <th scope='col'>Username</th>
               <th scope='col'>Class</th>
               <th scope='col'>Group</th>
-              <th scope='col'>Edit</th>
+              <th scope='col'>Modify</th>
             </tr>
           </thead>
           <tbody>
@@ -273,12 +274,19 @@ const Students = ({ createAlert }) => {
                     <td>{getClassName(student.class_id)}</td>
                     <td>{getGroupName(student.group_id)}</td>
                     <td>
-                      <Link
-                        to={`/teacher/students/edit?student_id=${student.student_id}`}
-                        className='btn btn-primary'
-                      >
-                        Edit
-                      </Link>
+                      <Dropdown>
+                        <Dropdown.Toggle variant='primary' id='dropdown-basic'>
+                          Modify
+                        </Dropdown.Toggle>
+                        <Dropdown.Menu id={student.student_id}>
+                          <Dropdown.Item>Change Class</Dropdown.Item>
+                          <Dropdown.Item>Change Group</Dropdown.Item>
+                          <Dropdown.Divider />
+                          <Dropdown.Item style={{ color: 'red' }}>
+                            Delete Student
+                          </Dropdown.Item>
+                        </Dropdown.Menu>
+                      </Dropdown>
                     </td>
                   </tr>
                 ))

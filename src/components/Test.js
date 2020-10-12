@@ -6,6 +6,7 @@ const Test = () => {
   const [answers, setAnswers] = useState([]);
   const [words, setWords] = useState([]);
   const history = useHistory();
+  const [testlines, setTestLines] = useState([]);
   const token = useRef(localStorage.getItem('token'));
   function useQuery() {
     return new URLSearchParams(useLocation().search);
@@ -16,13 +17,16 @@ const Test = () => {
     axios
       .get(
         process.env.NODE_ENV === 'development'
-          ? `/api/user/test?test_id=${test_id}`
-          : `https://spelling-tests-backend.herokuapp.com/api/user/test?test_id=${test_id}`,
+          ? `/api/student/test?test_id=${test_id}`
+          : `https://spelling-tests-backend.herokuapp.com/api/student/test?test_id=${test_id}`,
         {
           headers: { token: token.current },
         }
       )
-      .then((res) => {})
+      .then((res) => {
+        console.log(res.data);
+        setTestLines(res.data.testlines);
+      })
       .catch((err) => {});
   }, []);
 
@@ -67,14 +71,14 @@ const Test = () => {
         finished click the All Done button.
       </h4>
       <form>
-        {words.map((word) => (
+        {/* {words.map((word) => (
           <Question
             key={word}
             word={word}
             answers={answers}
             setAnswers={setAnswers}
           />
-        ))}
+        ))} */}
         <button
           className='btn btn-primary'
           style={{ width: '100%' }}

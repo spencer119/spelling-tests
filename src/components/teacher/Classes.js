@@ -1,5 +1,6 @@
 import React, { useState, useEffect, useRef, Fragment } from 'react';
 import { Link } from 'react-router-dom';
+import { Dropdown } from 'react-bootstrap';
 import axios from 'axios';
 import Spinner from '../Spinner';
 import '../../Misc.css';
@@ -10,11 +11,17 @@ const Classes = ({ createAlert }) => {
   const [loading, setLoading] = useState(true);
   const [classHover, setClassHover] = useState('');
   const [classes, setClasses] = useState([]);
+  const [groups, setGroups] = useState([]);
   const [selectedClass, setSelectedClass] = useState('');
-  const [action, setAction] = useState('');
+  const [tests, setTests] = useState([]);
   const [students, setStudents] = useState([]);
   const [studentCount, setStudentCount] = useState([]);
-  useEffect(() => {
+  const getTestName = (test_id) => {
+    let testObj = tests.find((test) => test.test_id === test_id);
+    console.log(testObj);
+    return testObj.test_name;
+  };
+  const loadPage = () => {
     setLoading(true);
     let userToken = token.current;
     axios
@@ -29,6 +36,7 @@ const Classes = ({ createAlert }) => {
       .then((res) => {
         let slist = [];
         res.data.classes.map((c) => {
+          // gets class count for badges
           let counter = 0;
           res.data.students.map((s) => {
             if (s.class_id === c.class_id) counter++;
@@ -42,6 +50,8 @@ const Classes = ({ createAlert }) => {
         });
         setStudentCount(slist);
         setClasses(res.data.classes);
+        setTests(res.data.tests);
+        setGroups(res.data.groups);
         setStudents(res.data.students);
         setLoading(false);
       })
@@ -52,6 +62,9 @@ const Classes = ({ createAlert }) => {
           5000
         );
       });
+  };
+  useEffect(() => {
+    loadPage();
   }, []);
   const confirm = () => {
     return new Promise((resolve, reject) => {});
@@ -67,11 +80,46 @@ const Classes = ({ createAlert }) => {
       case 'change':
         alert('change');
         break;
+      case 'group':
+        alert('group');
+        break;
       default:
         break;
     }
   };
   const onRemove = (e) => {};
+  const noTest = (e) => {
+    axios
+      .put(
+        process.env.NODE_ENV === 'development'
+          ? '/api/teacher/groups'
+          : 'https://spelling-tests-backend.herokuapp.com/api/teacher/groups',
+        {
+          group_id: e.target.parentElement.id,
+          new_test: '',
+        },
+        { headers: { token: token.current } }
+      )
+      .then(() => {
+        loadPage();
+      });
+  };
+  const onClick = (e) => {
+    axios
+      .put(
+        process.env.NODE_ENV === 'development'
+          ? '/api/teacher/groups'
+          : 'https://spelling-tests-backend.herokuapp.com/api/teacher/groups',
+        {
+          group_id: e.target.parentElement.id,
+          new_test: e.target.id,
+        },
+        { headers: { token: token.current } }
+      )
+      .then(() => {
+        loadPage();
+      });
+  };
   const getClassDetails = () => {
     let classStudents = [];
     students.map((student) => {
@@ -86,30 +134,51 @@ const Classes = ({ createAlert }) => {
             <td scope='row'>{s.first_name}</td>
             <td scope='row'>{s.last_name}</td>
             <td scope='row'>{s.username}</td>
-            <td scope='row'>
+            {/* <td scope='row'>
               <button className='btn btn-danger'>Delete</button>
-            </td>
+            </td> */}
           </tr>
         ))}
       </Fragment>
     );
   };
   const getClassGroups = () => {
-    let classStudents = [];
-    students.map((student) => {
+    let classGroups = [];
+    groups.map((student) => {
       if (student.class_id === selectedClass) {
-        classStudents.push(student);
+        classGroups.push(student);
       }
     });
     return (
       <Fragment>
-        {classStudents.map((s) => (
-          <tr key={s.student_id}>
-            <td scope='row'>{s.first_name}</td>
-            <td scope='row'>{s.last_name}</td>
+        {classGroups.map((group) => (
+          <tr key={group.group_id}>
+            <td scope='row'>{group.group_name}</td>
             <td scope='row'>
-              <button className='btn btn-danger'>Delete</button>
+              <Dropdown>
+                <Dropdown.Toggle variant='primary' id='dropdown-basic'>
+                  {group.active_test === null
+                    ? 'No test selected'
+                    : getTestName(group.active_test)}
+                </Dropdown.Toggle>
+                <Dropdown.Menu id={group.group_id}>
+                  {tests.map((test) => (
+                    <Dropdown.Item
+                      key={test.test_name}
+                      id={test.test_id}
+                      onClick={onClick}
+                    >
+                      {test.test_name}
+                    </Dropdown.Item>
+                  ))}
+                  <Dropdown.Divider />
+                  <Dropdown.Item onClick={noTest}>No test</Dropdown.Item>
+                </Dropdown.Menu>
+              </Dropdown>
             </td>
+            {/* <td scope='row'>
+              <button className='btn btn-danger'>Delete</button>
+            </td> */}
           </tr>
         ))}
       </Fragment>
@@ -162,7 +231,7 @@ const Classes = ({ createAlert }) => {
             >
               Create New Class
             </Link>
-            <button
+            {/* <button
               className='btn btn-danger'
               style={{ width: '100%', marginTop: '10px' }}
               id='delete'
@@ -170,8 +239,8 @@ const Classes = ({ createAlert }) => {
               disabled={selectedClass === '' ? true : false}
             >
               Delete Class
-            </button>
-            <button
+            </button> */}
+            {/* <button
               className='btn btn-warning'
               style={{ width: '100%', marginTop: '10px' }}
               id='change'
@@ -179,7 +248,7 @@ const Classes = ({ createAlert }) => {
               disabled={selectedClass === '' ? true : false}
             >
               Change Class Name
-            </button>
+            </button> */}
             <button
               className='btn btn-info'
               id='add'
@@ -189,20 +258,29 @@ const Classes = ({ createAlert }) => {
             >
               Add Students to Class
             </button>
+            {selectedClass === '' ? null : (
+              <Link
+                className='btn btn-info'
+                to={`/teacher/groups/create?class_id=${selectedClass}`}
+                style={{ width: '100%', marginTop: '10px' }}
+              >
+                Create Group
+              </Link>
+            )}
           </div>
         </div>
         <div className='row'>
           <div className='col' style={{ marginTop: '20px' }}>
             {selectedClass === '' ? null : (
               <Fragment>
-                <h4 className='text-center'>Class Info</h4>
+                <h4 className='text-center'>Students</h4>
                 <table className='table'>
                   <thead className='thead-dark'>
                     <tr>
                       <th scope='col'>First</th>
                       <th scope='col'>Last</th>
                       <th scope='col'>Username</th>
-                      <th scope='col'>Actions</th>
+                      {/* <th scope='col'>Actions</th> */}
                     </tr>
                   </thead>
                   <tbody>{getClassDetails()}</tbody>
@@ -221,7 +299,7 @@ const Classes = ({ createAlert }) => {
                     <tr>
                       <th scope='col'>Group Name</th>
                       <th scope='col'>Active Test</th>
-                      <th scope='col'>Actions</th>
+                      {/* <th scope='col'>Actions</th> */}
                     </tr>
                   </thead>
                   <tbody>{getClassGroups()}</tbody>
