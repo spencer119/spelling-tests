@@ -80,7 +80,9 @@ const Classes = ({ createAlert }) => {
     }
   };
   const getTestName = (test_id) => {
+    console.log(tests)
     let testObj = tests.find((test) => test.test_id === test_id);
+
     return testObj.test_name;
   };
   const getGroupName = (group_id) => {
@@ -154,7 +156,7 @@ const Classes = ({ createAlert }) => {
             <td scope='row'>
               <Dropdown>
                 <Dropdown.Toggle variant='primary' id='dropdown-basic'>
-                  {group.active_test === null
+                  {tests.length === 0 ? 'No test selected' : group.active_test === null
                     ? 'No test selected'
                     : getTestName(group.active_test)}
                 </Dropdown.Toggle>
