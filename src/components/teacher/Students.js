@@ -282,8 +282,7 @@ const Students = ({ createAlert }) => {
                           Modify
                         </Dropdown.Toggle>
                         <Dropdown.Menu id={student.student_id}>
-                          <Dropdown.Item onClick={() => history.push(`/teacher/students/edit?student_id=${student.student_id}&class_id=${student.class_id}&group_id=${student.group_id}&student_name=${student.first_name}`)}>Change Class</Dropdown.Item>
-                          <Dropdown.Item>Change Group</Dropdown.Item>
+                          <Dropdown.Item onClick={() => history.push(`/teacher/students/edit?student_id=${student.student_id}&class_id=${student.class_id}&group_id=${student.group_id}&student_name=${student.first_name}`)}>Edit Student</Dropdown.Item>
                           <Dropdown.Divider />
                           <Dropdown.Item style={{ color: 'red' }}>
                             Delete Student
