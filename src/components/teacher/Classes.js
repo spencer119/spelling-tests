@@ -16,11 +16,7 @@ const Classes = ({ createAlert }) => {
   const [tests, setTests] = useState([]);
   const [students, setStudents] = useState([]);
   const [studentCount, setStudentCount] = useState([]);
-  const getTestName = (test_id) => {
-    let testObj = tests.find((test) => test.test_id === test_id);
-    console.log(testObj);
-    return testObj.test_name;
-  };
+
   const loadPage = () => {
     setLoading(true);
     let userToken = token.current;
@@ -41,7 +37,6 @@ const Classes = ({ createAlert }) => {
           res.data.students.map((s) => {
             if (s.class_id === c.class_id) counter++;
           });
-          console.log(`${c.class_name}: ${counter}`);
           slist.push({
             class_id: c.class_id,
             class_name: c.class_name,
@@ -66,9 +61,6 @@ const Classes = ({ createAlert }) => {
   useEffect(() => {
     loadPage();
   }, []);
-  const confirm = () => {
-    return new Promise((resolve, reject) => {});
-  };
   const onButton = (e) => {
     switch (e.target.id) {
       case 'delete':
@@ -87,7 +79,14 @@ const Classes = ({ createAlert }) => {
         break;
     }
   };
-  const onRemove = (e) => {};
+  const getTestName = (test_id) => {
+    let testObj = tests.find((test) => test.test_id === test_id);
+    return testObj.test_name;
+  };
+  const getGroupName = (group_id) => {
+    let groupObj = groups.find((g) => g.group_id === group_id);
+    return groupObj.group_name;
+  };
   const noTest = (e) => {
     axios
       .put(
@@ -134,9 +133,7 @@ const Classes = ({ createAlert }) => {
             <td scope='row'>{s.first_name}</td>
             <td scope='row'>{s.last_name}</td>
             <td scope='row'>{s.username}</td>
-            {/* <td scope='row'>
-              <button className='btn btn-danger'>Delete</button>
-            </td> */}
+        <td scope='row'>{getGroupName(s.group_id)}</td>
           </tr>
         ))}
       </Fragment>
@@ -249,23 +246,26 @@ const Classes = ({ createAlert }) => {
             >
               Change Class Name
             </button> */}
-            <button
-              className='btn btn-info'
-              id='add'
-              onClick={onButton}
-              style={{ width: '100%', marginTop: '10px' }}
-              disabled={selectedClass === '' ? true : false}
-            >
-              Add Students to Class
-            </button>
+            
             {selectedClass === '' ? null : (
-              <Link
+              <Fragment>
+                <Link
                 className='btn btn-info'
                 to={`/teacher/groups/create?class_id=${selectedClass}`}
                 style={{ width: '100%', marginTop: '10px' }}
               >
                 Create Group
               </Link>
+                {/* <button
+              className='btn btn-info'
+              id='add'
+              onClick={onButton}
+              style={{ width: '100%', marginTop: '10px' }}
+            >
+              Add Students to Class
+            </button> */}
+              </Fragment>
+              
             )}
           </div>
         </div>
@@ -280,7 +280,7 @@ const Classes = ({ createAlert }) => {
                       <th scope='col'>First</th>
                       <th scope='col'>Last</th>
                       <th scope='col'>Username</th>
-                      {/* <th scope='col'>Actions</th> */}
+                      <th scope='col'>Group</th>
                     </tr>
                   </thead>
                   <tbody>{getClassDetails()}</tbody>

@@ -8,6 +8,7 @@ const StudentHome = () => {
   const [testId, setTestId] = useState('');
   const [loading, setLoading] = useState(true);
   const [firstName, setFirstName] = useState('');
+  const [attempts, setAttempts] = useState(0)
   const token = useRef(localStorage.getItem('token'));
   const onLogOut = () => {
     localStorage.removeItem('token');
@@ -28,14 +29,16 @@ const StudentHome = () => {
         setTestId(res.data.test_id);
         setFirstName(res.data.first_name);
         setLoading(false);
+        setAttempts(res.data.attempts)
       })
       .catch((err) => {
         setLoading(false);
-        console.log(err);
       });
   }, []);
+  if (loading) return <Spinner />
+  else
   return (
-    <div className='background-image'>
+    <div className=''>
       <div className='login-form' style={{}}>
         <form>
           <h2 className='text-center'>Hello {firstName}</h2>
@@ -43,9 +46,9 @@ const StudentHome = () => {
             <p className='text-center'>
               {testId === null
                 ? "You don't have a test to take right now!"
-                : 'You have a test to take!'}
+                : attempts === 0 ? 'You have a test to take!' : attempts === 1 ? 'You have already taken the test but you may retake it if you want.' : 'You have reached the maximum amount of attempts for this test.'}
             </p>
-            {testId === null ? null : (
+            {testId === null || attempts === 2 ? null : (
               <Link
                 type='submit'
                 className='btn btn-primary btn-block'

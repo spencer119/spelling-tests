@@ -113,6 +113,7 @@ const Students = ({ createAlert }) => {
             <Modal.Title>Add Student</Modal.Title>
           </Modal.Header>
           <Modal.Body>
+            <p>All fields must be filled in</p>
             {creationAlert ? (
               <div className='alert alert-danger'>
                 The first 3 fields must be filled in.
@@ -225,6 +226,7 @@ const Students = ({ createAlert }) => {
               onClick={() => {
                 addStudent();
               }}
+              disabled={selectedClass === 'Select Class' || selectedGroup === 'Select Group' || firstName === '' || lastName === '' || username === '' ? true : false}
             >
               Add Student
             </button>

@@ -6,7 +6,6 @@ import { BrowserRouter as Router, Switch, Route } from 'react-router-dom';
 import Test from './components/Test';
 import Done from './components/Done';
 import TeacherLogin from './components/teacher/TeacherLogin';
-import axios from 'axios';
 import EditStudent from './components/teacher/EditStudent'
 import Maintenance from './components/Maintenance';
 import Navbar from './components/Navbar';
@@ -146,7 +145,7 @@ function App() {
             <Route path='/teacher/students/edit'>
               <Navbar />
               <Alert alert={alert} alertType={alertType} />
-              <EditStudent />
+              <EditStudent createAlert={createAlert} />
             </Route>
           </Switch>
         </div>

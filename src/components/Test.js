@@ -1,12 +1,13 @@
 import React, { useState, useEffect, useRef } from 'react';
 import { useHistory, useLocation } from 'react-router-dom';
-import Question from './Question';
+import Spinner from './Spinner'
+import speaker from '../speaker.png'
 import axios from 'axios';
-const Test = () => {
-  const [answers, setAnswers] = useState([]);
-  const [words, setWords] = useState([]);
+const Test = ({createAlert}) => {
+  const [loading, setLoading] = useState(true)
+  const [testData, setTestData] = useState([]);
   const history = useHistory();
-  const [testlines, setTestLines] = useState([]);
+  const [testlines, setTestlines] = useState([]);
   const token = useRef(localStorage.getItem('token'));
   function useQuery() {
     return new URLSearchParams(useLocation().search);
@@ -14,6 +15,7 @@ const Test = () => {
   const query = useQuery();
   const test_id = query.get('test_id');
   useEffect(() => {
+    setLoading(true)
     axios
       .get(
         process.env.NODE_ENV === 'development'
@@ -24,39 +26,55 @@ const Test = () => {
         }
       )
       .then((res) => {
-        console.log(res.data);
-        setTestLines(res.data.testlines);
+        setTestlines(res.data.testlines);
+        let dataArr = [];
+        res.data.testlines.map(line => {
+          dataArr.push({word: line.word, ans: ''})
+        })
+        setTestData(dataArr)
+        setLoading(false)
       })
       .catch((err) => {});
   }, []);
 
+  const onPlay = (e) => {
+    let audio = new Audio(
+      e.target.id
+    );
+    audio.volume = 0.25;
+    audio.play();
+  };
+
+  const onChange = (e) => {
+    let newData = testData;
+    newData.map(d => {
+      if (d.word === e.target.id) d.ans = e.target.value
+    })
+    setTestData(newData)
+    
+  }
+
   const onClick = (e) => {
     e.preventDefault();
-    // let allAnswered = true;
-    // answers.map((ans) => {
-    //   if (ans.ans === '') {
-    //     allAnswered = false;
-    //     return createAlert(
-    //       'You must try to answer each question.',
-    //       'danger',
-    //       8000
-    //     );
-    //   } else return null;
-    // });
-    // if (allAnswered) {
-    //   gradeTest(answers)
-    //     .then(() => {
-    //       history.push('/done');
-    //     })
-    //     .catch((err) =>
-    //       createAlert(
-    //         'There was an error saving your test. Please try again.',
-    //         'danger',
-    //         5000
-    //       )
-    //     );
-    // }
+    axios
+      .post(
+        process.env.NODE_ENV === 'development'
+          ? '/api/student/test/submit'
+          : 'https://spelling-tests-backend.herokuapp.com/api/student/test/submit',
+        { testData, test_id },
+        { headers: { token: token.current } }
+      )
+      .then((res) => {
+        createAlert('Submitted', 'success', 5000);
+        history.push('/student/home')
+      })
+      .catch((err) => {
+        createAlert('Uh oh! There was an error submitting your test. Please try again.')
+      });
+
   };
+  if (loading) return <Spinner />
+  else
   return (
     <div className='container'>
       <strong>
@@ -71,18 +89,29 @@ const Test = () => {
         finished click the All Done button.
       </h4>
       <form>
-        {/* {words.map((word) => (
-          <Question
-            key={word}
-            word={word}
-            answers={answers}
-            setAnswers={setAnswers}
-          />
-        ))} */}
+        {testlines.map(line => (<div className='input-group'>
+      <img
+        src={speaker}
+        style={{ position: 'relative', bottom: '5px' }}
+        className='speaker'
+        id={line.audio_path}
+        onClick={onPlay}
+        alt='play'
+      />
+      <input
+        className='form-control'
+        autoComplete='off'
+        autoCorrect='off'
+        autoCapitalize='off'
+        spellCheck='false'
+        id={line.word}
+        onChange={onChange}
+      />
+    </div>))}
         <button
           className='btn btn-primary'
           style={{ width: '100%' }}
-          onClick={onClick}
+        onClick={onClick}
           type='submit'
         >
           All Done

@@ -32,15 +32,6 @@ const Navbar = () => {
             <Link
               className='nav-link'
               style={{ cursor: 'pointer' }}
-              to='/teacher/groups'
-            >
-              Groups
-            </Link>
-          </li>
-          <li className='nav-link'>
-            <Link
-              className='nav-link'
-              style={{ cursor: 'pointer' }}
               to='/teacher/classes'
             >
               Classes

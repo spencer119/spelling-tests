@@ -3,14 +3,16 @@ import axios from 'axios';
 import { Modal } from 'react-bootstrap';
 import { useHistory } from 'react-router-dom';
 import Spinner from '../Spinner';
+import speaker from '../../speaker.png'
 const Tests = ({ createAlert }) => {
   const history = useHistory();
   const [tests, setTests] = useState([]);
+  const [files, setFiles] = useState([])
   const [showModal, setShowModal] = useState(false);
   const [newTestName, setNewTestName] = useState('');
   const [newTestWords, setNewTestWords] = useState('');
   const [missing, setMissing] = useState([]);
-  const [testLines, setTestLines] = useState([]);
+  const [testlines, setTestlines] = useState([]);
   const [viewModal, setViewModal] = useState(false);
   const [viewInfo, setViewInfo] = useState([]);
   const [loading, setLoading] = useState(true);
@@ -35,31 +37,34 @@ const Tests = ({ createAlert }) => {
       )
       .then((res) => {
         setTests(res.data.tests);
-        setTestLines(res.data.testlines);
+        setTestlines(res.data.testlines);
         setLoading(false);
       })
       .catch(() => {});
   };
   const onClick = () => {
-    let userToken = token.current;
     let words = newTestWords.split('\n');
     if (words.includes('')) {
       let index = words.indexOf('');
       words.splice(index, 1);
     }
+    let data = new FormData();
+    for (var x = 0; x < files.length; x++) {
+      data.append('file', files[x]);
+    }
+    data.append('name', newTestName);
+    data.append('words', words)
     axios
       .post(
         process.env.NODE_ENV === 'development'
           ? '/api/teacher/tests'
           : 'https://spelling-tests-backend.herokuapp.com/api/teacher/tests',
-        {
-          name: newTestName,
-          words,
-        },
-        { headers: { token: userToken } }
+        data,
+        { headers: { token: token.current } }
       )
       .then((res) => {
         setShowModal(false);
+        getTests()
         createAlert('Test created successfully.', 'success', 5000);
       });
   };
@@ -71,7 +76,7 @@ const Tests = ({ createAlert }) => {
           : 'https://spelling-tests-backend.herokuapp.com/api/teacher/tests',
         {
           headers: {
-            token,
+            token: token.current,
           },
           data: {
             test: e.target.parentElement.parentElement.id,
@@ -79,20 +84,35 @@ const Tests = ({ createAlert }) => {
         }
       )
       .then(() => {
+        createAlert('Test deleted successfully!', 'success', 5000)
         getTests();
+      }).catch(() => {
+        createAlert('An error has occured.', 'danger', 5000)
       });
   };
   const viewTest = (e) => {
-    tests.map((test) => {
-      if (test.name === e.target.parentElement.parentElement.id) {
-        return setViewInfo(test.words);
-      } else return null;
-    });
-    setViewModal(true);
+    console.log(e.target.parentElement.parentElement.id)
+    let viewArr = [];
+    testlines.map(line => {
+      if (line.test_id === e.target.parentElement.parentElement.id) viewArr.push(line)
+    })
+    setViewModal(true)
+    return setViewInfo(viewArr)
   };
-  const mouseOver = (e) => {
-    alert('This test is missing audio files.');
-  };
+  // const viewTest = (e) => {
+  //   console.log(e.target.parentElement.parentElement.id)
+  //   tests.map((test) => {
+  //     if (test.test_id === e.target.parentElement.parentElement.id) {
+  //       return setViewInfo(test.words);
+  //     } else return null;
+  //   });
+  //   setViewModal(true);
+  // };
+  const onPlay = (e) => {
+    let audio = new Audio(e.target.id);
+    audio.volume = 0.25;
+    audio.play();
+  }
   useEffect(() => {
     getTests();
   }, []);
@@ -115,14 +135,19 @@ const Tests = ({ createAlert }) => {
               />
               <label>
                 Enter the words for the test in the box below. Seperate each
-                word by pressing enter and creating a new line.
+                word by pressing enter and creating a new line. Make sure you don't create an extra enter at the end. <br />Next, upload a audio file for each word at the bottom.
               </label>
+    
               <textarea
                 className='form-control'
                 rows='15'
                 value={newTestWords}
                 onChange={onWordChange}
               ></textarea>
+              <p>{newTestWords === '' ? '0' : newTestWords.split('\n').length} words</p>
+              <br />
+              <p><strong>**All audio files must be in .mp3 format and the name of the file must be the same as the word**</strong> <br />For example, the word cat would be uploaded with "cat.mp3"</p>
+              <input type='file' onChange={(e) => setFiles(e.target.files)} multiple />
             </form>
           </Modal.Body>
           <Modal.Footer>
@@ -132,7 +157,7 @@ const Tests = ({ createAlert }) => {
             >
               Cancel
             </button>
-            <button className='btn btn-success' onClick={onClick}>
+            <button className='btn btn-success' onClick={onClick} disabled={files.length === newTestWords.split('\n').length ? false : true}>
               Create test
             </button>
           </Modal.Footer>
@@ -144,7 +169,14 @@ const Tests = ({ createAlert }) => {
           </Modal.Header>
           <Modal.Body>
             {viewInfo.map((word) => (
-              <p>{word}</p>
+              <p>{word.word}       <img
+              src={speaker}
+              id={word.audio_path}
+              style={{ position: 'relative' }}
+              className='speaker'
+              onClick={onPlay}
+              alt='play'
+            /></p>
             ))}
           </Modal.Body>
           <Modal.Footer>
@@ -160,8 +192,7 @@ const Tests = ({ createAlert }) => {
         </Modal>
         <p>
           To create a new test click the button below and follow the
-          instructions. Do not forget to upload the audio files via the Upload
-          tab.
+          instructions.
         </p>
         <button
           className='btn btn-primary'
@@ -170,8 +201,6 @@ const Tests = ({ createAlert }) => {
         >
           Create new test
         </button>
-        <i className='fas fa-info-circle' style={{ color: 'red' }}></i>
-        <span> = The test is missing audio files</span>
         <table className='table'>
           <thead>
             <tr>
@@ -183,11 +212,11 @@ const Tests = ({ createAlert }) => {
           <tbody>
             {tests.map((test) => {
               return (
-                <tr key={test.test_name} id={test.name}>
+                <tr key={test.test_name} id={test.test_id}>
                   <td>{test.test_name}</td>
                   <td>
                     <button className='btn btn-info' onClick={viewTest}>
-                      Edit
+                      View
                     </button>
                   </td>
                   <td>

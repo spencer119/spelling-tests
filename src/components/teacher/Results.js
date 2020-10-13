@@ -1,36 +1,61 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import { Dropdown, Modal } from 'react-bootstrap';
 import axios from 'axios';
+import Spinner from '../Spinner'
 
-const Results = () => {
+const Results = ({createAlert}) => {
   const [searchType, setSearchType] = useState('student');
   const [search, setSearch] = useState('');
   const [results, setResults] = useState([]);
+  const [groups, setGroups] = useState([])
+  const [classes, setClasses] = useState([])
+  const [students, setStudents] = useState([])
+  const [loading, setLoading] = useState(true)
+  const [tests, setTests] = useState([])
   const [sorted, setSorted] = useState([]);
   const [showModal, setShowModal] = useState(false);
   const [modalInfo, setModalInfo] = useState([]);
-  let token;
+  const token = useRef(localStorage.getItem('token'))
+  const getClassName = (class_id) => {
+    let classObj = classes.find((c) => c.class_id === class_id);
+    return classObj.class_name;
+  }
+  const getTestName = (test_id) => {
+    let testObj = tests.find((test) => test.test_id === test_id);
+    return testObj.test_name;
+  };
+  const getGroupName = (group_id) => {
+    let groupObj = groups.find((g) => g.group_id === group_id);
+    return groupObj.group_name;
+  };
+  const getStudentName = (student_id) => {
+    let studentObj = students.find((s) => s.student_id === student_id);
+    return studentObj.first_name;
+  };
   useEffect(() => {
-    token = localStorage.getItem('token')
-    console.log(localStorage.getItem('token'))
     axios
       .get(
         process.env.NODE_ENV === 'development'
-          ? '/api/teacher/results'
-          : 'https://spelling-tests-backend.herokuapp.com/api/teacher/results',
-        { headers: { token } }
+          ? '/api/teacher'
+          : 'https://spelling-tests-backend.herokuapp.com/api/teacher',
+        {
+          headers: { token: token.current },
+        }
       )
       .then((res) => {
-        setResults(
-          res.data.results
-            .sort((a, b) => {
-              return b.time - a.time;
-            })
-            .reverse()
-        );
+        setClasses(res.data.classes);
+        setResults(res.data.results)
+        setTests(res.data.tests);
+        setGroups(res.data.groups);
+        setStudents(res.data.students);
+        setLoading(false);
       })
-      .catch((err) => {
-        console.log(err.response);
+      .catch(() => {
+        createAlert(
+          'There was an error fetching your student groups.',
+          'danger',
+          5000
+        );
       });
   });
   const onModal = (e) => {
@@ -86,6 +111,8 @@ const Results = () => {
     setSearchType(e.target.id);
     filterResults(search, e.target.id);
   };
+  if (loading) return <Spinner />
+  else
   return (
     <div className='container'>
       <Modal show={showModal} onHide={() => setShowModal(false)}>
@@ -124,7 +151,7 @@ const Results = () => {
           </button>
         </Modal.Footer>
       </Modal>
-      <div className='input-group mb-3'>
+      {/* <div className='input-group mb-3'>
         <div className='input-group-prepend'>
           <Dropdown>
             <Dropdown.Toggle variant='secondary' id='dropdown-basic'>
@@ -149,11 +176,10 @@ const Results = () => {
           value={search}
           onChange={onChange}
         />
-      </div>
+      </div> */}
       <table className='table'>
         <thead>
           <tr>
-            <th scope='col'>Date (MST)</th>
             <th scope='col'>Name</th>
             <th scope='col'>Test</th>
             <th scope='col'>Group</th>
@@ -164,44 +190,24 @@ const Results = () => {
         <tbody>
           {search === ''
             ? results.map((result) => (
-                <tr key={result._id} id={result._id}>
+                <tr key={result.result_id} id={result.result_id}>
                   <td>
-                    {new Date(result.time).toLocaleString('en-US', {
-                      hour: '2-digit',
-                      minute: '2-digit',
-                      timezone: 'MST',
-                      day: 'numeric',
-                      month: 'numeric',
-                      year: 'numeric',
-                    })}
+                    {getStudentName(result.student_id)}
+                  </td>
+                  <td>{getTestName(result.test_id)}</td>
+                  <td>{getGroupName(result.group_id)}</td>
+                  <td>
+            {result.correct}/{result.total} | {result.score * 100}%
                   </td>
                   <td>
-                    {result.name.charAt(0).toUpperCase() + result.name.slice(1)}
-                  </td>
-                  <td>{result.test}</td>
-                  <td>{result.group}</td>
-                  <td>
-                    {result.score}% ({result.correct} / {result.total})
-                  </td>
-                  <td>
-                    <button className='btn btn-primary' onClick={onModal}>
+                    <button className='btn btn-primary' onClick={onModal} disabled>
                       See More
                     </button>
                   </td>
                 </tr>
               ))
             : sorted.map((result) => (
-                <tr key={result._id} id={result._id}>
-                  <td>
-                    {new Date(result.time).toLocaleString('en-US', {
-                      hour: '2-digit',
-                      minute: '2-digit',
-                      timezone: 'MST',
-                      day: 'numeric',
-                      month: 'numeric',
-                      year: 'numeric',
-                    })}
-                  </td>
+                <tr key={result.result_id} id={result.result_id}>
                   <td>
                     {result.name.charAt(0).toUpperCase() + result.name.slice(1)}
                   </td>

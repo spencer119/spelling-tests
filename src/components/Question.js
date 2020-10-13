@@ -1,15 +1,10 @@
 import React, { useState } from 'react';
 import speaker from '../speaker.png';
-const Question = ({ word, answers, setAnswers }) => {
+const Question = ({ word, line, answers, setAnswers }) => {
   const [value, setValue] = useState('');
   const onClick = () => {
     let audio = new Audio(
-      process.env.NODE_ENV === 'development'
-        ? `/audio/${word.replace("'", '')}.m4a`
-        : `https://spelling-tests-backend.herokuapp.com/audio/${word.replace(
-            "'",
-            ''
-          )}.m4a`
+      line.audio_path
     );
     audio.volume = 0.25;
     audio.play();
