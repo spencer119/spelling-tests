@@ -201,18 +201,22 @@ const Students = ({ createAlert }) => {
                     None
                   </Dropdown.Item>
                 ) : null}
-                {groups.map((g) => (
-                  <Dropdown.Item
-                    id={g.group_id}
-                    gname={g.group_name}
-                    onClick={(e) => {
-                      setGroupId(e.target.id);
-                      setSelectedGroup(e.target.getAttribute('gname'));
-                    }}
-                  >
-                    {g.group_name}
-                  </Dropdown.Item>
-                ))}
+                {groups.map((g) => {
+                  if(g.class_id === classId) {
+                    return (
+                      <Dropdown.Item
+                        id={g.group_id}
+                        gname={g.group_name}
+                        onClick={(e) => {
+                          setGroupId(e.target.id);
+                          setSelectedGroup(e.target.getAttribute('gname'));
+                        }}
+                      >
+                        {g.group_name}
+                      </Dropdown.Item>
+                    )
+                  }
+                   else return null})}
               </Dropdown.Menu>
             </Dropdown>
           </Modal.Body>
