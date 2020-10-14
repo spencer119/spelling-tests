@@ -56,6 +56,8 @@ const Students = ({ createAlert }) => {
         .then((res) => {
           getData();
           setClassId('');
+          setSelectedClass('Select Class');
+          setSelectedGroup('Select Group')
           setGroupId('');
           setFirstName('');
           setLastName('');
