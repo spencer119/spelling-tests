@@ -57,14 +57,34 @@ const Results = ({createAlert}) => {
           5000
         );
       });
-  });
+  }, []);
   const onModal = (e) => {
-    setShowModal(true);
-    results.map((result) => {
-      if (result._id === e.target.parentElement.parentElement.id) {
-        return setModalInfo(result.data);
-      } else return null;
-    });
+    console.log(e.target.parentElement.parentElement);
+    axios
+      .get(
+        process.env.NODE_ENV === 'development'
+          ? '/api/teacher/result'
+          : 'https://spelling-tests-backend.herokuapp.com/api/teacher/result',
+        {
+          headers: { token: token.current, result_id: e.target.parentElement.parentElement },
+        }
+      )
+      .then((res) => {
+        console.log(res.data)
+      })
+      .catch(() => {
+        createAlert(
+          'There was an error fetching your student groups.',
+          'danger',
+          5000
+        );
+      });
+    // setShowModal(true);
+    // results.map((result) => {
+    //   if (result._id === e.target.parentElement.parentElement.id) {
+    //     return setModalInfo(result.data);
+    //   } else return null;
+    // });
   };
   const filterResults = (newSearch, newSearchType) => {
     if (newSearch === undefined || newSearchType === undefined) {
@@ -200,7 +220,7 @@ const Results = ({createAlert}) => {
             {result.correct}/{result.total} | {result.score * 100}%
                   </td>
                   <td>
-                    <button className='btn btn-primary' onClick={onModal} disabled>
+                    <button className='btn btn-primary' onClick={onModal}>
                       See More
                     </button>
                   </td>

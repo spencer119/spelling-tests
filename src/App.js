@@ -22,8 +22,6 @@ function App() {
   const [alert, setAlert] = useState('');
   const [token, setToken] = useState('');
   const [alertType, setAlertType] = useState('');
-  const [results, setResults] = useState({});
-  const [testName, setTestName] = useState('');
   const createAlert = (msg, type, time) => {
     // Creates an alert with a msg, type (see Alert.js for types), and time (in milliseconds) setting a time of 0 makes a permanant alert
     setAlert(msg);
@@ -33,46 +31,6 @@ function App() {
         setAlert('');
         setAlertType('');
       }, time);
-  };
-  const gradeTest = (answers) => {
-    // return new Promise((resolve, reject) => {
-    //   let total = answers.length;
-    //   let correct = 0;
-    //   answers.map((q) => {
-    //     if (q.word.toLowerCase() === q.ans.toLowerCase()) {
-    //       return correct++;
-    //     } else return null;
-    //   });
-    //   setResults({
-    //     name: first.toLowerCase(),
-    //     test: testName,
-    //     score: ((correct / total) * 100).toFixed(3),
-    //     correct,
-    //     total,
-    //     data: answers,
-    //   });
-    //   axios
-    //     .post(
-    //       process.env.NODE_ENV === 'development'
-    //         ? '/api/results'
-    //         : 'https://spelling-tests-backend.herokuapp.com/api/results',
-    //       {
-    //         name: first.toLowerCase(),
-    //         testName,
-    //         score: ((correct / total) * 100).toFixed(3),
-    //         correct,
-    //         total,
-    //         data: answers,
-    //         token,
-    //       }
-    //     )
-    //     .then((res) => {
-    //       resolve(res);
-    //     })
-    //     .catch((err) => {
-    //       reject(err);
-    //     });
-    // });
   };
   return (
     <Router>
@@ -93,7 +51,6 @@ function App() {
             </Route>
             <Route exact path='/done'>
               <Alert alert={alert} alertType={alertType} />
-              <Done results={results} />
             </Route>
             <Route exact path='/maintenance'>
               <Alert alert={alert} alertType={alertType} />
@@ -110,12 +67,12 @@ function App() {
             <Route exact path='/teacher/students'>
               <Navbar />
               <Alert alert={alert} alertType={alertType} />
-              <Students />
+              <Students createAlert={createAlert} />
             </Route>
             <Route path='/teacher/results'>
               <Navbar />
               <Alert alert={alert} alertType={alertType} />
-              <Results />
+              <Results createAlert={createAlert} />
             </Route>
             <Route path='/teacher/tests'>
               <Navbar />

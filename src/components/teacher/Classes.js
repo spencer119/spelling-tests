@@ -82,7 +82,7 @@ const Classes = ({ createAlert }) => {
   const getTestName = (test_id) => {
     console.log(tests)
     let testObj = tests.find((test) => test.test_id === test_id);
-
+    if (testObj === undefined) return null
     return testObj.test_name;
   };
   const getGroupName = (group_id) => {
