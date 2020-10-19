@@ -1,5 +1,6 @@
 import React, { useState, useEffect, useRef } from 'react';
-import { Dropdown, Modal } from 'react-bootstrap';
+import { Dropdown } from 'react-bootstrap';
+import {Link} from 'react-router-dom'
 import axios from 'axios';
 import Spinner from '../Spinner'
 
@@ -58,34 +59,7 @@ const Results = ({createAlert}) => {
         );
       });
   }, []);
-  const onModal = (e) => {
-    console.log(e.target.parentElement.parentElement);
-    axios
-      .get(
-        process.env.NODE_ENV === 'development'
-          ? '/api/teacher/result'
-          : 'https://spelling-tests-backend.herokuapp.com/api/teacher/result',
-        {
-          headers: { token: token.current, result_id: e.target.parentElement.parentElement },
-        }
-      )
-      .then((res) => {
-        console.log(res.data)
-      })
-      .catch(() => {
-        createAlert(
-          'There was an error fetching your student groups.',
-          'danger',
-          5000
-        );
-      });
-    // setShowModal(true);
-    // results.map((result) => {
-    //   if (result._id === e.target.parentElement.parentElement.id) {
-    //     return setModalInfo(result.data);
-    //   } else return null;
-    // });
-  };
+  
   const filterResults = (newSearch, newSearchType) => {
     if (newSearch === undefined || newSearchType === undefined) {
       newSearch = search;
@@ -135,42 +109,6 @@ const Results = ({createAlert}) => {
   else
   return (
     <div className='container'>
-      <Modal show={showModal} onHide={() => setShowModal(false)}>
-        <Modal.Header closeButton>
-          <Modal.Title>Student Results</Modal.Title>
-        </Modal.Header>
-        <Modal.Body>
-          <ol>
-            {modalInfo.map((q) => {
-              if (q.word.toLowerCase() === q.ans.toLowerCase()) {
-                return (
-                  <li key={q.word} style={{ color: 'green' }}>
-                    Word: {q.word}
-                    <br />
-                    Answer: {q.ans}
-                  </li>
-                );
-              } else {
-                return (
-                  <li key={q.word} style={{ color: 'red' }}>
-                    Word: {q.word}
-                    <br />
-                    Answer: {q.ans}
-                  </li>
-                );
-              }
-            })}
-          </ol>
-        </Modal.Body>
-        <Modal.Footer>
-          <button
-            className='btn btn-secondary'
-            onClick={() => setShowModal(false)}
-          >
-            Close
-          </button>
-        </Modal.Footer>
-      </Modal>
       {/* <div className='input-group mb-3'>
         <div className='input-group-prepend'>
           <Dropdown>
@@ -220,9 +158,9 @@ const Results = ({createAlert}) => {
             {result.correct}/{result.total} | {result.score * 100}%
                   </td>
                   <td>
-                    <button className='btn btn-primary' onClick={onModal}>
+                    <Link to={`/teacher/result?result_id=${result.result_id}`} className='btn btn-primary'>
                       See More
-                    </button>
+                    </Link>
                   </td>
                 </tr>
               ))
@@ -237,9 +175,9 @@ const Results = ({createAlert}) => {
                     {result.score}% ({result.correct} / {result.total})
                   </td>
                   <td>
-                    <button className='btn btn-primary' onClick={onModal}>
+                    <Link to={`/teacher/result?result_id=${result.result_id}`} className='btn btn-primary'>
                       See More
-                    </button>
+                    </Link>
                   </td>
                 </tr>
               ))}

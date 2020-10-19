@@ -29,8 +29,7 @@ const FirstLogin = ({createAlert}) => {
 
       })
       .catch((err) => {
-        history.push('/teacher/login');
-        createAlert('An error has occured, please try again.', 'danger', 5000)
+        createAlert(err.response.data.msg, 'danger', 5000)
       });
       }
     }

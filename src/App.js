@@ -16,6 +16,7 @@ import Groups from './components/teacher/Groups';
 import CreateClass from './components/teacher/create/CreateClass';
 import CreateGroup from './components/teacher/create/CreateGroup';
 import Classes from './components/teacher/Classes';
+import Result from './components/teacher/Result'
 import StudentHome from './components/StudentHome';
 import FirstLogin from './components/teacher/FirstLogin';
 function App() {
@@ -73,6 +74,11 @@ function App() {
               <Navbar />
               <Alert alert={alert} alertType={alertType} />
               <Results createAlert={createAlert} />
+            </Route>
+            <Route path='/teacher/result'>
+              <Navbar />
+              <Alert alert={alert} alertType={alertType} />
+              <Result createAlert={createAlert} />
             </Route>
             <Route path='/teacher/tests'>
               <Navbar />
