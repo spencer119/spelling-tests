@@ -54,7 +54,7 @@ const Result = ({createAlert}) => {
   <div className="card-body">
     <h5 className="card-title">{student.first_name} {student.last_name}</h5>
     <p>Username: {student.username}</p>
-    <p className="card-text">Test: {testName}<br />Score: 10/10</p>
+    <p className="card-text">Test: {testName}<br />Attempt {result.attempt}<br />Score: {result.correct}/{result.total} <br /> {((result.correct / result.total) * 100).toFixed(2)}%</p>
     <Link to='/teacher/results' className="btn btn-primary">Go back</Link>
   </div>
   <div className="card-footer text-muted">
@@ -73,16 +73,6 @@ const Result = ({createAlert}) => {
     {resultdata.map(ans => (<tr style={{color: `${ans.correct ? 'green' : 'red'}`}}><th scope="row">{ans.line_number}</th>
     <td>{ans.word}</td>
     <td>{ans.answer}</td></tr>))}
-    <tr style={{color: 'red'}}>
-      <th scope="row">1</th>
-      <td>Mark</td>
-      <td>Otto</td>
-    </tr>
-    <tr>
-      <th scope="row">2</th>
-      <td>Jacob</td>
-      <td>Thornton</td>
-    </tr>
   </tbody>
 </table>
         </div>

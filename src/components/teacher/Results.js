@@ -31,7 +31,7 @@ const Results = ({createAlert}) => {
   };
   const getStudentName = (student_id) => {
     let studentObj = students.find((s) => s.student_id === student_id);
-    return studentObj.first_name;
+    return (studentObj.first_name + ' ' + studentObj.last_name);
   };
   useEffect(() => {
     axios
@@ -141,6 +141,7 @@ const Results = ({createAlert}) => {
             <th scope='col'>Name</th>
             <th scope='col'>Test</th>
             <th scope='col'>Group</th>
+            <th scope='col'>Attempt</th>
             <th scope='col'>Score</th>
             <th scope='col'>See More</th>
           </tr>
@@ -154,6 +155,7 @@ const Results = ({createAlert}) => {
                   </td>
                   <td>{getTestName(result.test_id)}</td>
                   <td>{getGroupName(result.group_id)}</td>
+                  <td>{result.attempt}</td>
                   <td>
             {result.correct}/{result.total} | {result.score * 100}%
                   </td>
@@ -171,6 +173,7 @@ const Results = ({createAlert}) => {
                   </td>
                   <td>{result.test}</td>
                   <td>{result.group}</td>
+                  <td>{result.attempt}</td>
                   <td>
                     {result.score}% ({result.correct} / {result.total})
                   </td>
