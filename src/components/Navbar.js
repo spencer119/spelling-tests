@@ -70,7 +70,7 @@ const Navbar = () => {
             <Link
               className='nav-link'
               style={{ cursor: 'pointer' }}
-              to='/admin/teacher/add'
+              to='/admin/teacher/create'
             >
               Add Teacher
             </Link>
