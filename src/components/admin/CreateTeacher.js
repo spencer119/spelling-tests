@@ -1,24 +1,33 @@
 import React, {useState, useRef} from 'react'
 import axios from 'axios'
-const CreateTeacher = () => {
+const CreateTeacher = ({createAlert}) => {
     const [isAdmin, setIsAdmin] = useState(false)
     const [useDefaultPassword, setUseDefaultPassword] = useState(true)
     const [firstName, setFirstName] = useState('')
     const [lastName, setLastName] = useState('')
     const [username, setUsername] = useState('')
     const [email, setEmail] = useState('')
+    const [password, setPassword] = useState('')
     const token = useRef(localStorage.getItem('token'))
     const onClick = e => {
+        e.preventDefault()
         axios
         .post(
           process.env.NODE_ENV === 'development'
             ? '/api/admin/teacher/create'
             : 'https://spelling-tests-backend.herokuapp.com/api/admin/teacher/create',
-          { isAdmin, useDefaultPassword },
+          { firstName, lastName, username, email, isAdmin, useDefaultPassword, password },
           { headers: { token: token.current } }
         )
         .then((res) => {
-          
+            createAlert('Teacher created successfully!', 'success', 5000)
+            setIsAdmin(false);
+            setUseDefaultPassword(true);
+            setFirstName('');
+            setLastName('');
+            setUsername('');
+            setEmail('');
+            setPassword('');
         })
         .catch((err) => {
           
@@ -37,10 +46,10 @@ const CreateTeacher = () => {
                 </div>
                 <div className="form-row" style={{marginTop: '10px'}}>
                     <div className="col">
-                        <input type="text" placeholder='Username' className="form-control"/>
+                        <input type="text" placeholder='Username' value={username} onChange={(e) => setUsername(e.target.value)} className="form-control"/>
                     </div>
                     <div className="col">
-                        <input type="text" placeholder='Email' className="form-control"/>
+                        <input type="text" placeholder='Email' value={email} onChange={(e) => setEmail(e.target.value)} className="form-control"/>
                     </div>
                 </div>
                 <div className="form-row" style={{marginTop: '10px'}}>
@@ -55,7 +64,7 @@ const CreateTeacher = () => {
                     </div>
                     </div>
                     <div className="col">
-                        {useDefaultPassword ? null : (<input type="text" placeholder='Password' className="form-control"/>)}
+                        {useDefaultPassword ? null : (<input type="text" value={password} onChange={(e) => setPassword(e.target.value)} placeholder='Password' className="form-control"/>)}
                         
                     </div>
                 </div>

@@ -16,7 +16,9 @@ const Tests = ({ createAlert }) => {
   const [viewModal, setViewModal] = useState(false);
   const [viewInfo, setViewInfo] = useState([]);
   const [loading, setLoading] = useState(true);
+  const [filetype, setFiletype] = useState('m4a')
   const token = useRef(localStorage.getItem('token'));
+  const [disable, setDisable] = useState(false)
   const onNameChange = (e) => {
     setNewTestName(e.target.value);
   };
@@ -43,6 +45,7 @@ const Tests = ({ createAlert }) => {
       .catch(() => {});
   };
   const onClick = () => {
+    setDisable(true)
     let words = newTestWords.split('\n');
     if (words.includes('')) {
       let index = words.indexOf('');
@@ -53,6 +56,7 @@ const Tests = ({ createAlert }) => {
       data.append('file', files[x]);
     }
     data.append('name', newTestName);
+    data.append('filetype', filetype)
     data.append('words', words)
     axios
       .post(
@@ -66,6 +70,9 @@ const Tests = ({ createAlert }) => {
         setShowModal(false);
         getTests()
         createAlert('Test created successfully.', 'success', 5000);
+        setDisable(false)
+      }).catch(err => {
+        setDisable(false)
       });
   };
   const deleteTest = (e) => {
@@ -146,18 +153,23 @@ const Tests = ({ createAlert }) => {
               ></textarea>
               <p>{newTestWords === '' ? '0' : newTestWords.split('\n').length} words</p>
               <br />
-              <p><strong>**All audio files must be in .mp3 format and the name of the file must be the same as the word**</strong> <br />For example, the word cat would be uploaded with "cat.mp3"</p>
+              <p><strong>**All audio files must be in an .mp3 or .m4a format, select your format below, and the name of the file must be the same as the word**</strong> <br />For example, the word cat would be uploaded with "cat.mp3"</p>
               <input type='file' onChange={(e) => setFiles(e.target.files)} multiple />
+              <ul className="list-group list-group-horizontal" style={{marginTop: '10px'}}>
+  <li className={filetype === 'mp3' ? 'list-group-item active' : 'list-group-item'} onClick={() => setFiletype('mp3')} style={{cursor: 'pointer'}}>.mp3</li>
+  <li className={filetype === 'm4a' ? 'list-group-item active' : 'list-group-item'} onClick={() => setFiletype('m4a')} style={{cursor: 'pointer'}}>.m4a</li>
+</ul>
             </form>
           </Modal.Body>
           <Modal.Footer>
             <button
               className='btn btn-danger'
               onClick={() => setShowModal(false)}
+              disabled={disable ? true : false}
             >
               Cancel
             </button>
-            <button className='btn btn-success' onClick={onClick} disabled={files.length === newTestWords.split('\n').length ? false : true}>
+            <button className='btn btn-success' onClick={onClick} disabled={files.length !== newTestWords.split('\n').length || disable ? true : false}>
               Create test
             </button>
           </Modal.Footer>

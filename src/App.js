@@ -113,7 +113,7 @@ function App() {
             <Route path='/admin/teacher/create'>
               <Navbar />
               <Alert alert={alert} alertType={alertType} />
-              <CreateTeacher />
+              <CreateTeacher createAlert={createAlert} />
             </Route>
 
           </Switch>

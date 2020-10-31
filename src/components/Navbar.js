@@ -16,6 +16,7 @@ const Navbar = () => {
       }
     )
     .then((res) => {
+      console.log(res.data)
       setIsAdmin(res.data)
     })
     .catch(() => {
@@ -66,7 +67,7 @@ const Navbar = () => {
               Students
             </Link>
           </li>
-          <li className='nav-link'>
+          {isAdmin ? (<li className='nav-link'>
             <Link
               className='nav-link'
               style={{ cursor: 'pointer' }}
@@ -74,7 +75,8 @@ const Navbar = () => {
             >
               Add Teacher
             </Link>
-          </li>
+          </li>) : null }
+          
         </ul>
         <ul className='nav justify-content-end'>
           <Link

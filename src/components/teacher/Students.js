@@ -66,7 +66,7 @@ const Students = ({ createAlert }) => {
           createAlert('Student created!', 'success', 5000);
         })
         .catch((err) => {
-          console.log(err);
+          alert('This username already exists. Please choose another one.')
         });
     }
   };
