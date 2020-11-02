@@ -71,9 +71,9 @@ const Navbar = () => {
             <Link
               className='nav-link'
               style={{ cursor: 'pointer' }}
-              to='/admin/teacher/create'
+              to='/admin/teachers'
             >
-              Add Teacher
+              Manage Teachers
             </Link>
           </li>) : null }
           

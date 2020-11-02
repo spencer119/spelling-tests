@@ -4,7 +4,7 @@ import Home from './components/Home';
 import Alert from './components/Alert';
 import { BrowserRouter as Router, Switch, Route } from 'react-router-dom';
 import Test from './components/Test';
-import CreateTeacher from './components/admin/CreateTeacher'
+import Teachers from './components/admin/Teachers'
 import TeacherLogin from './components/teacher/TeacherLogin';
 import EditStudent from './components/teacher/EditStudent'
 import Maintenance from './components/Maintenance';
@@ -110,10 +110,10 @@ function App() {
               <Alert alert={alert} alertType={alertType} />
               <EditStudent createAlert={createAlert} />
             </Route>
-            <Route path='/admin/teacher/create'>
+            <Route path='/admin/teachers'>
               <Navbar />
               <Alert alert={alert} alertType={alertType} />
-              <CreateTeacher createAlert={createAlert} />
+              <Teachers createAlert={createAlert} />
             </Route>
 
           </Switch>
