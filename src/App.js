@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
 import './App.css';
+import TeacherHome from './components/teacher/TeacherHome'
 import Home from './components/Home';
 import Alert from './components/Alert';
 import { BrowserRouter as Router, Switch, Route } from 'react-router-dom';
@@ -69,6 +70,11 @@ function App() {
               <Navbar />
               <Alert alert={alert} alertType={alertType} />
               <Students createAlert={createAlert} />
+            </Route>
+            <Route exact path='/teacher'>
+              <Navbar />
+              <Alert alert={alert} alertType={alertType} />
+              <TeacherHome createAlert={createAlert} />
             </Route>
             <Route path='/teacher/results'>
               <Navbar />
