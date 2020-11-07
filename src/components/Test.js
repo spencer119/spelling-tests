@@ -7,6 +7,7 @@ const Test = ({createAlert}) => {
   const [loading, setLoading] = useState(true)
   const [testData, setTestData] = useState([]);
   const history = useHistory();
+  const [canPlay, setCanPlay] = useState(true)
   const [testlines, setTestlines] = useState([]);
   const token = useRef(localStorage.getItem('token'));
   function useQuery() {
@@ -38,11 +39,16 @@ const Test = ({createAlert}) => {
   }, []);
 
   const onPlay = (e) => {
-    let audio = new Audio(
-      e.target.id
-    );
-    audio.volume = 0.25;
-    audio.play();
+    if (canPlay) {
+      setCanPlay(false)
+      let audio = new Audio(
+        e.target.id
+      );
+      audio.volume = 0.25;
+      audio.play();
+      setTimeout(() => setCanPlay(true), 5000)
+    } else return
+    
   };
 
   const onChange = (e) => {
