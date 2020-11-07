@@ -8,7 +8,7 @@ const Home = ({ createAlert }) => {
   const [username, setUsername] = useState('');
   const [loading, setLoading] = useState(false);
   const onChange = (e) => {
-    setUsername(e.target.value.replace(' ', '').toLowerCase());
+    setUsername(e.target.value);
   };
   useEffect(() => {
     if (localStorage.getItem('loggedIn') === null) return;
