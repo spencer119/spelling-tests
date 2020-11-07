@@ -73,6 +73,7 @@ const Tests = ({ createAlert }) => {
         setDisable(false)
       }).catch(err => {
         setDisable(false)
+        alert(err.response.data.msg)
       });
   };
   const deleteTest = (e) => {
@@ -106,15 +107,6 @@ const Tests = ({ createAlert }) => {
     setViewModal(true)
     return setViewInfo(viewArr)
   };
-  // const viewTest = (e) => {
-  //   console.log(e.target.parentElement.parentElement.id)
-  //   tests.map((test) => {
-  //     if (test.test_id === e.target.parentElement.parentElement.id) {
-  //       return setViewInfo(test.words);
-  //     } else return null;
-  //   });
-  //   setViewModal(true);
-  // };
   const onPlay = (e) => {
     let audio = new Audio(e.target.id);
     audio.volume = 0.25;
