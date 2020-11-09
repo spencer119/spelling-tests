@@ -69,7 +69,7 @@ const Results = ({createAlert}) => {
       case 'student':
         let newArr = [];
         results.map((result) => {
-          if (result.name.toLowerCase().includes(newSearch.toLowerCase())) {
+          if (getStudentName(result.student_id).toLowerCase().includes(newSearch.toLowerCase())) {
             return newArr.push(result);
           } else return null;
         });
@@ -78,7 +78,7 @@ const Results = ({createAlert}) => {
       case 'test':
         let newTestArr = [];
         results.map((result) => {
-          if (result.test.toLowerCase().includes(newSearch.toLowerCase())) {
+          if (getTestName(result.test_id).toLowerCase().includes(newSearch.toLowerCase())) {
             return newTestArr.push(result);
           } else return null;
         });
@@ -87,7 +87,7 @@ const Results = ({createAlert}) => {
       case 'group':
         let newGroupArr = [];
         results.map((result) => {
-          if (result.group.toLowerCase().includes(newSearch.toLowerCase())) {
+          if (getGroupName(result.group_id).toLowerCase().includes(newSearch.toLowerCase())) {
             return newGroupArr.push(result);
           } else return null;
         });
@@ -109,7 +109,7 @@ const Results = ({createAlert}) => {
   else
   return (
     <div className='container'>
-      {/* <div className='input-group mb-3'>
+      <div className='input-group mb-3'>
         <div className='input-group-prepend'>
           <Dropdown>
             <Dropdown.Toggle variant='secondary' id='dropdown-basic'>
@@ -134,7 +134,7 @@ const Results = ({createAlert}) => {
           value={search}
           onChange={onChange}
         />
-      </div> */}
+      </div>
       <table className='table'>
         <thead>
           <tr>
@@ -167,22 +167,22 @@ const Results = ({createAlert}) => {
                 </tr>
               ))
             : sorted.map((result) => (
-                <tr key={result.result_id} id={result.result_id}>
-                  <td>
-                    {result.name.charAt(0).toUpperCase() + result.name.slice(1)}
-                  </td>
-                  <td>{result.test}</td>
-                  <td>{result.group}</td>
-                  <td>{result.attempt}</td>
-                  <td>
-                    {result.score}% ({result.correct} / {result.total})
-                  </td>
-                  <td>
-                    <Link to={`/teacher/result?result_id=${result.result_id}`} className='btn btn-primary'>
-                      See More
-                    </Link>
-                  </td>
-                </tr>
+              <tr key={result.result_id} id={result.result_id}>
+              <td>
+                {getStudentName(result.student_id)}
+              </td>
+              <td>{getTestName(result.test_id)}</td>
+              <td>{getGroupName(result.group_id)}</td>
+              <td>{result.attempt}</td>
+              <td>
+        {result.correct}/{result.total} | {result.score * 100}%
+              </td>
+              <td>
+                <Link to={`/teacher/result?result_id=${result.result_id}`} className='btn btn-primary'>
+                  See More
+                </Link>
+              </td>
+            </tr>
               ))}
         </tbody>
       </table>

@@ -11,7 +11,7 @@ const Tests = ({ createAlert }) => {
   const [showModal, setShowModal] = useState(false);
   const [newTestName, setNewTestName] = useState('');
   const [newTestWords, setNewTestWords] = useState('');
-  const [missing, setMissing] = useState([]);
+  const [attempts, setAttempts] = useState(1)
   const [testlines, setTestlines] = useState([]);
   const [viewModal, setViewModal] = useState(false);
   const [viewInfo, setViewInfo] = useState([]);
@@ -38,7 +38,9 @@ const Tests = ({ createAlert }) => {
         }
       )
       .then((res) => {
-        setTests(res.data.tests);
+        let notArchived = [];
+        res.data.tests.map(t => t.archived ? null : notArchived.push(t))
+        setTests(notArchived);
         setTestlines(res.data.testlines);
         setLoading(false);
       })
@@ -58,6 +60,7 @@ const Tests = ({ createAlert }) => {
     data.append('name', newTestName);
     data.append('filetype', filetype)
     data.append('words', words)
+    data.append('attempts', attempts)
     axios
       .post(
         process.env.NODE_ENV === 'development'
@@ -144,6 +147,9 @@ const Tests = ({ createAlert }) => {
                 onChange={onWordChange}
               ></textarea>
               <p>{newTestWords === '' ? '0' : newTestWords.split('\n').length} words</p>
+              <br />
+    <label for="formControlRange">{attempts} Attempt{attempts > 1 ? 's' : null}</label>
+    <input type="range" min='1' value={attempts} max='10' onChange={(e) => setAttempts(e.target.value)} className="form-control-range" id="formControlRange"></input>
               <br />
               <p><strong>**All audio files must be in an .mp3 or .m4a format, select your format below, and the name of the file must be the same as the word**</strong> <br />For example, the word cat would be uploaded with "cat.mp3"</p>
               <input type='file' onChange={(e) => setFiles(e.target.files)} multiple />
