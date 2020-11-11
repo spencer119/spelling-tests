@@ -11,8 +11,8 @@ const Teachers = ({createAlert}) => {
     const [password, setPassword] = useState('')
     const [teachers, setTeachers] = useState([])
     const token = useRef(localStorage.getItem('token'))
-    useEffect(() => {
-        axios
+    const getTeachers = () => {
+      axios
       .get(
         process.env.NODE_ENV === 'development'
           ? '/api/admin/teachers'
@@ -25,6 +25,9 @@ const Teachers = ({createAlert}) => {
       .catch((err) => {
           console.log(err)
       });
+    }
+    useEffect(() => {
+        getTeachers();
     }, [])
     const onClick = e => {
         e.preventDefault()
@@ -47,6 +50,7 @@ const Teachers = ({createAlert}) => {
             setUsername('');
             setEmail('');
             setPassword('');
+            getTeachers()
         })
         .catch((err) => {
           
@@ -62,6 +66,7 @@ const Teachers = ({createAlert}) => {
           { headers: { token: token.current } }
         )
         .then((res) => {
+          getTeachers()
           createAlert(`Password reset.`, 'success', 5000)
         })
         .catch((err) => {
@@ -114,6 +119,7 @@ const Teachers = ({createAlert}) => {
               <th scope='col'>First Name</th>
               <th scope='col'>Last Name</th>
               <th scope='col'>Username</th>
+              <th scope='col'>Password</th>
               <th scope='col'>Email</th>
               <th scope='col'>Account Type</th>
               <th scope='col'>Modify</th>
@@ -130,6 +136,7 @@ const Teachers = ({createAlert}) => {
                         teacher.last_name.slice(1)}
                     </td>
                     <td>{teacher.username}</td>
+                    <td>{teacher.password === '$2a$10$21tQ9rVJpGkax0vIN8gUs.Q0TtxGasogeeH5eRlKgnaq2nEwhX2PS' ? 'Default' : 'Custom'}</td>
                     <td>{teacher.email}</td>
                     <td>{teacher.is_admin ? 'Admin' : 'Teacher'}</td>
                     <td>
