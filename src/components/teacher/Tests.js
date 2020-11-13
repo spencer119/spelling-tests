@@ -139,13 +139,13 @@ const Tests = ({ createAlert }) => {
                 Enter the words for the test in the box below. Seperate each
                 word by pressing enter and creating a new line. Make sure you don't create an extra enter at the end. <br />Next, upload a audio file for each word at the bottom.
               </label>
-    
-              <textarea
+              <input onChange={onWordChange} className='form-control' />
+              {/* <textarea
                 className='form-control'
                 rows='15'
                 value={newTestWords}
                 onChange={onWordChange}
-              ></textarea>
+              ></textarea> */}
               <p>{newTestWords === '' ? '0' : newTestWords.split('\n').length} words</p>
               <br />
     <label for="formControlRange">{attempts} Attempt{attempts > 1 ? 's' : null}</label>
