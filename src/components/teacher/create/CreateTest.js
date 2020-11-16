@@ -1,64 +1,80 @@
 import React, {useState} from 'react'
-
+import {ReactMic} from '@cleandersonlobo/react-mic'
 const CreateTest = () => {
     const [words, setWords] = useState([])
     const [wordCount, setWordCount] = useState(0)
-    let wordArr = [];
+    const [testName, setTestName] = useState('')
+    const [record, setRecord] = useState(false)
+    const onWordCountChange = (e) => {
+
+        let newWordArr = [];
+        for (let i = 0; i < e.target.value; i++) {
+            newWordArr.push({number: i + 1, word: '', audio: ''})
+        }
+        setWordCount(e.target.value)
+        setWords(newWordArr)
+        
+    }
+    const onWordChange = e => {
+        console.log(e.target.id)
+        let found = words.find(word => word.number === parseInt(e.target.id));
+        found.word = e.target.value;
+        let newArr = words.filter(word => word.number !== parseInt(e.target.id))
+        newArr.push(found)
+        newArr.sort((a,b) => {return a.number - b.number})
+        setWords(newArr)
+        
+    }
+    const onStop = (blob) => {
+        console.log('recordedBlob is: ', blob);
+    }
+    const onData = (blob) => {
+        console.log('chunk of real-time data is: ', blob);
+    }
     return (
         <div className='container'>
             
             <div className="row">
                 <div className="col-10">
                 <label>Enter a test name</label>
-                <input type="text" placeholder='Test name' className="form-control"/>
+                <input type="text" value={testName} onChange={(e) => setTestName(e.target.value)} placeholder='Test name' className="form-control"/>
                 </div>
                 <div className="col-2">
                 <label>How many words?</label>
-                <input value={wordCount} onChange={(e) => setWordCount(e.target.value)} type="number" placeholder='# of words' className="form-control"/>
+                <input value={wordCount} onChange={onWordCountChange} type="number" placeholder='# of words' className="form-control"/>
                 </div>
             
             </div>
             <div className="row word-margin">
                 
             </div>
-            <div className="row word-margin">
+            {words.map((word) => (<div key={word.number} className="row word-margin">
                 <div className="col-10">
-                    <input type="text" className="form-control"/>
+                    <input type="text" id={word.number} className="form-control" onChange={onWordChange}/>
                 </div>
                 <div className="col-2">
                     <div className="row">
                     <div className="col">
-                <i class="fas fa-microphone fa-2x" style={{cursor: 'pointer'}}></i>
+                    <ReactMic
+                        record={record}
+                        className="fas fa-microphone fa-2x"
+                        onStop={onStop}
+                        onData={onData}
+                        mimeType="audio/mp3"/>
+                {/* <i className="fas fa-microphone fa-2x" style={{cursor: 'pointer'}}></i> */}
                         </div>
                         <div className="col">
-                        <i class="fas fa-volume-up fa-2x" style={{cursor: 'pointer'}}></i>
+                        <i className="fas fa-volume-up fa-2x" style={{cursor: 'pointer'}}></i>
                     </div>
                     <div className="col">
-                    <i class="fas fa-check-square fa-2x" style={{color: 'green'}}></i>
+                        {word.audio === '' ? <i className="fas fa-times-circle fa-2x" style={{color: 'red'}} /> : <i className="fas fa-check-square fa-2x" style={{color: 'green'}} />}
+                    
+                    
                     </div>
                     </div>
                 </div>
-            </div>
-            {() => {
-                for (let i=0; i < wordCount; i++) return (<div className="row word-margin">
-                <div className="col-10">
-                    <input type="text" className="form-control"/>
-                </div>
-                <div className="col-2">
-                    <div className="row">
-                    <div className="col">
-                <i class="fas fa-microphone fa-2x" style={{cursor: 'pointer'}}></i>
-                        </div>
-                        <div className="col">
-                        <i class="fas fa-volume-up fa-2x" style={{cursor: 'pointer'}}></i>
-                    </div>
-                    <div className="col">
-                    <i class="fas fa-check-square fa-2x" style={{color: 'green'}}></i>
-                    </div>
-                    </div>
-                </div>
-            </div>)
-            }}
+            </div>))}
+            
             
 
 
