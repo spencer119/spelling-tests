@@ -57,7 +57,7 @@ const StudentHome = () => {
                 Start Test
               </Link>
             )}
-            {/* <Link style={{width: '100%', marginTop: '5px'}} className='btn btn-success' to={`/student/scores`}>See Scores</Link> */}
+            <Link style={{width: '100%', marginTop: '5px'}} className='btn btn-success' to={`/student/scores`}>See Scores</Link>
             <Link
               className='btn btn-danger btn-block'
               to='/'

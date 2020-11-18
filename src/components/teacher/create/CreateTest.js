@@ -57,6 +57,7 @@ const CreateTest = () => {
                     <div className="col">
                     <ReactMic
                         record={record}
+                        style={{display: 'none'}}
                         className="fas fa-microphone fa-2x"
                         onStop={onStop}
                         onData={onData}

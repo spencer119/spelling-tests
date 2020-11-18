@@ -20,6 +20,7 @@ import Classes from './components/teacher/Classes';
 import Result from './components/teacher/Result'
 import StudentHome from './components/StudentHome';
 import CreateTest from './components/teacher/create/CreateTest'
+import StudentScores from './components/StudentScores'
 import FirstLogin from './components/teacher/FirstLogin';
 function App() {
   const [alert, setAlert] = useState('');
@@ -51,6 +52,10 @@ function App() {
             <Route exact path='/student/home'>
               <Alert alert={alert} alertType={alertType} />
               <StudentHome createAlert={createAlert} />
+            </Route>
+            <Route exact path='/student/scores'>
+              <Alert alert={alert} alertType={alertType} />
+              <StudentScores createAlert={createAlert} />
             </Route>
             <Route exact path='/done'>
               <Alert alert={alert} alertType={alertType} />

@@ -216,7 +216,7 @@ const Tests = ({ createAlert }) => {
             <tr>
               <th scope='col'>Test</th>
               <th scope='col'>Edit</th>
-              <th scope='col'>Delete</th>
+              <th scope='col'>Archive</th>
             </tr>
           </thead>
           <tbody>
@@ -231,7 +231,7 @@ const Tests = ({ createAlert }) => {
                   </td>
                   <td>
                     <button className='btn btn-danger' onClick={deleteTest}>
-                      Delete
+                      Archive
                     </button>
                   </td>
                 </tr>
