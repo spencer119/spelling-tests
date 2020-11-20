@@ -275,6 +275,25 @@ const Classes = ({ createAlert }) => {
           <div className='col' style={{ marginTop: '20px' }}>
             {selectedClass === '' ? null : (
               <Fragment>
+                <h4 className='text-center'>Class Groups</h4>
+                <table className='table'>
+                  <thead className='thead-dark'>
+                    <tr>
+                      <th scope='col'>Group Name</th>
+                      <th scope='col'>Active Test</th>
+                      {/* <th scope='col'>Actions</th> */}
+                    </tr>
+                  </thead>
+                  <tbody>{getClassGroups()}</tbody>
+                </table>
+              </Fragment>
+            )}
+          </div>
+        </div>
+        <div className='row'>
+          <div className='col' style={{ marginTop: '20px' }}>
+            {selectedClass === '' ? null : (
+              <Fragment>
                 <h4 className='text-center'>Students</h4>
                 <table className='table'>
                   <thead className='thead-dark'>
@@ -291,25 +310,7 @@ const Classes = ({ createAlert }) => {
             )}
           </div>
         </div>
-        <div className='row'>
-          <div className='col' style={{ marginTop: '20px' }}>
-            {selectedClass === '' ? null : (
-              <Fragment>
-                <h4 className='text-center'>Class Groups</h4>
-                <table className='table'>
-                  <thead className='thead-dark'>
-                    <tr>
-                      <th scope='col'>Group Name</th>
-                      <th scope='col'>Active Test</th>
-                      {/* <th scope='col'>Actions</th> */}
-                    </tr>
-                  </thead>
-                  <tbody>{getClassGroups()}</tbody>
-                </table>
-              </Fragment>
-            )}
-          </div>
-        </div>
+        
       </div>
     );
   }

@@ -1,5 +1,6 @@
 import React, {useState} from 'react'
 import {ReactMic} from '@cleandersonlobo/react-mic'
+import AudioRecorder from 'react-audio-recorder'
 const CreateTest = () => {
     const [words, setWords] = useState([])
     const [wordCount, setWordCount] = useState(0)
@@ -55,13 +56,7 @@ const CreateTest = () => {
                 <div className="col-2">
                     <div className="row">
                     <div className="col">
-                    <ReactMic
-                        record={record}
-                        style={{display: 'none'}}
-                        className="fas fa-microphone fa-2x"
-                        onStop={onStop}
-                        onData={onData}
-                        mimeType="audio/mp3"/>
+                    <AudioRecorder className='btn btn-primary' />
                 {/* <i className="fas fa-microphone fa-2x" style={{cursor: 'pointer'}}></i> */}
                         </div>
                         <div className="col">

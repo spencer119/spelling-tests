@@ -1,5 +1,5 @@
 import React, {useState, useEffect, useRef} from 'react'
-import {useLocation, Link} from 'react-router-dom'
+import {useLocation, Link, useHistory} from 'react-router-dom'
 import axios from 'axios'
 import Spinner from '../Spinner'
 const Result = ({createAlert}) => {
@@ -9,14 +9,14 @@ const Result = ({createAlert}) => {
     const [testName, setTestName] = useState('');
     const [student, setStudent] = useState({})
     const [result, setResult] = useState({})
-    
+    const [resultID, setResultID] = useState('')
+    const history = useHistory()
     function useQuery() {
         return new URLSearchParams(useLocation().search);
       }
       const query = useQuery();
       let result_id = query.get('result_id')
       useEffect(() => {
-        let parse = require('postgres-date')
           setLoading(true)
         axios
         .get(
@@ -42,6 +42,28 @@ const Result = ({createAlert}) => {
           );
         });
       }, [])
+      const deleteAttempt = e => {
+        e.preventDefault();
+        axios
+        .delete(
+          process.env.NODE_ENV === 'development'
+            ? '/api/teacher/result'
+            : 'https://spelling-tests-backend.herokuapp.com/api/teacher/result',
+          {
+            headers: {
+              token: token.current,
+              result_id
+            },
+            
+          }
+        )
+        .then(() => {
+          history.push('/teacher/results');
+          createAlert('Attempt deleted!', 'success', 5000)
+        }).catch(() => {
+          createAlert('An error has occured.', 'danger', 5000)
+        });
+      }
     if (loading) return <Spinner />
     else
     return (
@@ -55,10 +77,11 @@ const Result = ({createAlert}) => {
     <h5 className="card-title">{student.first_name} {student.last_name}</h5>
     <p>Username: {student.username}</p>
     <p className="card-text">Test: {testName}<br />Attempt {result.attempt}<br />Score: {result.correct}/{result.total} <br /> {((result.correct / result.total) * 100).toFixed(2)}%</p>
+    <button className='btn btn-danger' onClick={deleteAttempt} style={{marginBottom: '5px'}}>Delete Attempt</button> <br />
     <Link to='/teacher/results' className="btn btn-primary">Go back</Link>
   </div>
   <div className="card-footer text-muted">
-    {/* {result.created_at} TIME */}
+    {Date(result.created_at).toLocaleString()}
   </div>
 </div>
 <table className="table table-striped">

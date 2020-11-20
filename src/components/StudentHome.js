@@ -9,6 +9,7 @@ const StudentHome = () => {
   const [loading, setLoading] = useState(true);
   const [firstName, setFirstName] = useState('');
   const [attempts, setAttempts] = useState(0)
+  const [allowedAttempts, setAllowedAttempts] = useState(0)
   const token = useRef(localStorage.getItem('token'));
   const onLogOut = () => {
     localStorage.removeItem('token');
@@ -30,6 +31,7 @@ const StudentHome = () => {
         setFirstName(res.data.first_name);
         setLoading(false);
         setAttempts(res.data.attempts)
+        setAllowedAttempts(res.data.allowedAttempts)
       })
       .catch((err) => {
         setLoading(false);
@@ -46,9 +48,9 @@ const StudentHome = () => {
             <p className='text-center'>
               {testId === null
                 ? "You don't have a test to take right now!"
-                : attempts === 0 ? 'You have a test to take!' : attempts === 1 ? 'You have already taken the test but you may retake it if you want.' : 'You have reached the maximum amount of attempts for this test.'}
+                : attempts === allowedAttempts ? 'You have reached the maximum amount of attempts for this test.' : attempts === 0 ? 'You have a test to take!' : attempts !== allowedAttempts ? `You have already taken the test ${attempts === 1 ? '1 time,' : `${attempts} times,`} but you may retake it if you want.` : `You have reached the maximum amount of attempts for this test.`}
             </p>
-            {testId === null || attempts === 2 ? null : (
+            {testId === null || attempts === allowedAttempts ? null : (
               <Link
                 type='submit'
                 className='btn btn-primary btn-block'
@@ -57,7 +59,7 @@ const StudentHome = () => {
                 Start Test
               </Link>
             )}
-            <Link style={{width: '100%', marginTop: '5px'}} className='btn btn-success' to={`/student/scores`}>See Scores</Link>
+            {/* <Link style={{width: '100%', marginTop: '5px'}} className='btn btn-success' to={`/student/scores`}>See Scores</Link> */}
             <Link
               className='btn btn-danger btn-block'
               to='/'
