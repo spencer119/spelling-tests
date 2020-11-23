@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
 import './App.css';
+import axios from 'axios'
 import TeacherHome from './components/teacher/TeacherHome'
 import Home from './components/Home';
 import Alert from './components/Alert';
@@ -36,6 +37,21 @@ function App() {
         setAlertType('');
       }, time);
   };
+  // Universal error handling
+  axios.interceptors.response.use(() => {}, (err) => {
+    if (true) {
+      console.log(err.response)
+    
+    } else if (err.response.data.msg) {
+      createAlert(err.response.data.msg, 'danger', 5000)
+    } else {
+      switch (err.response.status){
+        case 500:
+          createAlert('')
+      }
+    }
+    throw err;
+  })
   return (
     <Router>
       <div className='App'>

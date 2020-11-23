@@ -30,9 +30,7 @@ const TeacherLogin = ({ createAlert }) => {
         }
 
       })
-      .catch((err) => {
-        createAlert(err.response.data.msg, 'danger', 5000);
-      });
+      
   };
   return (
     <div className='login-form'>
