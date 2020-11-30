@@ -5,6 +5,7 @@ import TeacherHome from './components/teacher/TeacherHome'
 import Home from './components/Home';
 import Alert from './components/Alert';
 import { BrowserRouter as Router, Switch, Route } from 'react-router-dom';
+import {useHistory} from 'react-router-dom'
 import Test from './components/Test';
 import Teachers from './components/admin/Teachers'
 import TeacherLogin from './components/teacher/TeacherLogin';
@@ -23,6 +24,7 @@ import StudentHome from './components/StudentHome';
 import CreateTest from './components/teacher/create/CreateTest'
 import StudentScores from './components/StudentScores'
 import FirstLogin from './components/teacher/FirstLogin';
+import Forbidden from './components/codes/Forbidden'
 function App() {
   const [alert, setAlert] = useState('');
   const [token, setToken] = useState('');
@@ -38,10 +40,12 @@ function App() {
       }, time);
   };
   // Universal error handling
-  axios.interceptors.response.use(() => {}, (err) => {
-    if (true) {
-      console.log(err.response)
-    
+  axios.interceptors.response.use((res)=> {return res}, (err) => {
+    if (err.response.data.expired) {
+      localStorage.clear();
+      alert('expire')
+      console.log('expired')
+      createAlert('Your login has expired. Please log in again.', 'warning', 3000)
     } else if (err.response.data.msg) {
       createAlert(err.response.data.msg, 'danger', 5000)
     } else {
@@ -147,6 +151,9 @@ function App() {
               <Navbar />
               <Alert alert={alert} alertType={alertType} />
               <Teachers createAlert={createAlert} />
+            </Route>
+            <Route path='/forbidden'>
+              <Forbidden />
             </Route>
 
           </Switch>
