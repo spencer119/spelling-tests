@@ -43,15 +43,13 @@ function App() {
   axios.interceptors.response.use((res)=> {return res}, (err) => {
     if (err.response.data.expired) {
       localStorage.clear();
-      alert('expire')
-      console.log('expired')
-      createAlert('Your login has expired. Please log in again.', 'warning', 3000)
+      window.location.href = '/'
     } else if (err.response.data.msg) {
       createAlert(err.response.data.msg, 'danger', 5000)
     } else {
       switch (err.response.status){
         case 500:
-          createAlert('')
+          createAlert('An internal server error has occured. Please try again', 'danger', 5000)
       }
     }
     throw err;
