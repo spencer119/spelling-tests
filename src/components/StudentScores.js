@@ -1,4 +1,5 @@
 import React, {useState, useEffect, useRef} from 'react'
+import {Link} from 'react-router-dom'
 import axios from 'axios'
 import Spinner from './Spinner'
 const StudentScores = () => {
@@ -22,15 +23,26 @@ const StudentScores = () => {
       .then((res) => {
         setResults(res.data.results);
         setResultData(res.data.resultData)
+        let lastAttemptID = res.data.results[res.data.results.length -1].result_id
         let masteredArr = [];
         let studyArr = [];
         res.data.resultData.map(result => {
+          if (result.result_id !== lastAttemptID) return
           if (result.correct) {
-            masteredArr.push(result.word)
+            let found = masteredArr.find(word => word === result.word)
+            if (found === undefined) {
+              masteredArr.push(result.word)
+            }
+            
           } else {
-            studyArr.push(result.word)
+            let found = studyArr.find(word => word === result.word)
+            if (found === undefined) {
+              studyArr.push(result.word)
+            }
+           
           }
         })
+        studyArr = studyArr.filter(word => !masteredArr.includes(word))
         setMastered(masteredArr)
         setStudy(studyArr)
         setLoading(false)
@@ -41,11 +53,11 @@ const StudentScores = () => {
     else 
     return (
         <div className='container'>
-          <div class="jumbotron jumbotron-fluid">
-  <div class="container">
-    <h1 class="display-4">Time to study!</h1>
-    <p class="lead">This is a modified jumbotron that occupies the entire horizontal space of its parent.</p>
-    <p className="lead"><button className='btn btn-primary'></button></p>
+          <div className="jumbotron jumbotron-fluid">
+  <div className="container">
+    <h1 className="display-4">Time to study!</h1>
+    <p className="lead">Last time you took the test you got {results[results.length -1].correct} words correct out of {results[results.length -1].total} total words.</p>
+    <p className="lead"><Link to='/student/home' className='btn btn-primary'>Go back</Link></p>
   </div>
 </div>
             <div className="row">
@@ -59,7 +71,7 @@ const StudentScores = () => {
                     </tr>
                   </thead>
                   <tbody>
-                    {mastered.map(word => (<tr scope='row'>
+                    {mastered.map(word => (<tr key={word} scope='row'>
                       <th>
                         {word}
                       </th>
@@ -77,7 +89,7 @@ const StudentScores = () => {
                     </tr>
                   </thead>
                   <tbody>
-                    {study.map(word => (<tr scope='row'>
+                    {study.map(word => (<tr key={word} scope='row'>
                       <th>
                         {word}
                       </th>

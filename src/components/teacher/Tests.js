@@ -19,6 +19,7 @@ const Tests = ({ createAlert }) => {
   const [filetype, setFiletype] = useState('m4a')
   const token = useRef(localStorage.getItem('token'));
   const [disable, setDisable] = useState(false)
+  const [showArchived, setShowArchived] = useState(false)
   const onNameChange = (e) => {
     setNewTestName(e.target.value);
   };
@@ -38,9 +39,7 @@ const Tests = ({ createAlert }) => {
         }
       )
       .then((res) => {
-        let notArchived = [];
-        res.data.tests.map(t => t.archived ? null : notArchived.push(t))
-        setTests(notArchived);
+        setTests(res.data.tests);
         setTestlines(res.data.testlines);
         setLoading(false);
       })
@@ -79,6 +78,29 @@ const Tests = ({ createAlert }) => {
         alert(err.response.data.msg)
       });
   };
+  const archiveTest = (e) => {
+    axios
+      .delete(
+        process.env.NODE_ENV === 'development'
+          ? '/api/teacher/tests'
+          : 'https://spelling-tests-backend.herokuapp.com/api/teacher/tests',
+        {
+          headers: {
+            token: token.current,
+          },
+          data: {
+            archive: true,
+            test: e.target.parentElement.parentElement.id,
+          },
+        }
+      )
+      .then(() => {
+        createAlert('Test deleted successfully!', 'success', 5000)
+        getTests();
+      }).catch(() => {
+        createAlert('An error has occured.', 'danger', 5000)
+      });
+  };
   const deleteTest = (e) => {
     axios
       .delete(
@@ -91,6 +113,7 @@ const Tests = ({ createAlert }) => {
           },
           data: {
             test: e.target.parentElement.parentElement.id,
+            archive: false
           },
         }
       )
@@ -102,7 +125,6 @@ const Tests = ({ createAlert }) => {
       });
   };
   const viewTest = (e) => {
-    console.log(e.target.parentElement.parentElement.id)
     let viewArr = [];
     testlines.map(line => {
       if (line.test_id === e.target.parentElement.parentElement.id) viewArr.push(line)
@@ -205,36 +227,64 @@ const Tests = ({ createAlert }) => {
         </p>
         <button
           className='btn btn-primary'
-          style={{ width: '100%', marginBottom: '25px' }}
+          style={{ width: '100%', marginBottom: '10px' }}
           onClick={() => setShowModal(true)}
         >
           Create new test
+        </button>
+        <button
+          className='btn btn-info'
+          style={{ width: '100%', marginBottom: '25px' }}
+          onClick={() => showArchived ? setShowArchived(false) : setShowArchived(true)}
+        >
+          {showArchived ? 'Show active tests' : 'Show archived tests'}
         </button>
         <table className='table'>
           <thead>
             <tr>
               <th scope='col'>Test</th>
               <th scope='col'>Edit</th>
-              <th scope='col'>Archive</th>
+            <th scope='col'>{showArchived ? 'Delete' : 'Archive'}</th>
             </tr>
           </thead>
           <tbody>
             {tests.map((test) => {
-              return (
-                <tr key={test.test_name} id={test.test_id}>
-                  <td>{test.test_name}</td>
-                  <td>
-                    <button className='btn btn-info' onClick={viewTest}>
-                      View
-                    </button>
-                  </td>
-                  <td>
-                    <button className='btn btn-danger' onClick={deleteTest}>
-                      Archive
-                    </button>
-                  </td>
-                </tr>
-              );
+              if (!showArchived && test.archived) return null
+              if (showArchived && !test.archived) return null
+              if (showArchived) {
+                return (
+                  <tr key={test.test_name} id={test.test_id}>
+                    <td>{test.test_name}</td>
+                    <td>
+                      <button className='btn btn-info' onClick={viewTest}>
+                        View
+                      </button>
+                    </td>
+                    <td>
+                      <button className='btn btn-danger' onClick={deleteTest}>
+                        Delete
+                      </button>
+                    </td>
+                  </tr>
+                );
+              } else {
+                return (
+                  <tr key={test.test_name} id={test.test_id}>
+                    <td>{test.test_name}</td>
+                    <td>
+                      <button className='btn btn-info' onClick={viewTest}>
+                        View
+                      </button>
+                    </td>
+                    <td>
+                      <button className='btn btn-danger' onClick={archiveTest}>
+                        Archive
+                      </button>
+                    </td>
+                  </tr>
+                );
+              }
+              
             })}
           </tbody>
         </table>
