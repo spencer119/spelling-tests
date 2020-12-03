@@ -5,7 +5,6 @@ import TeacherHome from './components/teacher/TeacherHome';
 import Home from './components/Home';
 import Alert from './components/Alert';
 import { BrowserRouter as Router, Switch, Route } from 'react-router-dom';
-import { useHistory } from 'react-router-dom';
 import Test from './components/Test';
 import Teachers from './components/admin/Teachers';
 import TeacherLogin from './components/teacher/TeacherLogin';
@@ -27,7 +26,6 @@ import FirstLogin from './components/teacher/FirstLogin';
 import Forbidden from './components/codes/Forbidden';
 function App() {
   const [alert, setAlert] = useState('');
-  const [token, setToken] = useState('');
   const [alertType, setAlertType] = useState('');
   const createAlert = (msg, type, time) => {
     // Creates an alert with a msg, type (see Alert.js for types), and time (in milliseconds) setting a time of 0 makes a permanant alert
@@ -54,6 +52,9 @@ function App() {
         switch (err.response.status) {
           case 500:
             createAlert('An internal server error has occured. Please try again', 'danger', 5000);
+            break;
+          default:
+            break;
         }
       }
       throw err;
@@ -89,7 +90,7 @@ function App() {
             </Route>
             <Route exact path='/teacher/login'>
               <Alert alert={alert} alertType={alertType} />
-              <TeacherLogin setToken={setToken} createAlert={createAlert} />
+              <TeacherLogin createAlert={createAlert} />
             </Route>
             <Route exact path='/teacher/login/firstlogin'>
               <Alert alert={alert} alertType={alertType} />
