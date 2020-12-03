@@ -45,17 +45,13 @@ const Classes = ({ createAlert }) => {
         });
         setStudentCount(slist);
         setClasses(res.data.classes);
-        setTests(res.data.tests);
+        setTests(res.data.tests.filter((t) => !t.archived));
         setGroups(res.data.groups);
         setStudents(res.data.students);
         setLoading(false);
       })
       .catch(() => {
-        createAlert(
-          'There was an error fetching your student groups.',
-          'danger',
-          5000
-        );
+        createAlert('There was an error fetching your student groups.', 'danger', 5000);
       });
   };
   useEffect(() => {
@@ -80,9 +76,9 @@ const Classes = ({ createAlert }) => {
     }
   };
   const getTestName = (test_id) => {
-    console.log(tests)
+    console.log(tests);
     let testObj = tests.find((test) => test.test_id === test_id);
-    if (testObj === undefined) return null
+    if (testObj === undefined) return null;
     return testObj.test_name;
   };
   const getGroupName = (group_id) => {
@@ -135,7 +131,7 @@ const Classes = ({ createAlert }) => {
             <td scope='row'>{s.first_name}</td>
             <td scope='row'>{s.last_name}</td>
             <td scope='row'>{s.username}</td>
-        <td scope='row'>{getGroupName(s.group_id)}</td>
+            <td scope='row'>{getGroupName(s.group_id)}</td>
           </tr>
         ))}
       </Fragment>
@@ -156,17 +152,15 @@ const Classes = ({ createAlert }) => {
             <td scope='row'>
               <Dropdown>
                 <Dropdown.Toggle variant='primary' id='dropdown-basic'>
-                  {tests.length === 0 ? 'No test selected' : group.active_test === null
+                  {tests.length === 0
+                    ? 'No test selected'
+                    : group.active_test === null
                     ? 'No test selected'
                     : getTestName(group.active_test)}
                 </Dropdown.Toggle>
                 <Dropdown.Menu id={group.group_id}>
                   {tests.map((test) => (
-                    <Dropdown.Item
-                      key={test.test_name}
-                      id={test.test_id}
-                      onClick={onClick}
-                    >
+                    <Dropdown.Item key={test.test_name} id={test.test_id} onClick={onClick}>
                       {test.test_name}
                     </Dropdown.Item>
                   ))}
@@ -212,11 +206,7 @@ const Classes = ({ createAlert }) => {
                 >
                   {x.class_name}
                   <span className='badge badge-primary badge-pill'>
-                    {
-                      studentCount.find((sc) => sc.class_id === x.class_id)
-                        .count
-                    }{' '}
-                    students
+                    {studentCount.find((sc) => sc.class_id === x.class_id).count} students
                   </span>
                 </li>
               ))}
@@ -248,16 +238,16 @@ const Classes = ({ createAlert }) => {
             >
               Change Class Name
             </button> */}
-            
+
             {selectedClass === '' ? null : (
               <Fragment>
                 <Link
-                className='btn btn-info'
-                to={`/teacher/groups/create?class_id=${selectedClass}`}
-                style={{ width: '100%', marginTop: '10px' }}
-              >
-                Create Group
-              </Link>
+                  className='btn btn-info'
+                  to={`/teacher/groups/create?class_id=${selectedClass}`}
+                  style={{ width: '100%', marginTop: '10px' }}
+                >
+                  Create Group
+                </Link>
                 {/* <button
               className='btn btn-info'
               id='add'
@@ -267,7 +257,6 @@ const Classes = ({ createAlert }) => {
               Add Students to Class
             </button> */}
               </Fragment>
-              
             )}
           </div>
         </div>
@@ -310,7 +299,6 @@ const Classes = ({ createAlert }) => {
             )}
           </div>
         </div>
-        
       </div>
     );
   }
