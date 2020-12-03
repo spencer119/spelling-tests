@@ -20,17 +20,14 @@ const TeacherLogin = ({ createAlert }) => {
       )
       .then((res) => {
         if (res.data.firstLogin === true) {
-          localStorage.setItem('token', res.data.token)
-          history.push('/teacher/login/firstlogin')
-        }
-        else {
+          localStorage.setItem('token', res.data.token);
+          history.push('/teacher/login/firstlogin');
+        } else {
           localStorage.setItem('token', res.data.token);
           localStorage.setItem('loggedIn', 'teacher');
-          history.push('/teacher/results');
+          history.push('/teacher/home');
         }
-
-      })
-      
+      });
   };
   return (
     <div className='login-form'>
@@ -56,11 +53,7 @@ const TeacherLogin = ({ createAlert }) => {
           />
         </div>
         <div className='form-group'>
-          <button
-            type='submit'
-            className='btn btn-primary btn-block'
-            onClick={onClick}
-          >
+          <button type='submit' className='btn btn-primary btn-block' onClick={onClick}>
             Log in
           </button>
           <Link className='btn btn-secondary btn-block' to='/'>

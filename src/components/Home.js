@@ -13,10 +13,8 @@ const Home = ({ createAlert }) => {
   useEffect(() => {
     if (localStorage.getItem('loggedIn') === null) return;
     else if (localStorage.getItem('token') === null) return;
-    else if (localStorage.getItem('loggedIn') === 'student')
-      history.push('/student/home');
-    else if (localStorage.getItem('loggedIn') === 'teacher')
-      history.push('/teacher/results');
+    else if (localStorage.getItem('loggedIn') === 'student') history.push('/student/home');
+    else if (localStorage.getItem('loggedIn') === 'teacher') history.push('/teacher/home');
   }, []);
   const onClick = (e) => {
     e.preventDefault();
@@ -68,8 +66,7 @@ const Home = ({ createAlert }) => {
           <div className='jumbotron'>
             <h1 className='display-4'>Hello students!</h1>
             <p className='lead'>
-              Please enter your username in the box below and then click Start
-              Test.
+              Please enter your username in the box below and then click Start Test.
             </p>
             <form>
               <div className='row'>
