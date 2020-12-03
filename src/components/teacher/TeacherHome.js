@@ -2,7 +2,7 @@ import React, { Fragment, useState, useEffect, useRef } from 'react';
 import { Link } from 'react-router-dom';
 import axios from 'axios';
 import Spinner from '../Spinner';
-import Feedback from 'react-bootstrap/Feedback';
+import { Dropdown } from 'react-bootstrap';
 const TeacherHome = ({ createAlert }) => {
   const token = useRef(localStorage.getItem('token'));
   const [updates, setUpdates] = useState({});
@@ -101,14 +101,26 @@ const TeacherHome = ({ createAlert }) => {
               <div className='card-header'>Site Feedback</div>
               <div className='card-body'>
                 <p>Any bugs found, suggestions, or feedback of any kind can be submitted here.</p>
-                <input
-                  type='text'
-                  value={feedbackType}
-                  onChange={(e) => setFeedbackType(e.target.value)}
-                  className='form-control'
-                  placeholder='Feedback type (Bug, suggestion, issue, etc.)'
-                  style={{ marginBottom: '10px' }}
-                />
+                <Dropdown style={{ marginBottom: '10px' }}>
+                  <Dropdown.Toggle variant='primary' id='dropdown-basic'>
+                    {feedbackType === ''
+                      ? 'Select Feedback Type'
+                      : `${feedbackType.charAt(0).toUpperCase()}${feedbackType.slice(
+                          1 - feedbackType.length
+                        )}`}
+                  </Dropdown.Toggle>
+                  <Dropdown.Menu>
+                    <Dropdown.Item onClick={() => setFeedbackType('bug')}>Bug</Dropdown.Item>
+                    <Dropdown.Item onClick={() => setFeedbackType('suggestion')}>
+                      Suggestion
+                    </Dropdown.Item>
+                    <Dropdown.Item onClick={() => setFeedbackType('other')}>Other</Dropdown.Item>
+                  </Dropdown.Menu>
+                </Dropdown>
+                <p>
+                  Please be as descriptive as possible when reporting an error. If possible, include
+                  steps to recreate the issue.
+                </p>
                 <textarea
                   value={feedback}
                   onChange={(e) => setFeedback(e.target.value)}

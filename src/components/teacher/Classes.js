@@ -7,7 +7,6 @@ import '../../Misc.css';
 
 const Classes = ({ createAlert }) => {
   const token = useRef(localStorage.getItem('token'));
-  const [editClass, setEditClass] = useState(false);
   const [loading, setLoading] = useState(true);
   const [classHover, setClassHover] = useState('');
   const [classes, setClasses] = useState([]);
@@ -128,10 +127,10 @@ const Classes = ({ createAlert }) => {
       <Fragment>
         {classStudents.map((s) => (
           <tr key={s.student_id}>
-            <td scope='row'>{s.first_name}</td>
-            <td scope='row'>{s.last_name}</td>
-            <td scope='row'>{s.username}</td>
-            <td scope='row'>{getGroupName(s.group_id)}</td>
+            <td>{s.first_name}</td>
+            <td>{s.last_name}</td>
+            <td>{s.username}</td>
+            <td>{getGroupName(s.group_id)}</td>
           </tr>
         ))}
       </Fragment>
@@ -148,8 +147,8 @@ const Classes = ({ createAlert }) => {
       <Fragment>
         {classGroups.map((group) => (
           <tr key={group.group_id}>
-            <td scope='row'>{group.group_name}</td>
-            <td scope='row'>
+            <td>{group.group_name}</td>
+            <td>
               <Dropdown>
                 <Dropdown.Toggle variant='primary' id='dropdown-basic'>
                   {tests.length === 0

@@ -1,7 +1,6 @@
 import React, { useEffect, useState, useRef } from 'react';
 import axios from 'axios';
 import { Modal } from 'react-bootstrap';
-import { useHistory } from 'react-router-dom';
 import Spinner from '../Spinner';
 import speaker from '../../speaker.png';
 const Tests = ({ createAlert }) => {
@@ -10,7 +9,6 @@ const Tests = ({ createAlert }) => {
   const [showModal, setShowModal] = useState(false);
   const [newTestName, setNewTestName] = useState('');
   const [newTestWords, setNewTestWords] = useState('');
-  const [newTestArr, setNewTestArr] = useState([]);
   const [attempts, setAttempts] = useState(1);
   const [testlines, setTestlines] = useState([]);
   const [viewModal, setViewModal] = useState(false);
