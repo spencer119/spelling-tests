@@ -18,6 +18,7 @@ const Tests = ({ createAlert }) => {
   const token = useRef(localStorage.getItem('token'));
   const [disable, setDisable] = useState(false);
   const [showArchived, setShowArchived] = useState(false);
+
   const onNameChange = (e) => {
     setNewTestName(e.target.value);
   };

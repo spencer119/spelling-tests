@@ -1,11 +1,18 @@
 import React, {useState} from 'react'
-import {ReactMic} from '@cleandersonlobo/react-mic'
-import AudioRecorder from 'react-audio-recorder'
+import {useReactMediaRecorder} from 'react-media-recorder'
 const CreateTest = () => {
     const [words, setWords] = useState([])
     const [wordCount, setWordCount] = useState(0)
     const [testName, setTestName] = useState('')
     const [record, setRecord] = useState(false)
+    const [audio, setAudio] = useState({})
+    const {
+        status,
+        startRecording,
+        stopRecording,
+        onStop,
+        mediaBlobUrl,
+      } = useReactMediaRecorder({ video: false });
     const onWordCountChange = (e) => {
 
         let newWordArr = [];
@@ -26,15 +33,28 @@ const CreateTest = () => {
         setWords(newArr)
         
     }
-    const onStop = (blob) => {
-        console.log('recordedBlob is: ', blob);
+    const onRecord = (e) => {
+        if (record) { // Stop recording
+            setRecord(false);
+            console.log(e.target.id)
+            stopRecording((x) => console.log(x));
+            let audioObj = {};
+            audioObj[e.target.id] = mediaBlobUrl
+            setAudio(audioObj)
+        } else { // start recording
+            setRecord(true)
+            startRecording()
+        }
     }
-    const onData = (blob) => {
-        console.log('chunk of real-time data is: ', blob);
+    const onPlay = (e) => {
+    let audio = new Audio(mediaBlobUrl);
+    audio.volume = 0.25;
+    audio.play();
     }
     return (
         <div className='container'>
-            
+            {status}
+            <audio className='btn btn-primary' src={mediaBlobUrl}></audio>
             <div className="row">
                 <div className="col-10">
                 <label>Enter a test name</label>
@@ -49,18 +69,17 @@ const CreateTest = () => {
             <div className="row word-margin">
                 
             </div>
-            {words.map((word) => (<div key={word.number} className="row word-margin">
+            {words.map((word) => (<div key={word.number} id={word.number} className="row word-margin">
                 <div className="col-10">
                     <input type="text" id={word.number} className="form-control" onChange={onWordChange}/>
                 </div>
                 <div className="col-2">
                     <div className="row">
                     <div className="col">
-                    <AudioRecorder className='btn btn-primary' />
-                {/* <i className="fas fa-microphone fa-2x" style={{cursor: 'pointer'}}></i> */}
+                <i className="fas fa-microphone fa-2x" id={word.number} onClick={onRecord} style={{cursor: 'pointer'}}></i>
                         </div>
                         <div className="col">
-                        <i className="fas fa-volume-up fa-2x" style={{cursor: 'pointer'}}></i>
+                        <i className="fas fa-volume-up fa-2x" onClick={() => console.log(mediaBlobUrl)} style={{cursor: 'pointer'}}></i>
                     </div>
                     <div className="col">
                         {word.audio === '' ? <i className="fas fa-times-circle fa-2x" style={{color: 'red'}} /> : <i className="fas fa-check-square fa-2x" style={{color: 'green'}} />}
@@ -71,13 +90,6 @@ const CreateTest = () => {
                 </div>
             </div>))}
             
-            
-
-
-
-
-
-
         </div>
     )
 }
