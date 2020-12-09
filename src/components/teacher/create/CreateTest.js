@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { Fragment, useState } from "react";
 import { useReactMediaRecorder } from "react-media-recorder";
 import ReactPlayer from "react-player";
 const CreateTest = () => {
@@ -49,7 +49,10 @@ const CreateTest = () => {
     }
   };
   const confirmAudio = (e) => {
-    console.log(mediaBlobUrl);
+    if (mediaBlobUrl === null)
+      return alert("You must record audio to save first.");
+    let wordArr = words;
+    wordArr.map((w) => {});
     let audioObj = audio;
     audioObj[e.target.id] = mediaBlobUrl;
     setAudio(audioObj);
@@ -57,6 +60,11 @@ const CreateTest = () => {
     setCurrentRecord(0);
     console.log(mediaBlobUrl);
     console.log(audio);
+  };
+  const deleteAudio = (e) => {
+    let newObj = audio;
+    delete audio[e.target.id];
+    setAudio(newObj);
   };
   const onPlay = (e) => {
     let audio = new Audio(mediaBlobUrl);
@@ -106,17 +114,43 @@ const CreateTest = () => {
           />
         </div>
       </div>
-      <div className='text-right word-margin'>
-        <i
-          className='fas fa-microphone fa-5x text-center'
-          style={{ margin: "10px" }}
-          onClick={onRecord}
-        ></i>
-        <i
-          className='fas fa-volume-up fa-5x text-center'
-          style={{ margin: "10px" }}
-        ></i>
-      </div>
+      {wordCount === 0 ? null : (
+        <div className='text-center word-margin'>
+          {mediaBlobUrl === null ? (
+            <i
+              className='fas fa-microphone fa-5x text-center'
+              style={{ margin: "10px", cursor: "pointer" }}
+              onClick={onRecord}
+            ></i>
+          ) : (
+            <Fragment>
+              <i
+                className='fas fa-volume-up fa-5x text-center'
+                height='20px'
+                width='20px'
+                style={{ cursor: "pointer" }}
+                url={mediaBlobUrl}
+                playing='true'
+              ></i>
+              <br />
+              <button className='btn btn-danger' onClick={() => clearBlobUrl()}>
+                Discard
+              </button>
+            </Fragment>
+          )}
+
+          {record ? (
+            <Fragment>
+              <p>Recording...</p>
+              <p>Click again to stop.</p>
+            </Fragment>
+          ) : mediaBlobUrl !== null ? (
+            <p>Audio ready to save.</p>
+          ) : (
+            <p>Click to start a new recording.</p>
+          )}
+        </div>
+      )}
 
       <div className='row word-margin'></div>
       {words.map((word) => (
@@ -127,36 +161,47 @@ const CreateTest = () => {
               id={word.number}
               className='form-control'
               onChange={onWordChange}
+              placeholder={audio[word.number]}
             />
           </div>
           <div className='col-2'>
             <div className='row'>
-              <div className='col'>
-                <ReactPlayer
-                  height='20px'
-                  width='20px'
-                  style={{ cursor: "pointer" }}
-                  className='fas fa-volume-up fa-2x'
-                  url={audio[word.number]}
-                  playing
-                />
-              </div>
-              <div className='col'>
-                <i
-                  className={`fas fa-minus-circle fa-2x`}
-                  id={word.number}
-                  onClick={confirmAudio}
-                  style={{ color: "red", cursor: "pointer" }}
-                />
-              </div>
-              <div className='col'>
-                <i
-                  className='fas fa-check-square fa-2x'
-                  id={word.number}
-                  onClick={confirmAudio}
-                  style={{ color: "green", cursor: "pointer" }}
-                />
-              </div>
+              {audio[word.number] === null ||
+              audio[word.number] === undefined ? (
+                <Fragment>
+                  <div className='col'>
+                    <button
+                      id={word.number}
+                      onClick={confirmAudio}
+                      className='btn btn-success'
+                    >
+                      Save Audio
+                    </button>
+                  </div>
+                </Fragment>
+              ) : (
+                <Fragment>
+                  <div className='col'>
+                    <ReactPlayer
+                      height='20px'
+                      width='20px'
+                      style={{ cursor: "pointer" }}
+                      className='fas fa-volume-up fa-2x'
+                      url={audio[word.number]}
+                      playing
+                    />
+                  </div>
+                  <div className='col'>
+                    <button
+                      className='btn btn-danger'
+                      id={word.number}
+                      onClick={deleteAudio}
+                    >
+                      Delete Audio
+                    </button>
+                  </div>
+                </Fragment>
+              )}
             </div>
           </div>
         </div>
