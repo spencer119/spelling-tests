@@ -6,9 +6,9 @@ const CreateTest = () => {
   const [wordCount, setWordCount] = useState(0);
   const [testName, setTestName] = useState("");
   const [record, setRecord] = useState(false);
-  const [currentRecord, setCurrentRecord] = useState(0);
   const [testblob, setTestblob] = useState("");
   const [audio, setAudio] = useState({});
+  const [playing, setPlaying] = useState(-1);
   const {
     status,
     startRecording,
@@ -26,7 +26,6 @@ const CreateTest = () => {
     setWords(newWordArr);
   };
   const onWordChange = (e) => {
-    console.log(e.target.id);
     let found = words.find((word) => word.number === parseInt(e.target.id));
     found.word = e.target.value;
     let newArr = words.filter((word) => word.number !== parseInt(e.target.id));
@@ -44,22 +43,24 @@ const CreateTest = () => {
     } else {
       // start recording
       setRecord(true);
-      setCurrentRecord(e.target.id);
       startRecording();
     }
   };
   const confirmAudio = (e) => {
     if (mediaBlobUrl === null)
       return alert("You must record audio to save first.");
-    let wordArr = words;
-    wordArr.map((w) => {});
-    let audioObj = audio;
-    audioObj[e.target.id] = mediaBlobUrl;
-    setAudio(audioObj);
+    let newValue = words.find((word) => word.number.toString() === e.target.id);
+    newValue.audio = mediaBlobUrl;
+    console.log(newValue);
+    let wordArr = words.filter(
+      (word) => word.number.toString() !== e.target.id
+    );
+    wordArr.push(newValue);
+    wordArr.sort((a, b) => {
+      return a.number - b.number;
+    });
+    setWords(wordArr);
     clearBlobUrl();
-    setCurrentRecord(0);
-    console.log(mediaBlobUrl);
-    console.log(audio);
   };
   const deleteAudio = (e) => {
     let newObj = audio;
@@ -91,7 +92,7 @@ const CreateTest = () => {
       >
         Play test blob
       </ReactPlayer>
-      <audio className='btn btn-primary' src={mediaBlobUrl}></audio>
+
       <div className='row'>
         <div className='col-10'>
           <label>Enter a test name</label>
@@ -129,8 +130,6 @@ const CreateTest = () => {
                 height='20px'
                 width='20px'
                 style={{ cursor: "pointer" }}
-                url={mediaBlobUrl}
-                playing='true'
               ></i>
               <br />
               <button className='btn btn-danger' onClick={() => clearBlobUrl()}>
@@ -166,8 +165,7 @@ const CreateTest = () => {
           </div>
           <div className='col-2'>
             <div className='row'>
-              {audio[word.number] === null ||
-              audio[word.number] === undefined ? (
+              {words.find((w) => w.number === word.number).audio === "" ? (
                 <Fragment>
                   <div className='col'>
                     <button
@@ -182,13 +180,17 @@ const CreateTest = () => {
               ) : (
                 <Fragment>
                   <div className='col'>
+                    <i
+                      className='fas fa-volume-up fa-2x'
+                      style={{ cursor: "pointer" }}
+                      onClick={() => setPlaying(word.number)}
+                    ></i>
                     <ReactPlayer
                       height='20px'
                       width='20px'
-                      style={{ cursor: "pointer" }}
-                      className='fas fa-volume-up fa-2x'
-                      url={audio[word.number]}
-                      playing
+                      url={words.find((w) => w.number === word.number).audio}
+                      playing={playing === word.number}
+                      onEnded={() => setPlaying(-1)}
                     />
                   </div>
                   <div className='col'>
@@ -197,7 +199,7 @@ const CreateTest = () => {
                       id={word.number}
                       onClick={deleteAudio}
                     >
-                      Delete Audio
+                      Delete
                     </button>
                   </div>
                 </Fragment>
