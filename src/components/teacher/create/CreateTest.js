@@ -1,26 +1,23 @@
-import React, { Fragment, useState } from "react";
-import { useReactMediaRecorder } from "react-media-recorder";
-import ReactPlayer from "react-player";
-const CreateTest = () => {
+import axios from 'axios';
+import React, { Fragment, useState, useRef } from 'react';
+import { useReactMediaRecorder } from 'react-media-recorder';
+import ReactPlayer from 'react-player';
+const CreateTest = ({ createAlert }) => {
   const [words, setWords] = useState([]);
   const [wordCount, setWordCount] = useState(0);
-  const [testName, setTestName] = useState("");
+  const [testName, setTestName] = useState('');
   const [record, setRecord] = useState(false);
-  const [testblob, setTestblob] = useState("");
+  const [testblob, setTestblob] = useState('');
   const [audio, setAudio] = useState({});
   const [playing, setPlaying] = useState(-1);
-  const {
-    status,
-    startRecording,
-    stopRecording,
-    onStop,
-    clearBlobUrl,
-    mediaBlobUrl,
-  } = useReactMediaRecorder({ video: false });
+  const token = useRef(localStorage.getItem('token'));
+  const { startRecording, stopRecording, clearBlobUrl, mediaBlobUrl } = useReactMediaRecorder({
+    video: false,
+  });
   const onWordCountChange = (e) => {
     let newWordArr = [];
     for (let i = 0; i < e.target.value; i++) {
-      newWordArr.push({ number: i + 1, word: "", audio: "" });
+      newWordArr.push({ number: i + 1, word: '', audio: '' });
     }
     setWordCount(e.target.value);
     setWords(newWordArr);
@@ -47,14 +44,10 @@ const CreateTest = () => {
     }
   };
   const confirmAudio = (e) => {
-    if (mediaBlobUrl === null)
-      return alert("You must record audio to save first.");
+    if (mediaBlobUrl === null) return alert('You must record audio to save first.');
     let newValue = words.find((word) => word.number.toString() === e.target.id);
     newValue.audio = mediaBlobUrl;
-    console.log(newValue);
-    let wordArr = words.filter(
-      (word) => word.number.toString() !== e.target.id
-    );
+    let wordArr = words.filter((word) => word.number.toString() !== e.target.id);
     wordArr.push(newValue);
     wordArr.sort((a, b) => {
       return a.number - b.number;
@@ -62,37 +55,48 @@ const CreateTest = () => {
     setWords(wordArr);
     clearBlobUrl();
   };
-  const deleteAudio = (e) => {
-    let newObj = audio;
-    delete audio[e.target.id];
-    setAudio(newObj);
+  const createTest = (e) => {
+    // Check that all info is entered
+    let notDone = false;
+    words.forEach((w) => {
+      if (w.word === '') {
+        notDone = true;
+        createAlert('One or more word entries is missing.', 'danger', 5000);
+      } else if (w.audio === '') {
+        notDone = true;
+        createAlert('One or more word is missing audio.', 'danger', 5000);
+      }
+    });
+    if (notDone) return;
+    else {
+      let data = new FormData();
+      words.forEach((word) => {
+        data.append(word.word, Blob);
+      });
+      axios
+        .post(
+          process.env.NODE_ENV === 'development'
+            ? '/api/v2/teacher/tests/create'
+            : 'https://spelling-tests-backend.herokuapp.com/api/v2/teacher/tests/create',
+          data,
+          { headers: { token: token.current } }
+        )
+        .then((res) => {})
+        .catch((err) => {});
+    }
   };
-  const onPlay = (e) => {
-    let audio = new Audio(mediaBlobUrl);
-    audio.volume = 0.25;
-    audio.play();
+  const deleteAudio = (e) => {
+    let newValue = words.find((word) => word.number.toString() === e.target.id);
+    newValue.audio = '';
+    let wordArr = words.filter((word) => word.number.toString() !== e.target.id);
+    wordArr.push(newValue);
+    wordArr.sort((a, b) => {
+      return a.number - b.number;
+    });
+    setWords(wordArr);
   };
   return (
     <div className='container'>
-      {status}
-      <input
-        type='text'
-        value={testblob}
-        onChange={(e) => setTestblob(e.target.value)}
-        placeholder='BLOB URL'
-        className='form-control'
-      />
-      <ReactPlayer
-        height='20px'
-        width='20px'
-        style={{ cursor: "pointer" }}
-        className='btn btn-primary'
-        url={testblob}
-        playing
-      >
-        Play test blob
-      </ReactPlayer>
-
       <div className='row'>
         <div className='col-10'>
           <label>Enter a test name</label>
@@ -120,7 +124,7 @@ const CreateTest = () => {
           {mediaBlobUrl === null ? (
             <i
               className='fas fa-microphone fa-5x text-center'
-              style={{ margin: "10px", cursor: "pointer" }}
+              style={{ margin: '10px', cursor: 'pointer' }}
               onClick={onRecord}
             ></i>
           ) : (
@@ -129,8 +133,18 @@ const CreateTest = () => {
                 className='fas fa-volume-up fa-5x text-center'
                 height='20px'
                 width='20px'
-                style={{ cursor: "pointer" }}
+                onClick={() => setPlaying(0)}
+                style={{ cursor: 'pointer' }}
               ></i>
+              <ReactPlayer
+                height='0px'
+                width='0px'
+                url={mediaBlobUrl}
+                playing={playing === 0 ? true : false}
+                onEnded={() => {
+                  setPlaying(-1);
+                }}
+              />
               <br />
               <button className='btn btn-danger' onClick={() => clearBlobUrl()}>
                 Discard
@@ -151,7 +165,6 @@ const CreateTest = () => {
         </div>
       )}
 
-      <div className='row word-margin'></div>
       {words.map((word) => (
         <div key={word.number} id={word.number} className='row word-margin'>
           <div className='col-10'>
@@ -165,14 +178,10 @@ const CreateTest = () => {
           </div>
           <div className='col-2'>
             <div className='row'>
-              {words.find((w) => w.number === word.number).audio === "" ? (
+              {words.find((w) => w.number === word.number).audio === '' ? (
                 <Fragment>
                   <div className='col'>
-                    <button
-                      id={word.number}
-                      onClick={confirmAudio}
-                      className='btn btn-success'
-                    >
+                    <button id={word.number} onClick={confirmAudio} className='btn btn-success'>
                       Save Audio
                     </button>
                   </div>
@@ -182,23 +191,23 @@ const CreateTest = () => {
                   <div className='col'>
                     <i
                       className='fas fa-volume-up fa-2x'
-                      style={{ cursor: "pointer" }}
-                      onClick={() => setPlaying(word.number)}
+                      style={{ cursor: 'pointer' }}
+                      onClick={() => {
+                        setPlaying(word.number);
+                      }}
                     ></i>
                     <ReactPlayer
                       height='20px'
                       width='20px'
-                      url={words.find((w) => w.number === word.number).audio}
-                      playing={playing === word.number}
-                      onEnded={() => setPlaying(-1)}
+                      url={word.audio}
+                      playing={playing === word.number ? true : false}
+                      onEnded={() => {
+                        setPlaying(-1);
+                      }}
                     />
                   </div>
                   <div className='col'>
-                    <button
-                      className='btn btn-danger'
-                      id={word.number}
-                      onClick={deleteAudio}
-                    >
+                    <button className='btn btn-danger' id={word.number} onClick={deleteAudio}>
                       Delete
                     </button>
                   </div>
@@ -208,6 +217,13 @@ const CreateTest = () => {
           </div>
         </div>
       ))}
+      {wordCount !== 0 ? (
+        <div className='row word-margin'>
+          <button style={{ width: '100%' }} onClick={createTest} className='btn btn-success'>
+            Create Test
+          </button>
+        </div>
+      ) : null}
     </div>
   );
 };
