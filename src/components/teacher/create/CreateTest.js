@@ -1,16 +1,14 @@
-import axios from "axios";
-import React, { Fragment, useState, useRef } from "react";
-import { useReactMediaRecorder } from "react-media-recorder";
-import ReactPlayer from "react-player";
+import axios from 'axios';
+import React, { Fragment, useState, useRef } from 'react';
+import { Link } from 'react-router-dom';
+import { useReactMediaRecorder } from 'react-media-recorder';
 const CreateTest = ({ createAlert }) => {
   const [words, setWords] = useState([]);
   const [wordCount, setWordCount] = useState(0);
-  const [testName, setTestName] = useState("");
+  const [testName, setTestName] = useState('');
   const [record, setRecord] = useState(false);
-  const [testblob, setTestblob] = useState("");
   const [audio, setAudio] = useState({});
-  const [playing, setPlaying] = useState(-1);
-  const token = useRef(localStorage.getItem("token"));
+  const token = useRef(localStorage.getItem('token'));
   const {
     startRecording,
     stopRecording,
@@ -22,7 +20,7 @@ const CreateTest = ({ createAlert }) => {
   const onWordCountChange = (e) => {
     let newWordArr = [];
     for (let i = 0; i < e.target.value; i++) {
-      newWordArr.push({ number: i + 1, word: "", audio: "" });
+      newWordArr.push({ number: i + 1, word: '', audio: '' });
     }
     setWordCount(e.target.value);
     setWords(newWordArr);
@@ -48,28 +46,32 @@ const CreateTest = ({ createAlert }) => {
       startRecording();
     }
   };
-  let createFormData = new Promise(async (resolve, reject) => {
-    let data = new FormData();
-    words.map(async (word) => {
-      let response = await fetch(word.audio);
-      let blob = await response.blob();
-      data.append(
-        word.word,
-        new File([blob], `${word.word}.wav`, { type: "audio/wav" })
-      );
+  let createFormData = () => {
+    return new Promise(async (resolve, reject) => {
+      let data = new FormData();
+      words.map(async (word) => {
+        let response = await fetch(word.audio);
+        let blob = await response.blob();
+        data.append(
+          word.word,
+          new File([blob], `${word.word}.wav`, { type: 'audio/wav' })
+        );
+      });
+      console.log(data);
+      resolve(data);
     });
-    console.log(data);
-    resolve(data);
-  });
+  };
   const blobToFile = async (blobUrl, fileName) => {
     let response = await fetch(blobUrl);
     let blob = await response.blob();
-    console.log("convert");
-    return new File([blob], `${fileName}.wav`, { type: "audio/wav" });
+    console.log('convert');
+    return new File([blob], `${fileName}.wav`, { type: 'audio/wav' });
   };
   const confirmAudio = (e) => {
     if (mediaBlobUrl === null)
-      return alert("You must record audio to save first.");
+      return alert(
+        'You must record audio to save first. Click the microphone icon below.'
+      );
     let newValue = words.find((word) => word.number.toString() === e.target.id);
     newValue.audio = mediaBlobUrl;
     let wordArr = words.filter(
@@ -80,18 +82,19 @@ const CreateTest = ({ createAlert }) => {
       return a.number - b.number;
     });
     setWords(wordArr);
+    console.log(mediaBlobUrl);
     clearBlobUrl();
   };
   const createTest = async (e) => {
     // Check that all info is entered
     let notDone = false;
     words.forEach((w) => {
-      if (w.word === "") {
+      if (w.word === '') {
         notDone = true;
-        createAlert("One or more word entries is missing.", "danger", 5000);
-      } else if (w.audio === "") {
+        createAlert('One or more word entries is missing.', 'danger', 5000);
+      } else if (w.audio === '') {
         notDone = true;
-        createAlert("One or more word is missing audio.", "danger", 5000);
+        createAlert('One or more word is missing audio.', 'danger', 5000);
       }
     });
     if (notDone) return;
@@ -103,12 +106,12 @@ const CreateTest = ({ createAlert }) => {
       createFormData().then((data) => {
         console.log(data);
       });
-      console.log("sending");
+      console.log('sending');
       axios
         .post(
-          process.env.NODE_ENV === "development"
-            ? "/api/v2/teacher/tests/create"
-            : "https://spelling-tests-backend.herokuapp.com/api/v2/teacher/tests/create",
+          process.env.NODE_ENV === 'development'
+            ? '/api/v2/teacher/tests/create'
+            : 'https://spelling-tests-backend.herokuapp.com/api/v2/teacher/tests/create',
           data,
           { headers: { token: token.current } }
         )
@@ -118,7 +121,7 @@ const CreateTest = ({ createAlert }) => {
   };
   const deleteAudio = (e) => {
     let newValue = words.find((word) => word.number.toString() === e.target.id);
-    newValue.audio = "";
+    newValue.audio = '';
     let wordArr = words.filter(
       (word) => word.number.toString() !== e.target.id
     );
@@ -130,6 +133,12 @@ const CreateTest = ({ createAlert }) => {
   };
   return (
     <div className='container'>
+      <div className='text-center'>
+        <Link className='text-center' to='/teachers/tests/create/tutorial'>
+          Click here to see a tutorial
+        </Link>
+      </div>
+
       <div className='row'>
         <div className='col-10'>
           <label>Enter a test name</label>
@@ -157,27 +166,12 @@ const CreateTest = ({ createAlert }) => {
           {mediaBlobUrl === null ? (
             <i
               className='fas fa-microphone fa-5x text-center'
-              style={{ margin: "10px", cursor: "pointer" }}
+              style={{ margin: '10px', cursor: 'pointer' }}
               onClick={onRecord}
             ></i>
           ) : (
             <Fragment>
-              <i
-                className='fas fa-volume-up fa-5x text-center'
-                height='20px'
-                width='20px'
-                onClick={() => setPlaying(0)}
-                style={{ cursor: "pointer" }}
-              ></i>
-              <ReactPlayer
-                height='0px'
-                width='0px'
-                url={mediaBlobUrl}
-                playing={playing === 0 ? true : false}
-                onEnded={() => {
-                  setPlaying(-1);
-                }}
-              />
+              <audio src={mediaBlobUrl} controls></audio>
               <br />
               <button className='btn btn-danger' onClick={() => clearBlobUrl()}>
                 Discard
@@ -200,7 +194,7 @@ const CreateTest = ({ createAlert }) => {
 
       {words.map((word) => (
         <div key={word.number} id={word.number} className='row word-margin'>
-          <div className='col-10'>
+          <div className='col-6'>
             <input
               type='text'
               id={word.number}
@@ -209,9 +203,9 @@ const CreateTest = ({ createAlert }) => {
               placeholder={audio[word.number]}
             />
           </div>
-          <div className='col-2'>
+          <div className='col-6'>
             <div className='row'>
-              {words.find((w) => w.number === word.number).audio === "" ? (
+              {words.find((w) => w.number === word.number).audio === '' ? (
                 <Fragment>
                   <div className='col'>
                     <button
@@ -226,22 +220,7 @@ const CreateTest = ({ createAlert }) => {
               ) : (
                 <Fragment>
                   <div className='col'>
-                    <i
-                      className='fas fa-volume-up fa-2x'
-                      style={{ cursor: "pointer" }}
-                      onClick={() => {
-                        setPlaying(word.number);
-                      }}
-                    ></i>
-                    <ReactPlayer
-                      height='20px'
-                      width='20px'
-                      url={word.audio}
-                      playing={playing === word.number ? true : false}
-                      onEnded={() => {
-                        setPlaying(-1);
-                      }}
-                    />
+                    <audio src={word.audio} controls></audio>
                   </div>
                   <div className='col'>
                     <button
@@ -261,7 +240,7 @@ const CreateTest = ({ createAlert }) => {
       {wordCount !== 0 ? (
         <div className='row word-margin'>
           <button
-            style={{ width: "100%" }}
+            style={{ width: '100%' }}
             onClick={createTest}
             className='btn btn-success'
           >
