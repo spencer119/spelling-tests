@@ -1,13 +1,17 @@
 import axios from 'axios';
 import React, { Fragment, useState, useRef } from 'react';
-import { Link } from 'react-router-dom';
+import { Link, useHistory } from 'react-router-dom';
 import { useReactMediaRecorder } from 'react-media-recorder';
+import Spinner from '../../Spinner';
 const CreateTest = ({ createAlert }) => {
+  const [loading, setLoading] = useState(false);
   const [words, setWords] = useState([]);
   const [wordCount, setWordCount] = useState(0);
   const [testName, setTestName] = useState('');
   const [record, setRecord] = useState(false);
   const [audio, setAudio] = useState({});
+  const [attempts, setAttempts] = useState(0);
+  const history = useHistory();
   const token = useRef(localStorage.getItem('token'));
   const {
     startRecording,
@@ -46,27 +50,6 @@ const CreateTest = ({ createAlert }) => {
       startRecording();
     }
   };
-  let createFormData = () => {
-    return new Promise(async (resolve, reject) => {
-      let data = new FormData();
-      words.map(async (word) => {
-        let response = await fetch(word.audio);
-        let blob = await response.blob();
-        data.append(
-          word.word,
-          new File([blob], `${word.word}.wav`, { type: 'audio/wav' })
-        );
-      });
-      console.log(data);
-      resolve(data);
-    });
-  };
-  const blobToFile = async (blobUrl, fileName) => {
-    let response = await fetch(blobUrl);
-    let blob = await response.blob();
-    console.log('convert');
-    return new File([blob], `${fileName}.wav`, { type: 'audio/wav' });
-  };
   const confirmAudio = (e) => {
     if (mediaBlobUrl === null)
       return alert(
@@ -88,6 +71,14 @@ const CreateTest = ({ createAlert }) => {
   const createTest = async (e) => {
     // Check that all info is entered
     let notDone = false;
+    if (testName === '')
+      return createAlert('Your test needs a name!', 'danger', 5000);
+    if (attempts === 0)
+      return createAlert(
+        'Please specify a number of attempts. You can always change this later.',
+        'danger',
+        5000
+      );
     words.forEach((w) => {
       if (w.word === '') {
         notDone = true;
@@ -99,24 +90,39 @@ const CreateTest = ({ createAlert }) => {
     });
     if (notDone) return;
     else {
+      setLoading(true);
       let data = new FormData();
-      await words.forEach(async (word) => {
-        await data.append(word.word, await blobToFile(word.audio, word.word));
+      words.map((w) => {
+        let wavFromBlob = new File([w.audio], `${w.word}.wav`);
+        data.append('file', wavFromBlob);
       });
-      createFormData().then((data) => {
-        console.log(data);
+      let wordArr = [];
+      words.map((word) => {
+        wordArr.push(word.word);
       });
-      console.log('sending');
+      data.append('words', wordArr);
+      data.append('testName', testName);
+      data.append('attempts', attempts);
       axios
         .post(
           process.env.NODE_ENV === 'development'
             ? '/api/v2/teacher/tests/create'
             : 'https://spelling-tests-backend.herokuapp.com/api/v2/teacher/tests/create',
           data,
-          { headers: { token: token.current } }
+          { headers: { token: token.current, words } }
         )
-        .then((res) => {})
-        .catch((err) => {});
+        .then((res) => {
+          history.push('/teacher/tests');
+          createAlert('Test created successfully!', 'success', 5000);
+        })
+        .catch((err) => {
+          setLoading(false);
+          createAlert(
+            'An error has occured, please try again.',
+            'danger',
+            5000
+          );
+        });
     }
   };
   const deleteAudio = (e) => {
@@ -131,125 +137,143 @@ const CreateTest = ({ createAlert }) => {
     });
     setWords(wordArr);
   };
-  return (
-    <div className='container'>
-      <div className='text-center'>
-        <Link className='text-center' to='/teachers/tests/create/tutorial'>
-          Click here to see a tutorial
-        </Link>
-      </div>
-
-      <div className='row'>
-        <div className='col-10'>
-          <label>Enter a test name</label>
-          <input
-            type='text'
-            value={testName}
-            onChange={(e) => setTestName(e.target.value)}
-            placeholder='Test name'
-            className='form-control'
-          />
+  if (loading) return <Spinner />;
+  else
+    return (
+      <div className='container'>
+        <div className='text-center'>
+          <Link className='text-center' to='/teachers/tests/create/tutorial'>
+            Click here to see a tutorial
+          </Link>
         </div>
-        <div className='col-2'>
-          <label>How many words?</label>
-          <input
-            value={wordCount}
-            onChange={onWordCountChange}
-            type='number'
-            placeholder='# of words'
-            className='form-control'
-          />
-        </div>
-      </div>
-      {wordCount === 0 ? null : (
-        <div className='text-center word-margin'>
-          {mediaBlobUrl === null ? (
-            <i
-              className='fas fa-microphone fa-5x text-center'
-              style={{ margin: '10px', cursor: 'pointer' }}
-              onClick={onRecord}
-            ></i>
-          ) : (
-            <Fragment>
-              <audio src={mediaBlobUrl} controls></audio>
-              <br />
-              <button className='btn btn-danger' onClick={() => clearBlobUrl()}>
-                Discard
-              </button>
-            </Fragment>
-          )}
 
-          {record ? (
-            <Fragment>
-              <p>Recording...</p>
-              <p>Click again to stop.</p>
-            </Fragment>
-          ) : mediaBlobUrl !== null ? (
-            <p>Audio ready to save.</p>
-          ) : (
-            <p>Click to start a new recording.</p>
-          )}
-        </div>
-      )}
-
-      {words.map((word) => (
-        <div key={word.number} id={word.number} className='row word-margin'>
-          <div className='col-6'>
+        <div className='row'>
+          <div className='col-10'>
+            <label>Enter a test name</label>
             <input
               type='text'
-              id={word.number}
+              value={testName}
+              onChange={(e) => setTestName(e.target.value)}
+              placeholder='Test name'
               className='form-control'
-              onChange={onWordChange}
-              placeholder={audio[word.number]}
             />
           </div>
-          <div className='col-6'>
-            <div className='row'>
-              {words.find((w) => w.number === word.number).audio === '' ? (
-                <Fragment>
-                  <div className='col'>
-                    <button
-                      id={word.number}
-                      onClick={confirmAudio}
-                      className='btn btn-success'
-                    >
-                      Save Audio
-                    </button>
-                  </div>
-                </Fragment>
-              ) : (
-                <Fragment>
-                  <div className='col'>
-                    <audio src={word.audio} controls></audio>
-                  </div>
-                  <div className='col'>
-                    <button
-                      className='btn btn-danger'
-                      id={word.number}
-                      onClick={deleteAudio}
-                    >
-                      Delete
-                    </button>
-                  </div>
-                </Fragment>
-              )}
-            </div>
+          <div className='col-2'>
+            <label>How many words?</label>
+            <input
+              value={wordCount}
+              onChange={onWordCountChange}
+              type='number'
+              placeholder='# of words'
+              className='form-control'
+            />
           </div>
         </div>
-      ))}
-      {wordCount !== 0 ? (
-        <div className='row word-margin'>
-          <button
-            style={{ width: '100%' }}
-            onClick={createTest}
-            className='btn btn-success'
-          >
-            Create Test
-          </button>
+        <div className='row'>
+          <div className='col-10'></div>
+          <div className='col-2'>
+            <label>How many attempts?</label>
+            <input
+              value={attempts}
+              onChange={(e) => setAttempts(e.target.value)}
+              type='number'
+              placeholder='# of attempts'
+              className='form-control'
+            />
+          </div>
         </div>
-      ) : null}
-    </div>
-  );
+        {wordCount === 0 ? null : (
+          <div className='text-center word-margin'>
+            {mediaBlobUrl === null ? (
+              <i
+                className='fas fa-microphone fa-5x text-center'
+                style={{ margin: '10px', cursor: 'pointer' }}
+                onClick={onRecord}
+              ></i>
+            ) : (
+              <Fragment>
+                <audio src={mediaBlobUrl} controls></audio>
+                <br />
+                <button
+                  className='btn btn-danger'
+                  onClick={() => clearBlobUrl()}
+                >
+                  Discard
+                </button>
+              </Fragment>
+            )}
+
+            {record ? (
+              <Fragment>
+                <p>Recording...</p>
+                <p>Click again to stop.</p>
+              </Fragment>
+            ) : mediaBlobUrl !== null ? (
+              <p>Audio ready to save.</p>
+            ) : (
+              <p>Click to start a new recording.</p>
+            )}
+          </div>
+        )}
+
+        {words.map((word) => (
+          <div key={word.number} id={word.number} className='row word-margin'>
+            <div className='col-6'>
+              <input
+                type='text'
+                id={word.number}
+                className='form-control'
+                onChange={onWordChange}
+                placeholder={audio[word.number]}
+              />
+            </div>
+            <div className='col-6'>
+              <div className='row'>
+                {words.find((w) => w.number === word.number).audio === '' ? (
+                  <Fragment>
+                    <div className='col'>
+                      <button
+                        id={word.number}
+                        onClick={confirmAudio}
+                        className='btn btn-success'
+                      >
+                        Save Audio
+                      </button>
+                    </div>
+                  </Fragment>
+                ) : (
+                  <Fragment>
+                    <div className='col'>
+                      <audio src={word.audio} controls></audio>
+                    </div>
+                    <div className='col'>
+                      <button
+                        className='btn btn-danger'
+                        id={word.number}
+                        onClick={deleteAudio}
+                      >
+                        Delete
+                      </button>
+                    </div>
+                  </Fragment>
+                )}
+              </div>
+            </div>
+          </div>
+        ))}
+        {wordCount !== 0 ? (
+          <div className='row word-margin'>
+            <button
+              style={{ width: '100%' }}
+              onClick={createTest}
+              className='btn btn-success'
+            >
+              Create Test
+            </button>
+          </div>
+        ) : null}
+      </div>
+    );
 };
 
 export default CreateTest;
