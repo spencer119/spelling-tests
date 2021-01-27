@@ -68,6 +68,22 @@ const CreateTest = ({ createAlert }) => {
     console.log(mediaBlobUrl);
     clearBlobUrl();
   };
+  const urlToBlob = async (blobUrl) => {
+    return new Promise((resolve, reject) => {
+      var xhr = new XMLHttpRequest();
+      xhr.open('GET', blobUrl, true);
+      xhr.responseType = 'blob';
+      xhr.onload = function (e) {
+        if (this.status == 200) {
+          resolve(this.response);
+          // var myBlob = this.response;
+          // let wavFromBlob = new File([myBlob], `${w.word}.wav`);
+          // data.append('file', wavFromBlob);
+        }
+      };
+      xhr.send();
+    });
+  };
   const createTest = async (e) => {
     // Check that all info is entered
     let notDone = false;
@@ -92,8 +108,10 @@ const CreateTest = ({ createAlert }) => {
     else {
       setLoading(true);
       let data = new FormData();
-      words.map((w) => {
-        let wavFromBlob = new File([w.audio], `${w.word}.wav`);
+      words.map(async (w) => {
+        let audioBlob = await urlToBlob(w.audio);
+        let wavFromBlob = new File([audioBlob], `${w.word}.wav`);
+        console.log(wavFromBlob);
         data.append('file', wavFromBlob);
       });
       let wordArr = [];
@@ -103,6 +121,7 @@ const CreateTest = ({ createAlert }) => {
       data.append('words', wordArr);
       data.append('testName', testName);
       data.append('attempts', attempts);
+      console.log(data);
       axios
         .post(
           process.env.NODE_ENV === 'development'
