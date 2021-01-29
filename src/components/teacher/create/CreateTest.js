@@ -11,6 +11,7 @@ const CreateTest = ({ createAlert }) => {
   const [record, setRecord] = useState(false);
   const [audio, setAudio] = useState({});
   const [attempts, setAttempts] = useState(0);
+  const [files, setFiles] = useState([]);
   const history = useHistory();
   const token = useRef(localStorage.getItem('token'));
   const {
@@ -50,6 +51,11 @@ const CreateTest = ({ createAlert }) => {
       startRecording();
     }
   };
+  const blobToFile = (audioBlob, fileName) => {
+    audioBlob.lastModifiedDate = new Date();
+    audioBlob.name = fileName;
+    return audioBlob;
+  };
   const confirmAudio = (e) => {
     if (mediaBlobUrl === null)
       return alert(
@@ -67,22 +73,6 @@ const CreateTest = ({ createAlert }) => {
     setWords(wordArr);
     console.log(mediaBlobUrl);
     clearBlobUrl();
-  };
-  const urlToBlob = async (blobUrl) => {
-    return new Promise((resolve, reject) => {
-      var xhr = new XMLHttpRequest();
-      xhr.open('GET', blobUrl, true);
-      xhr.responseType = 'blob';
-      xhr.onload = function (e) {
-        if (this.status == 200) {
-          resolve(this.response);
-          // var myBlob = this.response;
-          // let wavFromBlob = new File([myBlob], `${w.word}.wav`);
-          // data.append('file', wavFromBlob);
-        }
-      };
-      xhr.send();
-    });
   };
   const createTest = async (e) => {
     // Check that all info is entered
@@ -108,40 +98,53 @@ const CreateTest = ({ createAlert }) => {
     else {
       setLoading(true);
       let data = new FormData();
-      words.map(async (w) => {
-        let audioBlob = await urlToBlob(w.audio);
-        let wavFromBlob = new File([audioBlob], `${w.word}.wav`);
-        console.log(wavFromBlob);
-        data.append('file', wavFromBlob);
-      });
       let wordArr = [];
       words.map((word) => {
         wordArr.push(word.word);
       });
-      data.append('words', wordArr);
-      data.append('testName', testName);
-      data.append('attempts', attempts);
-      console.log(data);
-      axios
-        .post(
-          process.env.NODE_ENV === 'development'
-            ? '/api/v2/teacher/tests/create'
-            : 'https://spelling-tests-backend.herokuapp.com/api/v2/teacher/tests/create',
-          data,
-          { headers: { token: token.current, words } }
-        )
-        .then((res) => {
-          history.push('/teacher/tests');
-          createAlert('Test created successfully!', 'success', 5000);
-        })
-        .catch((err) => {
-          setLoading(false);
-          createAlert(
-            'An error has occured, please try again.',
-            'danger',
-            5000
-          );
+      new Promise((resolve, reject) => {
+        words.map(async (w) => {
+          var xhr = new XMLHttpRequest();
+          xhr.open('GET', w.audio, true);
+          xhr.responseType = 'blob';
+          xhr.onload = function (e) {
+            if (this.status == 200) {
+              var myBlob = this.response;
+              //let wavFromBlob = new File([myBlob], `${w.word}.wav`);
+              let wavFromBlob = blobToFile(myBlob, w.word.concat('.wav'));
+              console.log(wavFromBlob);
+              data.append('file', wavFromBlob);
+            }
+          };
+          xhr.send();
         });
+        resolve();
+      }).then(() => {
+        data.append('words', wordArr);
+        data.append('testName', testName);
+        data.append('attempts', attempts);
+        console.log(data);
+        axios
+          .post(
+            process.env.NODE_ENV === 'development'
+              ? '/api/v2/teacher/tests/create'
+              : 'https://spelling-tests-backend.herokuapp.com/api/v2/teacher/tests/create',
+            data,
+            { headers: { token: token.current, words } }
+          )
+          .then((res) => {
+            history.push('/teacher/tests');
+            createAlert('Test created successfully!', 'success', 5000);
+          })
+          .catch((err) => {
+            setLoading(false);
+            createAlert(
+              'An error has occured, please try again.',
+              'danger',
+              5000
+            );
+          });
+      });
     }
   };
   const deleteAudio = (e) => {
