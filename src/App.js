@@ -51,7 +51,11 @@ function App() {
       } else {
         switch (err.response.status) {
           case 500:
-            createAlert('An internal server error has occured. Please try again', 'danger', 5000);
+            createAlert(
+              'An internal server error has occured. Please try again',
+              'danger',
+              5000
+            );
             break;
           default:
             break;
@@ -121,11 +125,11 @@ function App() {
               <Alert alert={alert} alertType={alertType} />
               <Tests createAlert={createAlert} />
             </Route>
-            <Route path='/teacher/tests/create'>
+            {/* <Route path='/teacher/tests/create'>
               <Navbar />
               <Alert alert={alert} alertType={alertType} />
               <CreateTest createAlert={createAlert} />
-            </Route>
+            </Route> */}
             <Route exact path='/teacher/groups'>
               <Navbar />
               <Alert alert={alert} alertType={alertType} />
