@@ -179,9 +179,14 @@ const Classes = ({ createAlert }) => {
                 </Dropdown.Menu>
               </Dropdown>
             </td>
-            {/* <td scope='row'>
-              <button className='btn btn-danger'>Delete</button>
-            </td> */}
+            <td scope='row'>
+              <Link
+                to={`/teacher/group/edit?group_id=${group.group_id}`}
+                className='btn btn-primary'
+              >
+                Edit
+              </Link>
+            </td>
           </tr>
         ))}
       </Fragment>
@@ -284,6 +289,7 @@ const Classes = ({ createAlert }) => {
                     <tr>
                       <th scope='col'>Group Name</th>
                       <th scope='col'>Active Test</th>
+                      <th scope='col'>Edit</th>
                     </tr>
                   </thead>
                   <tbody>{getClassGroups()}</tbody>

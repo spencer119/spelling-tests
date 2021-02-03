@@ -23,6 +23,7 @@ import StudentHome from './components/StudentHome';
 import CreateTest from './components/teacher/create/CreateTest';
 import StudentScores from './components/StudentScores';
 import FirstLogin from './components/teacher/FirstLogin';
+import EditGroup from './components/teacher/edit/EditGroup';
 import Forbidden from './components/codes/Forbidden';
 function App() {
   const [alert, setAlert] = useState('');
@@ -57,6 +58,12 @@ function App() {
               5000
             );
             break;
+          case 403:
+            createAlert(
+              "You don't have permission to do this.",
+              'danger',
+              5000
+            );
           default:
             break;
         }
@@ -125,11 +132,12 @@ function App() {
               <Alert alert={alert} alertType={alertType} />
               <Tests createAlert={createAlert} />
             </Route>
-            {/* <Route path='/teacher/tests/create'>
+            <Route path='/admin/tests/create'>
+              {/* temporarily admin */}
               <Navbar />
               <Alert alert={alert} alertType={alertType} />
               <CreateTest createAlert={createAlert} />
-            </Route> */}
+            </Route>
             <Route exact path='/teacher/groups'>
               <Navbar />
               <Alert alert={alert} alertType={alertType} />
@@ -149,6 +157,11 @@ function App() {
               <Navbar />
               <Alert alert={alert} alertType={alertType} />
               <CreateGroup createAlert={createAlert} />
+            </Route>
+            <Route path='/teacher/group/edit'>
+              <Navbar />
+              <Alert alert={alert} alertType={alertType} />
+              <EditGroup createAlert={createAlert} />
             </Route>
             <Route path='/teacher/students/edit'>
               <Navbar />
