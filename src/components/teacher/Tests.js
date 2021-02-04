@@ -148,8 +148,7 @@ const Tests = ({ createAlert }) => {
     setEditName(e.target.getAttribute('testName'));
     let viewArr = [];
     testlines.map((line) => {
-      if (line.test_id === e.target.parentElement.parentElement.id)
-        viewArr.push(line);
+      if (line.test_id === e.target.parentElement.parentElement.id) viewArr.push(line);
     });
     setViewModal(true);
     return setViewInfo(viewArr);
@@ -193,15 +192,11 @@ const Tests = ({ createAlert }) => {
           <Modal.Body>
             <form>
               <label>Enter a test name:</label>
-              <input
-                className='form-control'
-                value={newTestName}
-                onChange={onNameChange}
-              />
+              <input className='form-control' value={newTestName} onChange={onNameChange} />
               <label>
-                Enter the words for the test in the box below. Seperate each
-                word by pressing enter and creating a new line. Make sure you
-                don't create an extra enter at the end. <br />
+                Enter the words for the test in the box below. Separate each word by pressing enter
+                and creating a new line. Make sure you don't create an extra enter at the end.{' '}
+                <br />
                 Next, upload a audio file for each word at the bottom.
               </label>
               <textarea
@@ -210,10 +205,7 @@ const Tests = ({ createAlert }) => {
                 value={newTestWords}
                 onChange={onWordChange}
               ></textarea>
-              <p>
-                {newTestWords === '' ? '0' : newTestWords.split('\n').length}{' '}
-                words
-              </p>
+              <p>{newTestWords === '' ? '0' : newTestWords.split('\n').length} words</p>
               <br />
               <label for='formControlRange'>
                 {attempts} Attempt{attempts > 1 ? 's' : null}
@@ -230,39 +222,23 @@ const Tests = ({ createAlert }) => {
               <br />
               <p>
                 <strong>
-                  **All audio files must be in an .mp3 or .m4a format, select
-                  your format below, and the name of the file must be the same
-                  as the word**
+                  **All audio files must be in an .mp3 or .m4a format, select your format below, and
+                  the name of the file must be the same as the word**
                 </strong>{' '}
                 <br />
                 For example, the word cat would be uploaded with "cat.mp3"
               </p>
-              <input
-                type='file'
-                onChange={(e) => setFiles(e.target.files)}
-                multiple
-              />
-              <ul
-                className='list-group list-group-horizontal'
-                style={{ marginTop: '10px' }}
-              >
+              <input type='file' onChange={(e) => setFiles(e.target.files)} multiple />
+              <ul className='list-group list-group-horizontal' style={{ marginTop: '10px' }}>
                 <li
-                  className={
-                    filetype === 'mp3'
-                      ? 'list-group-item active'
-                      : 'list-group-item'
-                  }
+                  className={filetype === 'mp3' ? 'list-group-item active' : 'list-group-item'}
                   onClick={() => setFiletype('mp3')}
                   style={{ cursor: 'pointer' }}
                 >
                   .mp3
                 </li>
                 <li
-                  className={
-                    filetype === 'm4a'
-                      ? 'list-group-item active'
-                      : 'list-group-item'
-                  }
+                  className={filetype === 'm4a' ? 'list-group-item active' : 'list-group-item'}
                   onClick={() => setFiletype('m4a')}
                   style={{ cursor: 'pointer' }}
                 >
@@ -282,11 +258,7 @@ const Tests = ({ createAlert }) => {
             <button
               className='btn btn-success'
               onClick={onClick}
-              disabled={
-                files.length !== newTestWords.split('\n').length || disable
-                  ? true
-                  : false
-              }
+              disabled={files.length !== newTestWords.split('\n').length || disable ? true : false}
             >
               Create test
             </button>
@@ -332,10 +304,7 @@ const Tests = ({ createAlert }) => {
             </button>
           </Modal.Footer>
         </Modal>
-        <p>
-          To create a new test click the button below and follow the
-          instructions.
-        </p>
+        <p>To create a new test click the button below and follow the instructions.</p>
         <button
           className='btn btn-primary'
           style={{ width: '100%', marginBottom: '10px' }}
@@ -346,9 +315,7 @@ const Tests = ({ createAlert }) => {
         <button
           className='btn btn-info'
           style={{ width: '100%', marginBottom: '25px' }}
-          onClick={() =>
-            showArchived ? setShowArchived(false) : setShowArchived(true)
-          }
+          onClick={() => (showArchived ? setShowArchived(false) : setShowArchived(true))}
         >
           {showArchived ? 'Show active tests' : 'Show archived tests'}
         </button>
@@ -380,10 +347,7 @@ const Tests = ({ createAlert }) => {
                       </button>
                     </td>
                     <td>
-                      <button
-                        className='btn btn-secondary'
-                        onClick={unArchiveTest}
-                      >
+                      <button className='btn btn-secondary' onClick={unArchiveTest}>
                         Unarchive
                       </button>
                     </td>
