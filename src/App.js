@@ -25,6 +25,7 @@ import StudentScores from './components/StudentScores';
 import FirstLogin from './components/teacher/FirstLogin';
 import EditGroup from './components/teacher/edit/EditGroup';
 import Forbidden from './components/codes/Forbidden';
+import NotFound from './components/codes/NotFound';
 function App() {
   const [alert, setAlert] = useState('');
   const [alertType, setAlertType] = useState('');
@@ -176,6 +177,7 @@ function App() {
             <Route path='/forbidden'>
               <Forbidden />
             </Route>
+            <Route component={NotFound}></Route>
           </Switch>
         </div>
       </div>
