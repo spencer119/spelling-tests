@@ -5,8 +5,9 @@ const NotFound = () => {
     <div className='container text-center'>
       <h2 style={{ color: 'red' }}>404 Not Found</h2>
       <h2>The page you are looking for does not exist.</h2>
-      <p>Please go back to the home page.</p>
-      <Link to='/'>Go Home</Link>
+      <Link style={{ fontSize: '20px' }} to='/'>
+        Go Home
+      </Link>
     </div>
   );
 };
