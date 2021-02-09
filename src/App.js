@@ -53,18 +53,10 @@ function App() {
       } else {
         switch (err.response.status) {
           case 500:
-            createAlert(
-              'An internal server error has occured. Please try again',
-              'danger',
-              5000
-            );
+            createAlert('An internal server error has occured. Please try again', 'danger', 5000);
             break;
           case 403:
-            createAlert(
-              "You don't have permission to do this.",
-              'danger',
-              5000
-            );
+            createAlert("You don't have permission to do this.", 'danger', 5000);
           default:
             break;
         }
@@ -133,8 +125,7 @@ function App() {
               <Alert alert={alert} alertType={alertType} />
               <Tests createAlert={createAlert} />
             </Route>
-            <Route path='/admin/tests/create'>
-              {/* temporarily admin */}
+            <Route path='/teacher/tests/create'>
               <Navbar />
               <Alert alert={alert} alertType={alertType} />
               <CreateTest createAlert={createAlert} />

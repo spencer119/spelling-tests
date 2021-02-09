@@ -1,4 +1,5 @@
 import React, { useEffect, useState, useRef } from 'react';
+import { Link } from 'react-router-dom';
 import axios from 'axios';
 import { Modal } from 'react-bootstrap';
 import Spinner from '../Spinner';
@@ -305,13 +306,13 @@ const Tests = ({ createAlert }) => {
           </Modal.Footer>
         </Modal>
         <p>To create a new test click the button below and follow the instructions.</p>
-        <button
+        <Link
           className='btn btn-primary'
           style={{ width: '100%', marginBottom: '10px' }}
-          onClick={() => setShowModal(true)}
+          to='/teacher/tests/create'
         >
           Create new test
-        </button>
+        </Link>
         <button
           className='btn btn-info'
           style={{ width: '100%', marginBottom: '25px' }}
@@ -323,7 +324,7 @@ const Tests = ({ createAlert }) => {
           <thead>
             <tr>
               <th scope='col'>Test</th>
-              <th scope='col'>Edit</th>
+              <th scope='col'>Edit/View</th>
               {showArchived ? <th scope='col'>Unarchive</th> : null}
               <th scope='col'>{showArchived ? 'Delete' : 'Archive'}</th>
             </tr>

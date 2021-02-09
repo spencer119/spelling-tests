@@ -14,12 +14,7 @@ const CreateTest = ({ createAlert }) => {
   const [files, setFiles] = useState([]);
   const history = useHistory();
   const token = useRef(localStorage.getItem('token'));
-  const {
-    startRecording,
-    stopRecording,
-    clearBlobUrl,
-    mediaBlobUrl,
-  } = useReactMediaRecorder({
+  const { startRecording, stopRecording, clearBlobUrl, mediaBlobUrl } = useReactMediaRecorder({
     video: false,
   });
   const onWordCountChange = (e) => {
@@ -51,21 +46,12 @@ const CreateTest = ({ createAlert }) => {
       startRecording();
     }
   };
-  const blobToFile = (audioBlob, fileName) => {
-    audioBlob.lastModifiedDate = new Date();
-    audioBlob.name = fileName;
-    return audioBlob;
-  };
   const confirmAudio = (e) => {
     if (mediaBlobUrl === null)
-      return alert(
-        'You must record audio to save first. Click the microphone icon below.'
-      );
+      return alert('You must record audio to save first. Click the microphone icon below.');
     let newValue = words.find((word) => word.number.toString() === e.target.id);
     newValue.audio = mediaBlobUrl;
-    let wordArr = words.filter(
-      (word) => word.number.toString() !== e.target.id
-    );
+    let wordArr = words.filter((word) => word.number.toString() !== e.target.id);
     wordArr.push(newValue);
     wordArr.sort((a, b) => {
       return a.number - b.number;
@@ -77,8 +63,7 @@ const CreateTest = ({ createAlert }) => {
   const createTest = async (e) => {
     // Check that all info is entered
     let notDone = false;
-    if (testName === '')
-      return createAlert('Your test needs a name!', 'danger', 5000);
+    if (testName === '') return createAlert('Your test needs a name!', 'danger', 5000);
     if (attempts === 0)
       return createAlert(
         'Please specify a number of attempts. You can always change this later.',
@@ -102,57 +87,42 @@ const CreateTest = ({ createAlert }) => {
       words.map((word) => {
         wordArr.push(word.word);
       });
-      new Promise((resolve, reject) => {
-        words.map(async (w) => {
-          var xhr = new XMLHttpRequest();
-          xhr.open('GET', w.audio, true);
-          xhr.responseType = 'blob';
-          xhr.onload = function (e) {
-            if (this.status == 200) {
-              var myBlob = this.response;
-              //let wavFromBlob = new File([myBlob], `${w.word}.wav`);
-              let wavFromBlob = blobToFile(myBlob, w.word.concat('.wav'));
-              console.log(wavFromBlob);
-              data.append('file', wavFromBlob);
-            }
-          };
-          xhr.send();
+      data.append('words', wordArr);
+      data.append('testName', testName);
+      data.append('attempts', attempts);
+      const files = await Promise.all(
+        words.map((word) => {
+          return fetch(word.audio)
+            .then((res) => res.blob())
+            .then((blob) => new File([blob], `${word.word}.wav`));
+        })
+      );
+      files.forEach((file) => data.append('file', file));
+
+      axios
+        .post(
+          process.env.NODE_ENV === 'development'
+            ? '/api/v2/teacher/tests/create'
+            : 'https://spelling-tests-backend.herokuapp.com/api/v2/teacher/tests/create',
+          data,
+          { headers: { token: token.current, words } }
+        )
+        .then((res) => {
+          console.log(res);
+          setLoading(false);
+          history.push('/teacher/tests');
+          createAlert('Test created successfully!', 'success', 5000);
+        })
+        .catch((err) => {
+          setLoading(false);
+          createAlert('An error has occured, please try again.', 'danger', 5000);
         });
-        resolve();
-      }).then(() => {
-        data.append('words', wordArr);
-        data.append('testName', testName);
-        data.append('attempts', attempts);
-        console.log(data);
-        axios
-          .post(
-            process.env.NODE_ENV === 'development'
-              ? '/api/v2/teacher/tests/create'
-              : 'https://spelling-tests-backend.herokuapp.com/api/v2/teacher/tests/create',
-            data,
-            { headers: { token: token.current, words } }
-          )
-          .then((res) => {
-            history.push('/teacher/tests');
-            createAlert('Test created successfully!', 'success', 5000);
-          })
-          .catch((err) => {
-            setLoading(false);
-            createAlert(
-              'An error has occured, please try again.',
-              'danger',
-              5000
-            );
-          });
-      });
     }
   };
   const deleteAudio = (e) => {
     let newValue = words.find((word) => word.number.toString() === e.target.id);
     newValue.audio = '';
-    let wordArr = words.filter(
-      (word) => word.number.toString() !== e.target.id
-    );
+    let wordArr = words.filter((word) => word.number.toString() !== e.target.id);
     wordArr.push(newValue);
     wordArr.sort((a, b) => {
       return a.number - b.number;
@@ -164,8 +134,12 @@ const CreateTest = ({ createAlert }) => {
     return (
       <div className='container'>
         <div className='text-center'>
+          <Link to='/teacher/tests' style={{ marginBottom: '10px' }} className='btn btn-primary'>
+            Go back
+          </Link>
+          <br />
           <Link className='text-center' to='/teachers/tests/create/tutorial'>
-            Click here to see a tutorial
+            Click here to see a tutorial on how to create a test.
           </Link>
         </div>
 
@@ -216,10 +190,7 @@ const CreateTest = ({ createAlert }) => {
               <Fragment>
                 <audio src={mediaBlobUrl} controls></audio>
                 <br />
-                <button
-                  className='btn btn-danger'
-                  onClick={() => clearBlobUrl()}
-                >
+                <button className='btn btn-danger' onClick={() => clearBlobUrl()}>
                   Discard
                 </button>
               </Fragment>
@@ -254,11 +225,7 @@ const CreateTest = ({ createAlert }) => {
                 {words.find((w) => w.number === word.number).audio === '' ? (
                   <Fragment>
                     <div className='col'>
-                      <button
-                        id={word.number}
-                        onClick={confirmAudio}
-                        className='btn btn-success'
-                      >
+                      <button id={word.number} onClick={confirmAudio} className='btn btn-success'>
                         Save Audio
                       </button>
                     </div>
@@ -269,11 +236,7 @@ const CreateTest = ({ createAlert }) => {
                       <audio src={word.audio} controls></audio>
                     </div>
                     <div className='col'>
-                      <button
-                        className='btn btn-danger'
-                        id={word.number}
-                        onClick={deleteAudio}
-                      >
+                      <button className='btn btn-danger' id={word.number} onClick={deleteAudio}>
                         Delete
                       </button>
                     </div>
@@ -285,11 +248,7 @@ const CreateTest = ({ createAlert }) => {
         ))}
         {wordCount !== 0 ? (
           <div className='row word-margin'>
-            <button
-              style={{ width: '100%' }}
-              onClick={createTest}
-              className='btn btn-success'
-            >
+            <button style={{ width: '100%' }} onClick={createTest} className='btn btn-success'>
               Create Test
             </button>
           </div>
