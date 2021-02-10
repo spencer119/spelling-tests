@@ -271,6 +271,7 @@ const Tests = ({ createAlert }) => {
             <Modal.Title>View test</Modal.Title>
           </Modal.Header>
           <Modal.Body>
+            <label>Test Name</label>
             <input
               className='form-control'
               value={editName}
@@ -320,6 +321,10 @@ const Tests = ({ createAlert }) => {
         >
           {showArchived ? 'Show active tests' : 'Show archived tests'}
         </button>
+        <p>
+          Note: Archiving a test does not delete it. In order to delete a test you must archive it,
+          then delete it. Deleting a test deletes all student results associated with that test.
+        </p>
         <table className='table'>
           <thead>
             <tr>

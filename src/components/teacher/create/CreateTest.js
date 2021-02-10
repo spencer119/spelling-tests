@@ -138,11 +138,20 @@ const CreateTest = ({ createAlert }) => {
             Go back
           </Link>
           <br />
-          <Link className='text-center' to='/teachers/tests/create/tutorial'>
+          {/* <Link className='text-center' to='/teachers/tests/create/tutorial'>
             Click here to see a tutorial on how to create a test.
-          </Link>
+          </Link>*/}
         </div>
-
+        <h3>How to Create a Test:</h3>
+        <ul>
+          <li>Give the test a name, amount of words, and amount of attempts.</li>
+          <li>Type the words out in the boxes provided. (Words are case sensitive)</li>
+          <li>Click the microphone button to start recording. Click it again to stop.</li>
+          <li>
+            After recording your word, click the "Save Audio" button next to the corresponding word.
+          </li>
+          <li>After all audio is recorded, click "Create Test"</li>
+        </ul>
         <div className='row'>
           <div className='col-10'>
             <label>Enter a test name</label>
