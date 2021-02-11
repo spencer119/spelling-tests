@@ -26,6 +26,7 @@ import FirstLogin from './components/teacher/FirstLogin';
 import EditGroup from './components/teacher/edit/EditGroup';
 import Forbidden from './components/codes/Forbidden';
 import NotFound from './components/codes/NotFound';
+import Feedback from './components/admin/Feedback';
 function App() {
   const [alert, setAlert] = useState('');
   const [alertType, setAlertType] = useState('');
@@ -165,10 +166,21 @@ function App() {
               <Alert alert={alert} alertType={alertType} />
               <Teachers createAlert={createAlert} />
             </Route>
+            <Route path='/admin/teachers'>
+              <Navbar />
+              <Alert alert={alert} alertType={alertType} />
+              <Teachers createAlert={createAlert} />
+            </Route>
+            <Route path='/admin/feedback'>
+              <Navbar />
+              <Alert alert={alert} alertType={alertType} />
+              <Feedback />
+            </Route>
             <Route path='/forbidden'>
               <Forbidden />
             </Route>
-            <Route component={NotFound}></Route>
+            <Route component={NotFound}></Route>{' '}
+            {/* If the route doesn't exist. It defaults to a not found page */}
           </Switch>
         </div>
       </div>

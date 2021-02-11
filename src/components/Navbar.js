@@ -1,4 +1,4 @@
-import React, { useEffect, useState, useRef } from 'react';
+import React, { useEffect, useState, useRef, Fragment } from 'react';
 import { Link } from 'react-router-dom';
 import axios from 'axios';
 
@@ -54,11 +54,18 @@ const Navbar = () => {
             </Link>
           </li>
           {isAdmin ? (
-            <li className='nav-link'>
-              <Link className='nav-link' style={{ cursor: 'pointer' }} to='/admin/teachers'>
-                Manage Teachers
-              </Link>
-            </li>
+            <Fragment>
+              <li className='nav-link'>
+                <Link className='nav-link' style={{ cursor: 'pointer' }} to='/admin/teachers'>
+                  Manage Teachers
+                </Link>
+              </li>
+              <li className='nav-link'>
+                <Link className='nav-link' style={{ cursor: 'pointer' }} to='/admin/feedback'>
+                  Feedback
+                </Link>
+              </li>
+            </Fragment>
           ) : null}
         </ul>
         <ul className='nav justify-content-end'>
