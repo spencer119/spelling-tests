@@ -91,7 +91,7 @@ const TeacherHome = ({ createAlert }) => {
               <div className='card-body'>
                 {groups.map((group) => (
                   <Fragment>
-                    {group.group_name} <i class='fas fa-angle-double-right' />{' '}
+                    {group.group_name} <i className='fas fa-angle-double-right' />{' '}
                     {getTestName(group.active_test)} <br />
                   </Fragment>
                 ))}
@@ -142,7 +142,7 @@ const TeacherHome = ({ createAlert }) => {
               <div className='card-body'>
                 <h5 className='card-title'>Welcome {username}</h5>
                 <p className='card-text'>You are on the home page.</p>
-                <Link to='/teacher/results' class='btn btn-primary'>
+                <Link to='/teacher/results' className='btn btn-primary'>
                   See All Results
                 </Link>
               </div>
@@ -191,18 +191,21 @@ const TeacherHome = ({ createAlert }) => {
                 <h4 className='card-title'>
                   Version {version} - {date}
                 </h4>
-                {Object.keys(updates).map((key) => (
-                  <Fragment>
-                    <h5 className='card-title'>{key}</h5>
-                    <p className='card-text'>
-                      {updates[key].map((update) => (
-                        <Fragment>
-                          <i class='fas fa-angle-double-right' /> {update} <br />
-                        </Fragment>
-                      ))}
-                    </p>
-                  </Fragment>
-                ))}
+                {Object.keys(updates).map((key) => {
+                  if (key === 'Dev Notes') return;
+                  return (
+                    <Fragment key={key}>
+                      <h5 className='card-title'>{key}</h5>
+                      <p className='card-text'>
+                        {updates[key].map((update) => (
+                          <Fragment key={update}>
+                            <i className='fas fa-angle-double-right' /> {update} <br />
+                          </Fragment>
+                        ))}
+                      </p>
+                    </Fragment>
+                  );
+                })}
               </div>
             </div>
           </div>

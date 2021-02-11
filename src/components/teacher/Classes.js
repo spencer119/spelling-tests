@@ -50,11 +50,7 @@ const Classes = ({ createAlert }) => {
         setLoading(false);
       })
       .catch(() => {
-        createAlert(
-          'There was an error fetching your student groups.',
-          'danger',
-          5000
-        );
+        createAlert('There was an error fetching your student groups.', 'danger', 5000);
       });
   };
   useEffect(() => {
@@ -166,11 +162,7 @@ const Classes = ({ createAlert }) => {
                 </Dropdown.Toggle>
                 <Dropdown.Menu id={group.group_id}>
                   {tests.map((test) => (
-                    <Dropdown.Item
-                      key={test.test_name}
-                      id={test.test_id}
-                      onClick={onClick}
-                    >
+                    <Dropdown.Item key={test.test_name} id={test.test_id} onClick={onClick}>
                       {test.test_name}
                     </Dropdown.Item>
                   ))}
@@ -221,11 +213,7 @@ const Classes = ({ createAlert }) => {
                 >
                   {x.class_name}
                   <span className='badge badge-primary badge-pill'>
-                    {
-                      studentCount.find((sc) => sc.class_id === x.class_id)
-                        .count
-                    }{' '}
-                    students
+                    {studentCount.find((sc) => sc.class_id === x.class_id).count} students
                   </span>
                 </li>
               ))}
@@ -239,7 +227,7 @@ const Classes = ({ createAlert }) => {
             >
               Create New Class
             </Link>
-            <button
+            {/* <button
               className='btn btn-danger'
               style={{ width: '100%', marginTop: '10px' }}
               id='delete'
@@ -247,8 +235,8 @@ const Classes = ({ createAlert }) => {
               disabled={selectedClass === '' ? true : false}
             >
               Delete Class
-            </button>
-            <button
+            </button> */}
+            {/* <button
               className='btn btn-warning'
               style={{ width: '100%', marginTop: '10px' }}
               id='change'
@@ -256,7 +244,7 @@ const Classes = ({ createAlert }) => {
               disabled={selectedClass === '' ? true : false}
             >
               Change Class Name
-            </button>
+            </button> */}
 
             {selectedClass === '' ? null : (
               <Fragment>
