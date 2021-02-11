@@ -23,7 +23,9 @@ import StudentHome from './components/StudentHome';
 import CreateTest from './components/teacher/create/CreateTest';
 import StudentScores from './components/StudentScores';
 import FirstLogin from './components/teacher/FirstLogin';
+import EditGroup from './components/teacher/edit/EditGroup';
 import Forbidden from './components/codes/Forbidden';
+import NotFound from './components/codes/NotFound';
 function App() {
   const [alert, setAlert] = useState('');
   const [alertType, setAlertType] = useState('');
@@ -53,6 +55,8 @@ function App() {
           case 500:
             createAlert('An internal server error has occured. Please try again', 'danger', 5000);
             break;
+          case 403:
+            createAlert("You don't have permission to do this.", 'danger', 5000);
           default:
             break;
         }
@@ -146,6 +150,11 @@ function App() {
               <Alert alert={alert} alertType={alertType} />
               <CreateGroup createAlert={createAlert} />
             </Route>
+            <Route path='/teacher/group/edit'>
+              <Navbar />
+              <Alert alert={alert} alertType={alertType} />
+              <EditGroup createAlert={createAlert} />
+            </Route>
             <Route path='/teacher/students/edit'>
               <Navbar />
               <Alert alert={alert} alertType={alertType} />
@@ -159,6 +168,7 @@ function App() {
             <Route path='/forbidden'>
               <Forbidden />
             </Route>
+            <Route component={NotFound}></Route>
           </Switch>
         </div>
       </div>

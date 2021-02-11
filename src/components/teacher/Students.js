@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import { Modal, Dropdown } from 'react-bootstrap';
 import axios from 'axios';
 import { useHistory } from 'react-router-dom';
@@ -20,15 +20,15 @@ const Students = ({ createAlert }) => {
   const [sorted, setSorted] = useState([]);
   const [showModal, setShowModal] = useState(false);
   const [loading, setLoading] = useState(true);
-  const history = useHistory()
-  let token = localStorage.getItem('token');
+  const history = useHistory();
+  let token = useRef(localStorage.getItem('token'));
   const getData = () => {
     axios // get student data
       .get(
         process.env.NODE_ENV === 'development'
           ? '/api/teacher'
           : 'https://spelling-tests-backend.herokuapp.com/api/teacher',
-        { headers: { token } }
+        { headers: { token: token.current } }
       )
       .then((res) => {
         setStudents(res.data.students);
@@ -51,13 +51,13 @@ const Students = ({ createAlert }) => {
             ? '/api/teacher/student'
             : 'https://spelling-tests-backend.herokuapp.com/api/teacher/student',
           { firstName, lastName, username, classId, groupId },
-          { headers: { token } }
+          { headers: { token: token.current } }
         )
         .then((res) => {
           getData();
           setClassId('');
           setSelectedClass('Select Class');
-          setSelectedGroup('Select Group')
+          setSelectedGroup('Select Group');
           setGroupId('');
           setFirstName('');
           setLastName('');
@@ -66,7 +66,7 @@ const Students = ({ createAlert }) => {
           createAlert('Student created!', 'success', 5000);
         })
         .catch((err) => {
-          alert('This username already exists. Please choose another one.')
+          alert('This username already exists. Please choose another one.');
         });
     }
   };
@@ -77,7 +77,7 @@ const Students = ({ createAlert }) => {
         process.env.NODE_ENV === 'development'
           ? '/api/teacher'
           : 'https://spelling-tests-backend.herokuapp.com/api/teacher',
-        { headers: { token } }
+        { headers: { token: token.current } }
       )
       .then((res) => {
         setStudents(res.data.students);
@@ -89,6 +89,26 @@ const Students = ({ createAlert }) => {
         console.log(err.response);
       });
   }, []);
+  const deleteStudent = (e) => {
+    console.log(token.current);
+    axios
+      .delete(
+        process.env.NODE_ENV === 'development'
+          ? '/api/teacher/student'
+          : 'https://spelling-tests-backend.herokuapp.com/api/teacher/student',
+        {
+          headers: {
+            token: token.current,
+            student_id: e.target.id,
+          },
+        }
+      )
+      .then(() => {
+        createAlert('Student delete successfully', 'success', 5000);
+        getData();
+      })
+      .catch(() => {});
+  };
   const onChange = (e) => {
     setSearch(e.target.value);
   };
@@ -117,9 +137,7 @@ const Students = ({ createAlert }) => {
           <Modal.Body>
             <p>All fields must be filled in</p>
             {creationAlert ? (
-              <div className='alert alert-danger'>
-                The first 3 fields must be filled in.
-              </div>
+              <div className='alert alert-danger'>The first 3 fields must be filled in.</div>
             ) : null}
             <div className='input-group mb-3'>
               <input
@@ -202,7 +220,7 @@ const Students = ({ createAlert }) => {
                   </Dropdown.Item>
                 ) : null}
                 {groups.map((g) => {
-                  if(g.class_id === classId) {
+                  if (g.class_id === classId) {
                     return (
                       <Dropdown.Item
                         id={g.group_id}
@@ -214,17 +232,14 @@ const Students = ({ createAlert }) => {
                       >
                         {g.group_name}
                       </Dropdown.Item>
-                    )
-                  }
-                   else return null})}
+                    );
+                  } else return null;
+                })}
               </Dropdown.Menu>
             </Dropdown>
           </Modal.Body>
           <Modal.Footer>
-            <button
-              className='btn btn-danger'
-              onClick={() => setShowModal(false)}
-            >
+            <button className='btn btn-danger' onClick={() => setShowModal(false)}>
               Close
             </button>
             <button
@@ -232,7 +247,15 @@ const Students = ({ createAlert }) => {
               onClick={() => {
                 addStudent();
               }}
-              disabled={selectedClass === 'Select Class' || selectedGroup === 'Select Group' || firstName === '' || lastName === '' || username === '' ? true : false}
+              disabled={
+                selectedClass === 'Select Class' ||
+                selectedGroup === 'Select Group' ||
+                firstName === '' ||
+                lastName === '' ||
+                username === ''
+                  ? true
+                  : false
+              }
             >
               Add Student
             </button>
@@ -272,12 +295,10 @@ const Students = ({ createAlert }) => {
               ? students.map((student) => (
                   <tr key={student.student_id} id={student.student_id}>
                     <td>
-                      {student.first_name.charAt(0).toUpperCase() +
-                        student.first_name.slice(1)}
+                      {student.first_name.charAt(0).toUpperCase() + student.first_name.slice(1)}
                     </td>
                     <td>
-                      {student.last_name.charAt(0).toUpperCase() +
-                        student.last_name.slice(1)}
+                      {student.last_name.charAt(0).toUpperCase() + student.last_name.slice(1)}
                     </td>
                     <td>{student.username}</td>
                     <td>{getClassName(student.class_id)}</td>
@@ -288,9 +309,21 @@ const Students = ({ createAlert }) => {
                           Modify
                         </Dropdown.Toggle>
                         <Dropdown.Menu id={student.student_id}>
-                          <Dropdown.Item onClick={() => history.push(`/teacher/students/edit?student_id=${student.student_id}&class_id=${student.class_id}&group_id=${student.group_id}&student_name=${student.first_name}`)}>Edit Student</Dropdown.Item>
+                          <Dropdown.Item
+                            onClick={() =>
+                              history.push(
+                                `/teacher/students/edit?student_id=${student.student_id}&class_id=${student.class_id}&group_id=${student.group_id}&student_name=${student.first_name}`
+                              )
+                            }
+                          >
+                            Edit Student
+                          </Dropdown.Item>
                           <Dropdown.Divider />
-                          <Dropdown.Item style={{ color: 'red' }}>
+                          <Dropdown.Item
+                            id={student.student_id}
+                            onClick={deleteStudent}
+                            style={{ color: 'red' }}
+                          >
                             Delete Student
                           </Dropdown.Item>
                         </Dropdown.Menu>

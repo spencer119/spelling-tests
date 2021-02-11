@@ -74,6 +74,9 @@ const Classes = ({ createAlert }) => {
         break;
     }
   };
+  const changeClassName = (e) => {
+    const newTestName = prompt('Please enter a new test name:');
+  };
   const getTestName = (test_id) => {
     console.log(tests);
     let testObj = tests.find((test) => test.test_id === test_id);
@@ -168,9 +171,14 @@ const Classes = ({ createAlert }) => {
                 </Dropdown.Menu>
               </Dropdown>
             </td>
-            {/* <td scope='row'>
-              <button className='btn btn-danger'>Delete</button>
-            </td> */}
+            <td scope='row'>
+              <Link
+                to={`/teacher/group/edit?group_id=${group.group_id}`}
+                className='btn btn-primary'
+              >
+                Edit
+              </Link>
+            </td>
           </tr>
         ))}
       </Fragment>
@@ -232,7 +240,7 @@ const Classes = ({ createAlert }) => {
               className='btn btn-warning'
               style={{ width: '100%', marginTop: '10px' }}
               id='change'
-              onClick={onButton}
+              onClick={changeClassName}
               disabled={selectedClass === '' ? true : false}
             >
               Change Class Name
@@ -269,7 +277,7 @@ const Classes = ({ createAlert }) => {
                     <tr>
                       <th scope='col'>Group Name</th>
                       <th scope='col'>Active Test</th>
-                      {/* <th scope='col'>Actions</th> */}
+                      <th scope='col'>Edit</th>
                     </tr>
                   </thead>
                   <tbody>{getClassGroups()}</tbody>
