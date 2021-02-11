@@ -26,7 +26,8 @@ import FirstLogin from './components/teacher/FirstLogin';
 import EditGroup from './components/teacher/edit/EditGroup';
 import Forbidden from './components/codes/Forbidden';
 import NotFound from './components/codes/NotFound';
-import Feedback from './components/admin/Feedback';
+import AdminFeedback from './components/admin/AdminFeedback';
+import TeacherFeedback from './components/teacher/TeacherFeedback';
 function App() {
   const [alert, setAlert] = useState('');
   const [alertType, setAlertType] = useState('');
@@ -171,10 +172,15 @@ function App() {
               <Alert alert={alert} alertType={alertType} />
               <Teachers createAlert={createAlert} />
             </Route>
-            <Route path='/admin/feedback'>
+            <Route exact path='/admin/feedback'>
               <Navbar />
               <Alert alert={alert} alertType={alertType} />
-              <Feedback />
+              <AdminFeedback createAlert={createAlert} />
+            </Route>
+            <Route exact path='/teacher/feedback'>
+              <Navbar />
+              <Alert alert={alert} alertType={alertType} />
+              <TeacherFeedback createAlert={createAlert} />
             </Route>
             <Route path='/forbidden'>
               <Forbidden />

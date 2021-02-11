@@ -101,6 +101,10 @@ const TeacherHome = ({ createAlert }) => {
               <div className='card-header'>Site Feedback</div>
               <div className='card-body'>
                 <p>Any bugs found, suggestions, or feedback of any kind can be submitted here.</p>
+                <p>
+                  <Link to='/teacher/feedback'>View Feedback Status</Link>
+                </p>
+
                 <Dropdown style={{ marginBottom: '10px' }}>
                   <Dropdown.Toggle variant='primary' id='dropdown-basic'>
                     {feedbackType === ''

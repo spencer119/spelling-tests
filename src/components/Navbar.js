@@ -1,11 +1,13 @@
 import React, { useEffect, useState, useRef, Fragment } from 'react';
 import { Link } from 'react-router-dom';
 import axios from 'axios';
+import { Dropdown } from 'react-bootstrap';
 
 const Navbar = () => {
   const [isAdmin, setIsAdmin] = useState(false);
   const token = useRef(localStorage.getItem('token'));
   useEffect(() => {
+    console.log(window.location.pathname);
     axios
       .get(
         process.env.NODE_ENV === 'development'
@@ -29,40 +31,80 @@ const Navbar = () => {
       <div className='collapse navbar-collapse'>
         <ul className='navbar-nav mr-auto'>
           <li className='nav-link'>
-            <Link className='nav-link' style={{ cursor: 'pointer' }} to='/teacher/home'>
+            <Link
+              className={`nav-link ${
+                window.location.pathname.includes('/teacher/home') ? 'active' : ''
+              }`}
+              style={{ cursor: 'pointer' }}
+              to='/teacher/home'
+            >
               Home
             </Link>
           </li>
-          <li className='nav-link'>
+          <li
+            className={`nav-link ${
+              window.location.pathname.includes('/teacher/results') ? 'active' : ''
+            }`}
+          >
             <Link className='nav-link' style={{ cursor: 'pointer' }} to='/teacher/results'>
               Results
             </Link>
           </li>
           <li className='nav-link'>
-            <Link className='nav-link' style={{ cursor: 'pointer' }} to='/teacher/tests'>
+            <Link
+              className={`nav-link ${
+                window.location.pathname.includes('/teacher/tests') ? 'active' : ''
+              }`}
+              style={{ cursor: 'pointer' }}
+              to='/teacher/tests'
+            >
               Tests
             </Link>
           </li>
           <li className='nav-link'>
-            <Link className='nav-link' style={{ cursor: 'pointer' }} to='/teacher/classes'>
+            <Link
+              className={`nav-link ${
+                window.location.pathname.includes('/teacher/classes') ? 'active' : ''
+              }`}
+              style={{ cursor: 'pointer' }}
+              to='/teacher/classes'
+            >
               Classes
             </Link>
           </li>
           <li className='nav-link'>
-            <Link className='nav-link' style={{ cursor: 'pointer' }} to='/teacher/students'>
+            <Link
+              className={`nav-link ${
+                window.location.pathname.includes('/teacher/students') ? 'active' : ''
+              }`}
+              style={{ cursor: 'pointer' }}
+              to='/teacher/students'
+            >
               Students
+            </Link>
+          </li>
+          <li className='nav-link'>
+            <Link
+              className={`nav-link ${
+                window.location.pathname.includes('/feedback') ? 'active' : ''
+              }`}
+              style={{ cursor: 'pointer' }}
+              to={`/${isAdmin ? 'admin' : 'teacher'}/feedback`}
+            >
+              Feedback/Support
             </Link>
           </li>
           {isAdmin ? (
             <Fragment>
               <li className='nav-link'>
-                <Link className='nav-link' style={{ cursor: 'pointer' }} to='/admin/teachers'>
+                <Link
+                  className={`nav-link ${
+                    window.location.pathname.includes('/admin/teachers') ? 'active' : ''
+                  }`}
+                  style={{ cursor: 'pointer' }}
+                  to='/admin/teachers'
+                >
                   Manage Teachers
-                </Link>
-              </li>
-              <li className='nav-link'>
-                <Link className='nav-link' style={{ cursor: 'pointer' }} to='/admin/feedback'>
-                  Feedback
                 </Link>
               </li>
             </Fragment>
