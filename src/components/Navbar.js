@@ -1,7 +1,6 @@
 import React, { useEffect, useState, useRef, Fragment } from 'react';
 import { Link } from 'react-router-dom';
 import axios from 'axios';
-import { Dropdown } from 'react-bootstrap';
 
 const Navbar = () => {
   const [isAdmin, setIsAdmin] = useState(false);
@@ -26,14 +25,21 @@ const Navbar = () => {
       });
   });
   return (
-    <nav className='navbar navbar-dark navbar-expand-lg bg-dark' style={{ marginBottom: '35px' }}>
-      <span className='navbar-brand'>{isAdmin ? 'Admin Dashboard' : 'Teacher Dashboard'}</span>
+    <nav
+      className='navbar navbar-dark navbar-expand-lg bg-dark'
+      style={{ marginBottom: '35px' }}
+    >
+      <span className='navbar-brand'>
+        {isAdmin ? 'Admin Dashboard' : 'Teacher Dashboard'}
+      </span>
       <div className='collapse navbar-collapse'>
         <ul className='navbar-nav mr-auto'>
           <li className='nav-link'>
             <Link
               className={`nav-link ${
-                window.location.pathname.includes('/teacher/home') ? 'active' : ''
+                window.location.pathname.includes('/teacher/home')
+                  ? 'active'
+                  : ''
               }`}
               style={{ cursor: 'pointer' }}
               to='/teacher/home'
@@ -43,17 +49,25 @@ const Navbar = () => {
           </li>
           <li
             className={`nav-link ${
-              window.location.pathname.includes('/teacher/results') ? 'active' : ''
+              window.location.pathname.includes('/teacher/results')
+                ? 'active'
+                : ''
             }`}
           >
-            <Link className='nav-link' style={{ cursor: 'pointer' }} to='/teacher/results'>
+            <Link
+              className='nav-link'
+              style={{ cursor: 'pointer' }}
+              to='/teacher/results'
+            >
               Results
             </Link>
           </li>
           <li className='nav-link'>
             <Link
               className={`nav-link ${
-                window.location.pathname.includes('/teacher/tests') ? 'active' : ''
+                window.location.pathname.includes('/teacher/tests')
+                  ? 'active'
+                  : ''
               }`}
               style={{ cursor: 'pointer' }}
               to='/teacher/tests'
@@ -64,7 +78,9 @@ const Navbar = () => {
           <li className='nav-link'>
             <Link
               className={`nav-link ${
-                window.location.pathname.includes('/teacher/classes') ? 'active' : ''
+                window.location.pathname.includes('/teacher/classes')
+                  ? 'active'
+                  : ''
               }`}
               style={{ cursor: 'pointer' }}
               to='/teacher/classes'
@@ -75,7 +91,9 @@ const Navbar = () => {
           <li className='nav-link'>
             <Link
               className={`nav-link ${
-                window.location.pathname.includes('/teacher/students') ? 'active' : ''
+                window.location.pathname.includes('/teacher/students')
+                  ? 'active'
+                  : ''
               }`}
               style={{ cursor: 'pointer' }}
               to='/teacher/students'
@@ -99,7 +117,9 @@ const Navbar = () => {
               <li className='nav-link'>
                 <Link
                   className={`nav-link ${
-                    window.location.pathname.includes('/admin/teachers') ? 'active' : ''
+                    window.location.pathname.includes('/admin/teachers')
+                      ? 'active'
+                      : ''
                   }`}
                   style={{ cursor: 'pointer' }}
                   to='/admin/teachers'

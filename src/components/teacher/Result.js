@@ -34,7 +34,11 @@ const Result = ({ createAlert }) => {
         setLoading(false);
       })
       .catch(() => {
-        createAlert('There was an error fetching your student groups.', 'danger', 5000);
+        createAlert(
+          'There was an error fetching your student groups.',
+          'danger',
+          5000
+        );
       });
   }, []);
   const deleteAttempt = (e) => {
@@ -78,22 +82,38 @@ const Result = ({ createAlert }) => {
               Score: {result.correct}/{result.total} <br />{' '}
               {((result.correct / result.total) * 100).toFixed(2)}%
             </p>
-            <button
-              className='btn btn-danger'
-              onClick={deleteAttempt}
-              style={{ marginBottom: '5px' }}
-            >
-              Delete Attempt
-            </button>{' '}
-            <br />
-            <Link
-              to={query.get('back') === 'home' ? '/teacher/home' : '/teacher/results'}
-              className='btn btn-primary'
-            >
-              Go back
-            </Link>
+            <div className='no-print'>
+              <button
+                className='btn btn-danger'
+                onClick={deleteAttempt}
+                style={{ marginBottom: '5px' }}
+              >
+                Delete Attempt
+              </button>{' '}
+              <br />
+              <Link
+                to={
+                  query.get('back') === 'home'
+                    ? '/teacher/home'
+                    : '/teacher/results'
+                }
+                className='btn btn-primary'
+                style={{ marginBottom: '5px' }}
+              >
+                Go back
+              </Link>
+              <br />
+              <button
+                className='btn btn-success'
+                onClick={() => window.print()}
+              >
+                Print/Save to PDF
+              </button>
+            </div>
           </div>
-          <div className='card-footer text-muted'>{Date(result.created_at).toLocaleString()}</div>
+          <div className='card-footer text-muted'>
+            {Date(result.created_at).toLocaleString()}
+          </div>
         </div>
         <table className='table table-striped'>
           <thead>
