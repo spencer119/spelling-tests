@@ -9,6 +9,7 @@
     "@testing-library/react": "^9.5.0",
     "@testing-library/user-event": "^7.2.1",
     "axios": "^0.21.1",
+    "js-file-download": "^0.4.12",
     "postgres-date": "^1.0.7",
     "react": "^16.13.1",
     "react-audio-recorder": "^2.2.0",
