@@ -137,14 +137,18 @@ const Students = ({ createAlert }) => {
           <Modal.Body>
             <p>All fields must be filled in</p>
             {creationAlert ? (
-              <div className='alert alert-danger'>The first 3 fields must be filled in.</div>
+              <div className='alert alert-danger'>
+                The first 3 fields must be filled in.
+              </div>
             ) : null}
             <div className='input-group mb-3'>
               <input
                 type='text'
                 value={firstName}
                 id='firstName'
-                className='form-control'
+                className={`form-control ${
+                  firstName === '' ? 'is-invalid' : 'is-valid'
+                }`}
                 onChange={(e) => setFirstName(e.target.value)}
                 placeholder='First Name'
               />
@@ -153,7 +157,9 @@ const Students = ({ createAlert }) => {
                 value={lastName}
                 id='lastName'
                 onChange={(e) => setLastName(e.target.value)}
-                className='form-control'
+                className={`form-control ${
+                  lastName === '' ? 'is-invalid' : 'is-valid'
+                }`}
                 placeholder='Last Name'
               />
               <input
@@ -161,7 +167,9 @@ const Students = ({ createAlert }) => {
                 onChange={(e) => setUsername(e.target.value)}
                 value={username}
                 id='username'
-                className='form-control'
+                className={`form-control ${
+                  username === '' ? 'is-invalid' : 'is-valid'
+                }`}
                 placeholder='Username'
               />
             </div>
@@ -239,7 +247,10 @@ const Students = ({ createAlert }) => {
             </Dropdown>
           </Modal.Body>
           <Modal.Footer>
-            <button className='btn btn-danger' onClick={() => setShowModal(false)}>
+            <button
+              className='btn btn-danger'
+              onClick={() => setShowModal(false)}
+            >
               Close
             </button>
             <button
@@ -295,10 +306,12 @@ const Students = ({ createAlert }) => {
               ? students.map((student) => (
                   <tr key={student.student_id} id={student.student_id}>
                     <td>
-                      {student.first_name.charAt(0).toUpperCase() + student.first_name.slice(1)}
+                      {student.first_name.charAt(0).toUpperCase() +
+                        student.first_name.slice(1)}
                     </td>
                     <td>
-                      {student.last_name.charAt(0).toUpperCase() + student.last_name.slice(1)}
+                      {student.last_name.charAt(0).toUpperCase() +
+                        student.last_name.slice(1)}
                     </td>
                     <td>{student.username}</td>
                     <td>{getClassName(student.class_id)}</td>

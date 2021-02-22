@@ -14,7 +14,12 @@ const CreateTest = ({ createAlert }) => {
   const [files, setFiles] = useState([]);
   const history = useHistory();
   const token = useRef(localStorage.getItem('token'));
-  const { startRecording, stopRecording, clearBlobUrl, mediaBlobUrl } = useReactMediaRecorder({
+  const {
+    startRecording,
+    stopRecording,
+    clearBlobUrl,
+    mediaBlobUrl,
+  } = useReactMediaRecorder({
     video: false,
   });
   const onWordCountChange = (e) => {
@@ -48,10 +53,14 @@ const CreateTest = ({ createAlert }) => {
   };
   const confirmAudio = (e) => {
     if (mediaBlobUrl === null)
-      return alert('You must record audio to save first. Click the microphone icon below.');
+      return alert(
+        'You must record audio to save first. Click the microphone icon below.'
+      );
     let newValue = words.find((word) => word.number.toString() === e.target.id);
     newValue.audio = mediaBlobUrl;
-    let wordArr = words.filter((word) => word.number.toString() !== e.target.id);
+    let wordArr = words.filter(
+      (word) => word.number.toString() !== e.target.id
+    );
     wordArr.push(newValue);
     wordArr.sort((a, b) => {
       return a.number - b.number;
@@ -63,7 +72,8 @@ const CreateTest = ({ createAlert }) => {
   const createTest = async (e) => {
     // Check that all info is entered
     let notDone = false;
-    if (testName === '') return createAlert('Your test needs a name!', 'danger', 5000);
+    if (testName === '')
+      return createAlert('Your test needs a name!', 'danger', 5000);
     if (attempts === 0)
       return createAlert(
         'Please specify a number of attempts. You can always change this later.',
@@ -115,14 +125,20 @@ const CreateTest = ({ createAlert }) => {
         })
         .catch((err) => {
           setLoading(false);
-          createAlert('An error has occured, please try again.', 'danger', 5000);
+          createAlert(
+            'An error has occured, please try again.',
+            'danger',
+            5000
+          );
         });
     }
   };
   const deleteAudio = (e) => {
     let newValue = words.find((word) => word.number.toString() === e.target.id);
     newValue.audio = '';
-    let wordArr = words.filter((word) => word.number.toString() !== e.target.id);
+    let wordArr = words.filter(
+      (word) => word.number.toString() !== e.target.id
+    );
     wordArr.push(newValue);
     wordArr.sort((a, b) => {
       return a.number - b.number;
@@ -134,7 +150,11 @@ const CreateTest = ({ createAlert }) => {
     return (
       <div className='container'>
         <div className='text-center'>
-          <Link to='/teacher/tests' style={{ marginBottom: '10px' }} className='btn btn-primary'>
+          <Link
+            to='/teacher/tests'
+            style={{ marginBottom: '10px' }}
+            className='btn btn-primary'
+          >
             Go back
           </Link>
           <br />
@@ -144,11 +164,19 @@ const CreateTest = ({ createAlert }) => {
         </div>
         <h3>How to Create a Test:</h3>
         <ul>
-          <li>Give the test a name, amount of words, and amount of attempts.</li>
-          <li>Type the words out in the boxes provided. (Words are case sensitive)</li>
-          <li>Click the microphone button to start recording. Click it again to stop.</li>
           <li>
-            After recording your word, click the "Save Audio" button next to the corresponding word.
+            Give the test a name, amount of words, and amount of attempts.
+          </li>
+          <li>
+            Type the words out in the boxes provided. (Words are case sensitive)
+          </li>
+          <li>
+            Click the microphone button to start recording. Click it again to
+            stop.
+          </li>
+          <li>
+            After recording your word, click the "Save Audio" button next to the
+            corresponding word.
           </li>
           <li>After all audio is recorded, click "Create Test"</li>
         </ul>
@@ -183,7 +211,7 @@ const CreateTest = ({ createAlert }) => {
               onChange={(e) => setAttempts(e.target.value)}
               type='number'
               placeholder='# of attempts'
-              className='form-control'
+              className={``}
             />
           </div>
         </div>
@@ -199,7 +227,10 @@ const CreateTest = ({ createAlert }) => {
               <Fragment>
                 <audio src={mediaBlobUrl} controls></audio>
                 <br />
-                <button className='btn btn-danger' onClick={() => clearBlobUrl()}>
+                <button
+                  className='btn btn-danger'
+                  onClick={() => clearBlobUrl()}
+                >
                   Discard
                 </button>
               </Fragment>
@@ -234,7 +265,11 @@ const CreateTest = ({ createAlert }) => {
                 {words.find((w) => w.number === word.number).audio === '' ? (
                   <Fragment>
                     <div className='col'>
-                      <button id={word.number} onClick={confirmAudio} className='btn btn-success'>
+                      <button
+                        id={word.number}
+                        onClick={confirmAudio}
+                        className='btn btn-success'
+                      >
                         Save Audio
                       </button>
                     </div>
@@ -245,7 +280,11 @@ const CreateTest = ({ createAlert }) => {
                       <audio src={word.audio} controls></audio>
                     </div>
                     <div className='col'>
-                      <button className='btn btn-danger' id={word.number} onClick={deleteAudio}>
+                      <button
+                        className='btn btn-danger'
+                        id={word.number}
+                        onClick={deleteAudio}
+                      >
                         Delete
                       </button>
                     </div>
@@ -257,7 +296,11 @@ const CreateTest = ({ createAlert }) => {
         ))}
         {wordCount !== 0 ? (
           <div className='row word-margin'>
-            <button style={{ width: '100%' }} onClick={createTest} className='btn btn-success'>
+            <button
+              style={{ width: '100%' }}
+              onClick={createTest}
+              className='btn btn-success'
+            >
               Create Test
             </button>
           </div>
