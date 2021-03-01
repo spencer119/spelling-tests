@@ -215,39 +215,41 @@ const CreateTest = ({ createAlert }) => {
             />
           </div>
         </div>
-        {wordCount === 0 ? null : (
-          <div className='text-center word-margin'>
-            {mediaBlobUrl === null ? (
-              <i
-                className='fas fa-microphone fa-5x text-center'
-                style={{ margin: '10px', cursor: 'pointer' }}
-                onClick={onRecord}
-              ></i>
-            ) : (
-              <Fragment>
-                <audio src={mediaBlobUrl} controls></audio>
-                <br />
-                <button
-                  className='btn btn-danger'
-                  onClick={() => clearBlobUrl()}
-                >
-                  Discard
-                </button>
-              </Fragment>
-            )}
+        <div className='position-sticky'>
+          {wordCount === 0 ? null : (
+            <div className='text-center word-margin'>
+              {mediaBlobUrl === null ? (
+                <i
+                  className='fas fa-microphone fa-5x text-center'
+                  style={{ margin: '10px', cursor: 'pointer' }}
+                  onClick={onRecord}
+                ></i>
+              ) : (
+                <Fragment>
+                  <audio src={mediaBlobUrl} controls></audio>
+                  <br />
+                  <button
+                    className='btn btn-danger'
+                    onClick={() => clearBlobUrl()}
+                  >
+                    Discard
+                  </button>
+                </Fragment>
+              )}
 
-            {record ? (
-              <Fragment>
-                <p>Recording...</p>
-                <p>Click again to stop.</p>
-              </Fragment>
-            ) : mediaBlobUrl !== null ? (
-              <p>Audio ready to save.</p>
-            ) : (
-              <p>Click to start a new recording.</p>
-            )}
-          </div>
-        )}
+              {record ? (
+                <Fragment>
+                  <p>Recording...</p>
+                  <p>Click again to stop.</p>
+                </Fragment>
+              ) : mediaBlobUrl !== null ? (
+                <p>Audio ready to save.</p>
+              ) : (
+                <p>Click to start a new recording.</p>
+              )}
+            </div>
+          )}
+        </div>
 
         {words.map((word) => (
           <div key={word.number} id={word.number} className='row word-margin'>

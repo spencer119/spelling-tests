@@ -26,3 +26,7 @@ body {
     display: none !important;
   }
 }
+.test-suggestion {
+  position: relative;
+  display: inline-block;
+}

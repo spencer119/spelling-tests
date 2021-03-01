@@ -6,6 +6,10 @@ const Export = ({ createAlert }) => {
   const [downloading, setDownloading] = useState(false);
   const token = useRef(localStorage.getItem('token'));
   const [exportType, setExportType] = useState('all');
+  const [tests, setTests] = useState([]);
+  const [testSuggestions, setTestSuggestions] = useState([]);
+  const [testSearch, setTestSearch] = useState('');
+
   useEffect(() => {
     axios
       .get(
@@ -17,7 +21,7 @@ const Export = ({ createAlert }) => {
         }
       )
       .then((res) => {
-        console.log(res.data);
+        setTests(res.data.tests);
       })
       .catch(() => {});
   }, []);
@@ -46,6 +50,26 @@ const Export = ({ createAlert }) => {
         setDownloading(false);
       });
   };
+  const searchTest = (e) => {
+    setTestSearch(e.target.value);
+    if (e.target.value.length < 3) return setTestSuggestions([]);
+    let done = false;
+    tests.forEach((t) => {
+      if (t.test_name === e.target.value) {
+        done = true;
+        return;
+      }
+    });
+    if (done) return setTestSuggestions([]);
+    let match = tests.filter((tst) =>
+      tst.test_name.toLowerCase().includes(e.target.value.toLowerCase())
+    );
+    setTestSuggestions(
+      match.map((t) => {
+        return t.test_name;
+      })
+    );
+  };
   return (
     <div className='container'>
       <div className='form-group'>
@@ -53,7 +77,9 @@ const Export = ({ createAlert }) => {
         <select
           className='form-control'
           value={exportType}
-          onChange={(e) => setExportType(e.target.value)}
+          onChange={(e) => {
+            setExportType(e.target.value);
+          }}
         >
           <option value='all'>Export All Results</option>
           <option value='date'>Export by Date</option>
@@ -84,6 +110,33 @@ const Export = ({ createAlert }) => {
               />
             </div>
           </div>
+        </div>
+      ) : exportType === 'test' ? (
+        <div className='form-group'>
+          <label>Test Name</label>
+          <input
+            type='text'
+            value={testSearch}
+            onChange={searchTest}
+            className='form-control'
+          />
+          <br />
+          <ul className='list-group list-group-horizontal'>
+            {testSuggestions.map((sug) => (
+              <li
+                key={sug}
+                id={sug}
+                className='list-group-item list-group-item-action'
+                style={{ cursor: 'pointer' }}
+                onClick={(e) => {
+                  setTestSearch(e.target.id);
+                  setTestSuggestions([]);
+                }}
+              >
+                {sug}
+              </li>
+            ))}
+          </ul>
         </div>
       ) : null}
       <div className='form-group'>
