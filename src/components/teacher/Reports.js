@@ -26,16 +26,33 @@ const Reports = ({ createAlert }) => {
       })
       .catch(() => {});
   }, []);
-  const getData = () => {
+  const getReport = () => {
     if (downloading) return;
+
+    switch (exportType) {
+      case 'test':
+        console.log(params);
+        let testObj = tests.find((tst) => tst.test_name === params.testName);
+        if (testObj === undefined)
+          return createAlert(
+            'The test you provided does not exist.',
+            'danger',
+            5000
+          );
+        setParams((prev) => ({ ...prev, testId: testObj.test_id }));
+        break;
+      default:
+        break;
+    }
+    return;
     setDownloading(true);
     axios
       .get(
         process.env.NODE_ENV === 'development'
-          ? '/api/v2/teacher/export'
-          : 'https://spelling-tests-backend.herokuapp.com/api/v2/teacher/export',
+          ? '/api/v2/teacher/report'
+          : 'https://spelling-tests-backend.herokuapp.com/api/v2/teacher/report',
         {
-          headers: { exportType, params, token: token.current },
+          headers: { exportType, token: token.current },
         }
       )
       .then((res) => {
@@ -43,15 +60,50 @@ const Reports = ({ createAlert }) => {
         setDownloading(false);
       })
       .catch(() => {
-        createAlert('There was an error exporting the data. Please try again.', 'danger', 5000);
+        createAlert(
+          'There was an error exporting the data. Please try again.',
+          'danger',
+          5000
+        );
         setDownloading(false);
       });
+  };
+  const getExport = () => {
+    if (downloading) return;
+
+    setDownloading(true);
+    axios
+      .get(
+        process.env.NODE_ENV === 'development'
+          ? '/api/v2/teacher/export'
+          : 'https://spelling-tests-backend.herokuapp.com/api/v2/teacher/export',
+        {
+          headers: { exportType, token: token.current },
+        }
+      )
+      .then((res) => {
+        fileDownload(res.data, 'export.csv');
+        setDownloading(false);
+      })
+      .catch(() => {
+        createAlert(
+          'There was an error exporting the data. Please try again.',
+          'danger',
+          5000
+        );
+        setDownloading(false);
+      });
+  };
+  const onSubmit = () => {
+    if (exportType === 'all') getExport();
+    else getReport();
   };
   const updateParam = (param, value) => {
     setParams((prev) => ({ ...prev, [param]: value }));
   };
   const searchTest = (e) => {
     setTestSearch(e.target.value);
+    setParams({ testName: e.target.id });
     if (e.target.value.length < 3) return setTestSuggestions([]);
     let done = false;
     tests.forEach((t) => {
@@ -117,7 +169,12 @@ const Reports = ({ createAlert }) => {
       ) : exportType === 'test' ? (
         <div className='form-group'>
           <label>Test Name</label>
-          <input type='text' value={testSearch} onChange={searchTest} className='form-control' />
+          <input
+            type='text'
+            value={testSearch}
+            onChange={searchTest}
+            className='form-control'
+          />
           <br />
           <ul className='list-group list-group-horizontal'>
             {testSuggestions.map((sug) => (
@@ -129,6 +186,7 @@ const Reports = ({ createAlert }) => {
                 onClick={(e) => {
                   setTestSearch(e.target.id);
                   setTestSuggestions([]);
+                  setParams({ testName: e.target.id });
                 }}
               >
                 {sug}
@@ -138,7 +196,7 @@ const Reports = ({ createAlert }) => {
         </div>
       ) : null}
       <div className='form-group'>
-        <button className='btn btn-primary form-control' onClick={getData}>
+        <button className='btn btn-primary form-control' onClick={onSubmit}>
           Export
         </button>
       </div>
