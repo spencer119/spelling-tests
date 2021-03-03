@@ -1,7 +1,7 @@
 import React, { useState, useRef, useEffect, Fragment } from 'react';
 import axios from 'axios';
 
-const Export = ({ createAlert }) => {
+const Reports = ({ createAlert }) => {
   let fileDownload = require('js-file-download');
   const [downloading, setDownloading] = useState(false);
   const token = useRef(localStorage.getItem('token'));
@@ -9,6 +9,7 @@ const Export = ({ createAlert }) => {
   const [tests, setTests] = useState([]);
   const [testSuggestions, setTestSuggestions] = useState([]);
   const [testSearch, setTestSearch] = useState('');
+  const [params, setParams] = useState({});
 
   useEffect(() => {
     axios
@@ -25,7 +26,7 @@ const Export = ({ createAlert }) => {
       })
       .catch(() => {});
   }, []);
-  const getData = (params) => {
+  const getData = () => {
     if (downloading) return;
     setDownloading(true);
     axios
@@ -34,7 +35,7 @@ const Export = ({ createAlert }) => {
           ? '/api/v2/teacher/export'
           : 'https://spelling-tests-backend.herokuapp.com/api/v2/teacher/export',
         {
-          headers: { token: token.current },
+          headers: { exportType, params, token: token.current },
         }
       )
       .then((res) => {
@@ -42,13 +43,12 @@ const Export = ({ createAlert }) => {
         setDownloading(false);
       })
       .catch(() => {
-        createAlert(
-          'There was an error exporting the data. Please try again.',
-          'danger',
-          5000
-        );
+        createAlert('There was an error exporting the data. Please try again.', 'danger', 5000);
         setDownloading(false);
       });
+  };
+  const updateParam = (param, value) => {
+    setParams((prev) => ({ ...prev, [param]: value }));
   };
   const searchTest = (e) => {
     setTestSearch(e.target.value);
@@ -79,6 +79,7 @@ const Export = ({ createAlert }) => {
           value={exportType}
           onChange={(e) => {
             setExportType(e.target.value);
+            setParams({});
           }}
         >
           <option value='all'>Export All Results</option>
@@ -98,6 +99,7 @@ const Export = ({ createAlert }) => {
                 placeholder='Start Date'
                 min='2019-01-01'
                 className='form-control'
+                onChange={(e) => updateParam('startDate', e.target.value)}
               />
             </div>
             <div className='col'>
@@ -107,6 +109,7 @@ const Export = ({ createAlert }) => {
                 placeholder='End Date'
                 min='2019-01-01'
                 className='form-control'
+                onChange={(e) => updateParam('endDate', e.target.value)}
               />
             </div>
           </div>
@@ -114,12 +117,7 @@ const Export = ({ createAlert }) => {
       ) : exportType === 'test' ? (
         <div className='form-group'>
           <label>Test Name</label>
-          <input
-            type='text'
-            value={testSearch}
-            onChange={searchTest}
-            className='form-control'
-          />
+          <input type='text' value={testSearch} onChange={searchTest} className='form-control' />
           <br />
           <ul className='list-group list-group-horizontal'>
             {testSuggestions.map((sug) => (
@@ -148,4 +146,4 @@ const Export = ({ createAlert }) => {
   );
 };
 
-export default Export;
+export default Reports;

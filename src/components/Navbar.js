@@ -54,8 +54,8 @@ const Navbar = () => {
               window.location.pathname.includes('/teacher/export') ? 'active' : ''
             }`}
           >
-            <Link className='nav-link' style={{ cursor: 'pointer' }} to='/teacher/export'>
-              Export Results
+            <Link className='nav-link' style={{ cursor: 'pointer' }} to='/teacher/reports'>
+              Reports/Export
             </Link>
           </li>
           <li className='nav-link'>

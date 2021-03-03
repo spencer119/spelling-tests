@@ -28,7 +28,7 @@ import Forbidden from './components/codes/Forbidden';
 import NotFound from './components/codes/NotFound';
 import AdminFeedback from './components/admin/AdminFeedback';
 import TeacherFeedback from './components/teacher/TeacherFeedback';
-import Export from './components/teacher/Export';
+import Reports from './components/teacher/Reports';
 function App() {
   const [alert, setAlert] = useState('');
   const [alertType, setAlertType] = useState('');
@@ -168,10 +168,10 @@ function App() {
               <Alert alert={alert} alertType={alertType} />
               <TeacherFeedback createAlert={createAlert} />
             </Route>
-            <Route exact path='/teacher/export'>
+            <Route exact path='/teacher/reports'>
               <Navbar />
               <Alert alert={alert} alertType={alertType} />
-              <Export createAlert={createAlert} />
+              <Reports createAlert={createAlert} />
             </Route>
             <Route path='/admin/teachers'>
               <Navbar />
