@@ -44,7 +44,7 @@ const Reports = ({ createAlert }) => {
       default:
         break;
     }
-
+    console.log(params);
     setDownloading(true);
     axios
       .get(
@@ -52,7 +52,7 @@ const Reports = ({ createAlert }) => {
           ? '/api/v2/teacher/report'
           : 'https://spelling-tests-backend.herokuapp.com/api/v2/teacher/report',
         {
-          headers: { exportType, params, token: token.current },
+          headers: { exportType, params: params, token: token.current },
         }
       )
       .then((res) => {
