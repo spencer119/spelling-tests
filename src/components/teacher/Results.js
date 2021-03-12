@@ -15,12 +15,7 @@ const Results = ({ createAlert }) => {
   const [tests, setTests] = useState([]);
   const [sorted, setSorted] = useState([]);
   const [showModal, setShowModal] = useState(false);
-  const [modalInfo, setModalInfo] = useState([]);
   const token = useRef(localStorage.getItem('token'));
-  const getClassName = (class_id) => {
-    let classObj = classes.find((c) => c.class_id === class_id);
-    return classObj.class_name;
-  };
   const getTestName = (test_id) => {
     let testObj = tests.find((test) => test.test_id === test_id);
     return testObj.test_name;
@@ -58,7 +53,7 @@ const Results = ({ createAlert }) => {
           5000
         );
       });
-  }, []);
+  }, [createAlert]);
 
   const filterResults = (newSearch, newSearchType) => {
     if (newSearch === undefined || newSearchType === undefined) {

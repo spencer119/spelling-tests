@@ -10,7 +10,6 @@ const EditStudent = ({ createAlert }) => {
   const [selectedClass, setSelectedClass] = useState('');
   const [selectedGroup, setSelectedGroup] = useState('');
   const [hover, setHover] = useState('');
-  const [student, setStudent] = useState({});
   const [firstName, setFirstName] = useState('');
   const [lastName, setLastName] = useState('');
   const [username, setUsername] = useState('');
@@ -86,7 +85,11 @@ const EditStudent = ({ createAlert }) => {
       })
       .catch((err) => {
         history.push('/teacher/students');
-        createAlert('There was an error creating your group. Please try again.', 'danger', 5000);
+        createAlert(
+          'There was an error creating your group. Please try again.',
+          'danger',
+          5000
+        );
       });
   };
   if (loading) return <Spinner />;
