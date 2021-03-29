@@ -30,16 +30,21 @@ const Reports = ({ createAlert }) => {
     if (downloading) return;
 
     switch (exportType) {
+      case 'all':
+        getExport();
       case 'test':
-        console.log(params);
-        let testObj = tests.find((tst) => tst.test_name === params.testName);
+        let testObj = tests.find((tst) => tst.test_name === testSearch);
         if (testObj === undefined)
           return createAlert(
             'The test you provided does not exist.',
             'danger',
             5000
           );
-        setParams((prev) => ({ ...prev, testId: testObj.test_id }));
+        setParams((prev) => ({
+          testName: testSearch,
+          testId: testObj.test_id,
+        }));
+
         break;
       default:
         break;
@@ -52,14 +57,19 @@ const Reports = ({ createAlert }) => {
           ? '/api/v2/teacher/report'
           : 'https://spelling-tests-backend.herokuapp.com/api/v2/teacher/report',
         {
-          headers: { exportType, params: params, token: token.current },
+          headers: {
+            exportType,
+            params: JSON.stringify(params),
+            token: token.current,
+          },
         }
       )
       .then((res) => {
         fileDownload(res.data, 'export.csv');
         setDownloading(false);
       })
-      .catch(() => {
+      .catch((err) => {
+        console.error(err);
         createAlert(
           'There was an error exporting the data. Please try again.',
           'danger',
