@@ -1,5 +1,6 @@
 import React, { useState, useRef, useEffect, Fragment } from 'react';
 import axios from 'axios';
+import Spinner from '../Spinner';
 
 const Reports = ({ createAlert }) => {
   let fileDownload = require('js-file-download');
@@ -10,8 +11,10 @@ const Reports = ({ createAlert }) => {
   const [testSuggestions, setTestSuggestions] = useState([]);
   const [testSearch, setTestSearch] = useState('');
   const [params, setParams] = useState({});
+  const [loading, setLoading] = useState(false);
 
   useEffect(() => {
+    setLoading(true);
     axios
       .get(
         process.env.NODE_ENV === 'development'
@@ -23,12 +26,13 @@ const Reports = ({ createAlert }) => {
       )
       .then((res) => {
         setTests(res.data.tests);
+        setLoading(false);
       })
       .catch(() => {});
   }, []);
   const getReport = () => {
     if (downloading) return;
-
+    let finalParams;
     switch (exportType) {
       case 'all':
         getExport();
@@ -44,12 +48,12 @@ const Reports = ({ createAlert }) => {
           testName: testSearch,
           testId: testObj.test_id,
         }));
+        finalParams = { testName: testSearch, testId: testObj.test_id };
 
         break;
       default:
         break;
     }
-    console.log(params);
     setDownloading(true);
     axios
       .get(
@@ -59,7 +63,7 @@ const Reports = ({ createAlert }) => {
         {
           headers: {
             exportType,
-            params: JSON.stringify(params),
+            params: JSON.stringify(finalParams),
             token: token.current,
           },
         }
@@ -145,10 +149,10 @@ const Reports = ({ createAlert }) => {
           }}
         >
           <option value='all'>Export All Results</option>
-          <option value='date'>Export by Date</option>
-          <option value='student'>Export by Student</option>
+          {/* <option value='date'>Export by Date</option>
+          <option value='student'>Export by Student</option> */}
           <option value='test'>Export by Test</option>
-          <option value='group'>Export by Group</option>
+          {/* <option value='group'>Export by Group</option> */}
         </select>
       </div>
       {exportType === 'date' ? (
