@@ -51,6 +51,15 @@ const Reports = ({ createAlert }) => {
         finalParams = { testName: testSearch, testId: testObj.test_id };
 
         break;
+      case 'date':
+        finalParams = params;
+        if (params.startDate > params.endDate)
+          return createAlert(
+            'Please double check the dates entered and try again.',
+            'danger',
+            5000
+          );
+        console.log(params.endDate > params.startDate);
       default:
         break;
     }
@@ -149,10 +158,9 @@ const Reports = ({ createAlert }) => {
           }}
         >
           <option value='all'>Export All Results</option>
-          {/* <option value='date'>Export by Date</option>
-          <option value='student'>Export by Student</option> */}
-          <option value='test'>Export by Test</option>
-          {/* <option value='group'>Export by Group</option> */}
+          <option value='date'>Report by Date</option>
+          <option value='student'>Individual Student Report</option>
+          <option value='test'>Test Report</option>
         </select>
       </div>
       {exportType === 'date' ? (
@@ -207,6 +215,17 @@ const Reports = ({ createAlert }) => {
               </li>
             ))}
           </ul>
+        </div>
+      ) : exportType === 'student' ? (
+        <div className='form-group'>
+          <label>Student Name</label>
+          <input
+            type='text'
+            value={testSearch}
+            onChange={searchTest}
+            className='form-control'
+          />
+          <br />
         </div>
       ) : null}
       <div className='form-group'>
