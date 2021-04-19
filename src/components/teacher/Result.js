@@ -33,7 +33,17 @@ const Result = ({ createAlert }) => {
         setStudent(res.data.student);
         setTestName(res.data.test_name);
         let dateFormatted = new Date(res.data.result.created_at);
-        setFdate(dateFormatted.toLocaleString());
+        setFdate(
+          dateFormatted.toLocaleString('en-US', {
+            weekday: 'long',
+            year: 'numeric',
+            month: 'long',
+            day: 'numeric',
+            hour: 'numeric',
+            minute: 'numeric',
+            hour12: true,
+          })
+        );
         setLoading(false);
       })
       .catch(() => {
