@@ -9,6 +9,7 @@ const Result = ({ createAlert }) => {
   const [testName, setTestName] = useState('');
   const [student, setStudent] = useState({});
   const [result, setResult] = useState({});
+  const [fdate, setFdate] = useState();
   const history = useHistory();
   function useQuery() {
     return new URLSearchParams(useLocation().search);
@@ -31,6 +32,8 @@ const Result = ({ createAlert }) => {
         setResult(res.data.result);
         setStudent(res.data.student);
         setTestName(res.data.test_name);
+        let dateFormatted = new Date(res.data.result.created_at);
+        setFdate(dateFormatted.toLocaleString());
         setLoading(false);
       })
       .catch(() => {
@@ -111,9 +114,7 @@ const Result = ({ createAlert }) => {
               </button>
             </div>
           </div>
-          <div className='card-footer text-muted'>
-            {Date(result.created_at).toLocaleString()}
-          </div>
+          <div className='card-footer text-muted'>{fdate}</div>
         </div>
         <table className='table table-striped'>
           <thead>
